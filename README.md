@@ -1,7 +1,7 @@
 BNN
 ===
 
-[![Discuss at roboticsclubiitj@googlegroups.com](https://img.shields.io/badge/discuss-roboticsclubiitj%40googlegroups.com-blue.svg)](https://groups.google.com/forum/#!forum/robotics-club-iitj) ![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
+![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
 
 About Us
 --------
