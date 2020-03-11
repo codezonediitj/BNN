@@ -45,11 +45,32 @@ namespace bnn
 
         template <class data_type>
         TensorCPU<data_type>::TensorCPU
-        (std::vector<unsigned> shape):
+        (std::vector<unsigned>& shape):
         data_cpu(_reserve_space_cpu(shape)),
         ndims_cpu(shape.size()),
         shape_cpu(_init_shape_cpu(shape))
         {
+        }
+
+        template <class data_type>
+        unsigned
+        TensorCPU<data_type>::_compute_index
+        (va_list& args, unsigned ndims)
+        {
+            unsigned* indices = new unsigned[ndims];
+            for(unsigned i = 0; i < ndims; i++)
+            {
+                indices[i] = va_arg(args, unsigned);
+                bnn::utils::check(indices[i] < this->shape_cpu[i],
+                                  "Index out of range.");
+            }
+
+            unsigned prods = 1, index = 0;
+            for(unsigned i = ndims - 1; i >= 0; i--)
+            {
+                index += prods*indices[i];
+                prods *= this->shape_cpu[i];
+            }
         }
 
         template <class data_type>
@@ -58,21 +79,7 @@ namespace bnn
         {
             va_list args;
             va_start(args, this->ndims_cpu);
-            unsigned* indices = new unsigned[this->ndims_cpu];
-            for(unsigned i = 0; i < this->ndims_cpu; i++)
-            {
-                indices[i] = va_arg(args, unsigned);
-                bnn::utils::check(indices[i] < this->shape_cpu[i],
-                                  "Index out of range.");
-            }
-
-            unsigned prods = 1, index = 0;
-            for(unsigned i = this->ndims_cpu - 1; i > 0; i--)
-            {
-                index += prods*indices[i];
-                prods *= this->shape_cpu[i];
-            }
-
+            unsigned index = this->_compute_index(args);
             return this->data_cpu[index];
         }
 
@@ -82,38 +89,8 @@ namespace bnn
         {
             va_list args;
             va_start(args, this->ndims_cpu);
-            unsigned* indices = new unsigned[this->ndims_cpu];
-            for(unsigned i = 0; i < this->ndims_cpu; i++)
-            {
-                indices[i] = va_arg(args, unsigned);
-                bnn::utils::check(indices[i] < this->shape_cpu[i],
-                                  "Index out of range.");
-            }
-
-            unsigned prods = 1, index = 0;
-            for(unsigned i = this->ndims_cpu - 1; i > 0; i--)
-            {
-                index += prods*indices[i];
-                prods *= this->shape_cpu[i];
-            }
-
+            unsigned index = this->_compute_index(args);
             this->data_cpu[index] = value;
-        }
-
-        template <class data_type>
-        void
-        TensorCPU<data_type>::fill(data_type value)
-        {
-            unsigned size = 1;
-            for(unsigned i = 0; i < this->ndims_cpu; i++)
-            {
-                size *= shape_cpu[i];
-            }
-
-            for(unsigned i = 0; i < size; i++)
-            {
-                this->data_cpu[i] = value;
-            }
         }
 
         template <class data_type>
