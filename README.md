@@ -1,7 +1,7 @@
 BNN
 ===
 
-[![Join the chat at https://gitter.im/codezoned2017/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/codezoned2017/Lobby) ![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
+[![Build Status](https://travis-ci.com/codezonediitj/BNN.svg?branch=master)](https://travis-ci.com/codezonediitj/BNN) [![Join the chat at https://gitter.im/codezoned2017/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/codezoned2017/Lobby) ![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
 
 About Us
 --------
