@@ -2,8 +2,9 @@
 #include<string>
 #include<vector>
 #include<bnn/cuda/core/tensor.hpp>
+#include<iostream>
 
-TEST(Core, TensorCPU)
+TEST(Cuda_Core, TensorGPU)
 {
     bnn::cuda::core::TensorGPU<float> t_f;
     EXPECT_EQ(0, t_f.get_ndims(true))<<"Default GPU size should be 0";
@@ -24,14 +25,14 @@ TEST(Core, TensorCPU)
         {
             for(unsigned k = 0; k < 3; k++)
             {
-                t.set(true, 5., i, j, k);
-                EXPECT_EQ(5., t.at(true, i, j, k))
+                t.set(5., i, j, k);
+                EXPECT_EQ(5., t.at(i, j, k))
                 <<"Each element of the tensor should be 5.";
             }
         }
     }
-    t.set(true, 3., 1, 2, 2);
-    EXPECT_EQ(3., t.at(true, 1, 2, 2));
+    t.set(3., 1, 2, 2);
+    EXPECT_EQ(3., t.at(1, 2, 2));
 }
 
 int main(int ac, char* av[])

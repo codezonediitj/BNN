@@ -11,7 +11,7 @@ namespace bnn
         namespace core
         {
             template <class data_type>
-            class TensorGPU: public TensorCPU
+            class TensorGPU: public bnn::core::TensorCPU<data_type>
             {
                 private:
 
@@ -35,13 +35,21 @@ namespace bnn
 
                     TensorGPU(std::vector<unsigned>& shape);
 
-                    data_type at(bool gpu, ...);
-
-                    void set(bool gpu, data_type value, ...);
-
                     unsigned* get_shape(bool gpu);
 
                     unsigned get_ndims(bool gpu);
+
+                    data_type* get_data_pointer(bool gpu);
+
+                     /*
+                    * Copies the data from GPU to CPU.
+                    */
+                    void copy_to_host();
+
+                    /*
+                    * Copies the  data from CPU to GPU.
+                    */
+                    void copy_to_device();
 
                     ~TensorGPU();
 

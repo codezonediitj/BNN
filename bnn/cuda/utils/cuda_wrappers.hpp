@@ -6,9 +6,9 @@
 
 namespace bnn
 {
-    namespace utils
+    namespace cuda
     {
-        namespace cuda
+        namespace utils
         {
             enum direction {HostToDevice, DeviceToHost};
             typedef cudaEvent_t cuda_event_t;

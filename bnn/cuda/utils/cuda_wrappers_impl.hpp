@@ -1,13 +1,13 @@
 #ifndef BNN_BNN_UTILS_CUDA_WRAPPERS_IMPL_HPP
 #define BNN_BNN_UTILS_CUDA_WRAPPERS_IMPL_HPP
 
-#include<adaboost/utils/cuda_wrappers.hpp>
+#include<bnn/cuda/utils/cuda_wrappers.hpp>
 
 namespace bnn
 {
-    namespace utils
+    namespace cuda
     {
-        namespace cuda
+        namespace utils
         {
             void cuda_malloc(void** ptr, unsigned num_bytes)
             {

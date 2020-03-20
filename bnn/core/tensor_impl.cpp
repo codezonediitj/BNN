@@ -3,6 +3,7 @@
 
 #include<bnn/core/tensor.hpp>
 #include<bnn/utils/utils.hpp>
+#include<iostream>
 
 namespace bnn
 {
@@ -53,12 +54,14 @@ namespace bnn
         }
 
         template <class data_type>
-        unsigned
-        TensorCPU<data_type>::_compute_index
-        (va_list& args, unsigned ndims)
+        data_type
+        TensorCPU<data_type>::at(unsigned s, ...)
         {
-            unsigned* indices = new unsigned[ndims];
-            for(unsigned i = 0; i < ndims; i++)
+            va_list args;
+            va_start(args, s);
+            unsigned* indices = new unsigned[this->ndims_cpu];
+            indices[0] = s;
+            for(unsigned i = 1; i < this->ndims_cpu; i++)
             {
                 indices[i] = va_arg(args, unsigned);
                 bnn::utils::check(indices[i] < this->shape_cpu[i],
@@ -66,20 +69,11 @@ namespace bnn
             }
 
             unsigned prods = 1, index = 0;
-            for(unsigned i = ndims - 1; i >= 0; i--)
+            for(int i = this->ndims_cpu - 1; i >= 0; i--)
             {
                 index += prods*indices[i];
                 prods *= this->shape_cpu[i];
             }
-        }
-
-        template <class data_type>
-        data_type
-        TensorCPU<data_type>::at(...)
-        {
-            va_list args;
-            va_start(args, this->ndims_cpu);
-            unsigned index = this->_compute_index(args);
             return this->data_cpu[index];
         }
 
@@ -88,8 +82,21 @@ namespace bnn
         TensorCPU<data_type>::set(data_type value, ...)
         {
             va_list args;
-            va_start(args, this->ndims_cpu);
-            unsigned index = this->_compute_index(args);
+            va_start(args, value);
+            unsigned* indices = new unsigned[this->ndims_cpu];
+            for(unsigned i = 0; i < this->ndims_cpu; i++)
+            {
+                indices[i] = va_arg(args, unsigned);
+                bnn::utils::check(indices[i] < this->shape_cpu[i],
+                                  "Index out of range.");
+            }
+
+            unsigned prods = 1, index = 0;
+            for(int i = this->ndims_cpu - 1; i >= 0; i--)
+            {
+                index += prods*indices[i];
+                prods *= this->shape_cpu[i];
+            }
             this->data_cpu[index] = value;
         }
 
@@ -108,10 +115,19 @@ namespace bnn
         }
 
         template <class data_type>
+        data_type*
+        TensorCPU<data_type>::get_data_pointer()
+        {
+            return this->data_cpu;
+        }
+
+        template <class data_type>
         TensorCPU<data_type>::~TensorCPU()
         {
-            delete [] this->shape_cpu;
-            delete [] this->data_cpu;
+            if(this->shape_cpu != NULL)
+                delete [] this->shape_cpu;
+            if(this->data_cpu != NULL)
+                delete [] this->data_cpu;
         }
 
         #include "bnn/templates/core_tensor.hpp"

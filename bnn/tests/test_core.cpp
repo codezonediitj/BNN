@@ -3,6 +3,7 @@
 #include<stdexcept>
 #include<vector>
 #include<bnn/core/tensor.hpp>
+#include<iostream>
 
 TEST(Core, TensorCPU)
 {

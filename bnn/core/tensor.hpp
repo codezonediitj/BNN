@@ -33,16 +33,15 @@ namespace bnn
 
                 TensorCPU(std::vector<unsigned>& shape);
 
-                static unsigned
-                _compute_index(va_list& args, unsigned ndims);
-
-                data_type at(...);
+                data_type at(unsigned s, ...);
 
                 void set(data_type value, ...);
 
                 unsigned* get_shape();
 
                 unsigned get_ndims();
+
+                data_type* get_data_pointer();
 
                 ~TensorCPU();
         };
