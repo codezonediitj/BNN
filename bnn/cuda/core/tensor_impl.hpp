@@ -86,25 +86,35 @@ namespace bnn
                              ::get_data_pointer();
             }
 
-            template <class data_type_vector>
+            template <class data_type>
             void
-            TensorGPU<data_type_vector>::copy_to_host()
+            TensorGPU<data_type>::copy_to_host()
             {
+                unsigned size = 1;
+                for(unsigned i = 0; i < this->get_ndims(true); i++)
+                {
+                    size *= this->get_shape(true)[i];
+                }
                 bnn::cuda::utils::cuda_memcpy(
                 this->get_data_pointer(false),
                 this->get_data_pointer(true),
-                this->size_gpu*sizeof(data_type_vector),
+                size*sizeof(data_type),
                 bnn::cuda::utils::DeviceToHost);
             }
 
-            template <class data_type_vector>
+            template <class data_type>
             void
-            TensorGPU<data_type_vector>::copy_to_device()
+            TensorGPU<data_type>::copy_to_device()
             {
+                unsigned size = 1;
+                for(unsigned i = 0; i < this->get_ndims(false); i++)
+                {
+                    size *= this->get_shape(false)[i];
+                }
                 bnn::cuda::utils::cuda_memcpy(
                 this->get_data_pointer(true),
                 this->get_data_pointer(false),
-                this->size_gpu*sizeof(data_type_vector),
+                size*sizeof(data_type),
                 bnn::cuda::utils::HostToDevice);
             }
 
