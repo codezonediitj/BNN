@@ -4,7 +4,6 @@
 #include <bnn/cuda/core/tensor.hpp>
 #include <bnn/cuda/utils/cuda_wrappers.hpp>
 #include <bnn/utils/utils.hpp>
-#include<iostream>
 
 namespace bnn
 {

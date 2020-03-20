@@ -2,7 +2,6 @@
 #include<string>
 #include<vector>
 #include<bnn/cuda/core/tensor.hpp>
-#include<iostream>
 
 TEST(Cuda_Core, TensorGPU)
 {
