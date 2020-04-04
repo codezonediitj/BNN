@@ -25,7 +25,7 @@ How to contribute?
 Follow the steps given below,
 
 1. Fork, https://github.com/codezonediitj/BNN
-2. Execute, `git clone https://github.com/<your-github-username>/BNN/`
+2. Execute, `git clone https://github.com/codezonediitj/BNN/`
 3. Change your working directory to `../BNN`.
 4. Execute, `git remote add origin_user https://github.com/<your-github-username>/BNN/`
 5. Execute, `git checkout -b <your-new-branch-for-working>`.
