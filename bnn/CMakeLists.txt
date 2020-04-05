@@ -2,6 +2,9 @@ add_library(bnn_utils SHARED
             utils/utils_impl.cpp)
 add_library(bnn_core SHARED
             core/tensor_impl.cpp)
+add_library(bnn_operations SHARED
+            operations/operations_impl.cpp
+            operations/operators_impl.cpp)
 target_link_libraries(bnn_core bnn_utils)
 if(BUILD_CUDA)
     add_library(bnn_cuda_utils SHARED

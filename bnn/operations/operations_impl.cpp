@@ -10,13 +10,15 @@ namespace bnn
     {
         template <class data_type>
         bnn::operators::Add*
-        add(const bnn::core::TensorCPU<data_type>& a,
-            const bnn::core::TensorCPU<data_type>& b)
+        add(bnn::core::TensorCPU<data_type>& a,
+            bnn::core::TensorCPU<data_type>& b)
         {
             using namespace bnn::operators;
-            Identity* ia = new Identity<data_type>(a);
-            Identity* ib = new Identity<data_type>(b);
-            return add(ia, ib);
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return add(ta, tb);
         }
 
         bnn::operators::Add*
@@ -27,6 +29,8 @@ namespace bnn
             Add* result = new Add(a, b);
             return result;
         }
+
+        #include "bnn/templates/operations_operations.hpp"
     }
 }
 

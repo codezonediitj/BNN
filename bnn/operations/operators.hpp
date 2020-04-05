@@ -20,6 +20,14 @@ namespace bnn
 
                 std::string get_name();
 
+                virtual bool is_tensor();
+
+                virtual Operator*
+                get_arg();
+
+                virtual Operator*
+                get_arg(bool idx);
+
         };
 
         class UnaryOperator: public Operator
@@ -37,7 +45,7 @@ namespace bnn
                 (Operator* a,
                  std::string _name);
 
-                Operator*
+                virtual Operator*
                 get_arg();
 
         };
@@ -77,10 +85,12 @@ namespace bnn
                 TensorWrapper();
 
                 TensorWrapper
-                (const bnn::core::TensorCPU<data_type>& _t);
+                (bnn::core::TensorCPU<data_type>& _t);
 
                 bnn::core::TensorCPU<data_type>*
                 get_tensor();
+
+                virtual bool is_tensor();
 
         };
 

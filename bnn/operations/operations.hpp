@@ -10,12 +10,12 @@ namespace bnn
     {
         template <class data_type>
         bnn::operators::Add*
-        add(const bnn::core::TensorCPU<data_type>& a,
-            const bnn::core::TensorCPU<data_type>& b);
+        add(bnn::core::TensorCPU<data_type>& a,
+            bnn::core::TensorCPU<data_type>& b);
 
         bnn::operators::Add*
-        add(const bnn::operators::Operator* a,
-            const bnn::operators::Operator* b);
+        add(bnn::operators::Operator* a,
+            bnn::operators::Operator* b);
     }
 }
 

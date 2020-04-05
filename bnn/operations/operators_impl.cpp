@@ -19,6 +19,24 @@ namespace bnn
             return this->name;
         }
 
+        bool
+        Operator::is_tensor()
+        {
+            return false;
+        }
+
+        Operator*
+        Operator::get_arg()
+        {
+            return NULL;
+        }
+
+        Operator*
+        Operator::get_arg(bool index)
+        {
+            return NULL;
+        }
+
         UnaryOperator::UnaryOperator
         (std::string _name):
         x(NULL),
@@ -46,7 +64,8 @@ namespace bnn
         {}
 
         BinaryOperator::BinaryOperator
-        (Operator* a, Operator* b,
+        (Operator* a,
+         Operator* b,
          std::string _name):
         x(a),
         y(b),
@@ -74,7 +93,7 @@ namespace bnn
 
         template <class data_type>
         TensorWrapper<data_type>::TensorWrapper
-        (const bnn::core::TensorCPU<data_type>& _t):
+        (bnn::core::TensorCPU<data_type>& _t):
         t(&_t),
         Operator::Operator
         ("TensorWrapper_" + std::to_string(_id++))
@@ -85,6 +104,13 @@ namespace bnn
         TensorWrapper<data_type>::get_tensor()
         {
             return this->t;
+        }
+
+        template <class data_type>
+        bool
+        TensorWrapper<data_type>::is_tensor()
+        {
+            return true;
         }
 
         unsigned long int
@@ -101,6 +127,8 @@ namespace bnn
         BinaryOperator::BinaryOperator
         (a, b, "Add_" + std::to_string(_id++))
         {}
+
+        #include "bnn/templates/operations_operators.hpp"
 
     }
 }
