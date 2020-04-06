@@ -189,6 +189,20 @@ namespace bnn
                  Operator* b);
 
         };
+
+        class Exp: public UnaryOperator
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                Exp();
+
+                Exp(Operator* a);
+
+        };
     }
 }
 
