@@ -6,12 +6,12 @@
 #include <bnn/operations/operations.hpp>
 #include <bnn/operations/operators.hpp>
 
-TEST(Core, Add)
-{
-    using namespace bnn::core;
-    using namespace bnn::operators;
-    using namespace bnn::operations;
+using namespace bnn::core;
+using namespace bnn::operators;
+using namespace bnn::operations;
 
+TEST(Operations, Add)
+{
     std::vector<unsigned> shape = {1};
     TensorCPU<float> t1(shape), t2(shape);
     t1.set(1., 0);
@@ -52,6 +52,29 @@ TEST(Core, Add)
         twa = dynamic_cast<TensorWrapper<float>*>(res3arg1);
     ta = twa->get_tensor();
     EXPECT_EQ(1., ta->at(0));
+}
+
+TEST(Operations, Exp)
+{
+    std::vector<unsigned> shape = {1};
+    TensorCPU<float> t1(shape), t2(shape);
+    t1.set(1., 0);
+    t2.set(3., 0);
+    Operator* res1 = exp(t1);
+    Operator* res2 = exp(res1);
+
+    EXPECT_EQ("Exp_0", res1->get_name());
+    EXPECT_EQ("Exp_1", res2->get_name());
+
+    Operator* res1arg1 = res1->get_arg();
+    TensorWrapper<float>* twa;
+    if(res1arg1->is_tensor())
+        twa = dynamic_cast<TensorWrapper<float>*>(res1arg1);
+    TensorCPU<float>* ta = twa->get_tensor();
+    EXPECT_EQ(1., ta->at(0));
+
+    Operator* res2arg1 = res2->get_arg();
+    EXPECT_EQ("Exp_0", res2arg1->get_name());
 }
 
 int main(int ac, char* av[])
