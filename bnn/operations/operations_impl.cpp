@@ -9,22 +9,13 @@ namespace bnn
 {
     namespace operations
     {
-        template <class data_type>
-        bnn::operators::Add*
-        add(bnn::core::TensorCPU<data_type>& a,
-            bnn::core::TensorCPU<data_type>& b)
-        {
-            bool is_correct_shape =
-            a.get_ndims() == b.get_ndims();
-            if(is_correct_shape)
-                for(unsigned i = 0; i < a.get_ndims(); i++)
-                {
-                    is_correct_shape &=
-                    a.get_shape()[i] == b.get_shape()[i];
-                }
-            bnn::utils::check(is_correct_shape, "Got tensors of different shapes.");
+        using namespace bnn::core;
+        using namespace bnn::operators;
+        using namespace bnn::utils;
 
-            using namespace bnn::operators;
+        template <class data_type>
+        Add* add(TensorCPU<data_type>& a, TensorCPU<data_type>& b)
+        {
             TensorWrapper<data_type>* ta =
             new TensorWrapper<data_type>(a);
             TensorWrapper<data_type>* tb =
@@ -32,11 +23,24 @@ namespace bnn
             return add(ta, tb);
         }
 
-        bnn::operators::Add*
-        add(bnn::operators::Operator* a,
-            bnn::operators::Operator* b)
+        template <class data_type>
+        Add* add(TensorCPU<data_type>& a, Operator* b)
         {
-            using namespace bnn::operators;
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return add(ta, b);
+        }
+
+        template <class data_type>
+        Add* add(Operator* a, TensorCPU<data_type>& b)
+        {
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return add(a, tb);
+        }
+
+        Add* add(Operator* a, Operator* b)
+        {
             Add* result = new Add(a, b);
             return result;
         }
