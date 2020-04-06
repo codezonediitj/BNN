@@ -46,5 +46,10 @@ install(DIRECTORY bnn DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 install(FILES
         ${CMAKE_BINARY_DIR}/libs/libbnn_core.so
         ${CMAKE_BINARY_DIR}/libs/libbnn_utils.so
-        ${CMAKE_BINARY_DIR}/libs/libbnn_cuda.so
+        ${CMAKE_BINARY_DIR}/libs/libbnn_operations.so
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+if(BUILD_CUDA)
+  install(FILES
+          ${CMAKE_BINARY_DIR}/libs/libbnn_cuda.so
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+endif()
