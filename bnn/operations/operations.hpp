@@ -50,9 +50,24 @@ namespace bnn
         * @param a Pointer to Operator object.
         * @param b Pointer to Operator object.
         */
-        bnn::operators::Add*
-        add(bnn::operators::Operator* a,
-            bnn::operators::Operator* b);
+        Add* add(Operator* a, Operator* b);
+
+        /* @overload
+        * Creates a bnn::operators::Exp object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        */
+        template <class data_type>
+        Exp* exp(TensorCPU<data_type>& a);
+
+        /* @overload
+        * Creates a bnn::operators::Exp object.
+        *
+        * @param a Pointer to Operator object.
+        */
+        Exp* exp(Operator* a);
     }
 }
 

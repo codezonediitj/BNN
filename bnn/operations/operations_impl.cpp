@@ -45,6 +45,20 @@ namespace bnn
             return result;
         }
 
+        template <class data_type>
+        Exp* exp(TensorCPU<data_type>& a)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return exp(ta);
+        }
+
+        Exp* exp(Operator* a)
+        {
+            Exp* result = new Exp(a);
+            return result;
+        }
+
         #include "bnn/templates/operations_operations.hpp"
     }
 }

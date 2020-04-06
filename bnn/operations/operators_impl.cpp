@@ -128,6 +128,19 @@ namespace bnn
         (a, b, "Add_" + std::to_string(_id++))
         {}
 
+        unsigned long int
+        Exp::_id = 0;
+
+        Exp::Exp():
+        UnaryOperator::
+        UnaryOperator("Exp")
+        {}
+
+        Exp::Exp(Operator* a):
+        UnaryOperator::UnaryOperator
+        (a, "Exp_" + std::to_string(_id++))
+        {}
+
         #include "bnn/templates/operations_operators.hpp"
 
     }
