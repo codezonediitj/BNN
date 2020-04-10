@@ -8,72 +8,129 @@ namespace bnn
 {
     namespace operators
     {
-        Operator::Operator
+        template <class data_type>
+        Operator<data_type>::Operator
         (std::string _name):
         name(_name)
         {}
 
-        std::string
-        Operator::get_name()
+        template <class data_type>
+        std::string Operator<data_type>::
+        get_name()
         {
             return this->name;
         }
 
-        bool
-        Operator::is_tensor()
+        template <class data_type>
+        bool Operator<data_type>::
+        is_tensor()
         {
             return false;
         }
 
-        Operator*
-        Operator::get_arg()
+        template <class data_type>
+        Operator<data_type>* Operator<data_type>::
+        get_arg()
         {
             return NULL;
         }
 
-        Operator*
-        Operator::get_arg(bool index)
+        template <class data_type>
+        Operator<data_type>* Operator<data_type>::
+        get_arg(bool index)
         {
             return NULL;
         }
 
-        UnaryOperator::UnaryOperator
+        template <class data_type>
+        data_type Operator<data_type>::
+        compute_gradient()
+        {
+            return 0;
+        }
+
+        template <class data_type>
+        data_type Operator<data_type>::
+        compute_value()
+        {
+            return 0;
+        }
+
+        template <class data_type>
+        data_type Operator<data_type>::
+        get_value()
+        {
+            return this->value;
+        }
+
+        template <class data_type>
+        data_type Operator<data_type>::
+        get_gradient()
+        {
+            return this->gradient;
+        }
+
+        template <class data_type>
+        void Operator<data_type>::
+        set_value(data_type _value)
+        {
+            this->value = _value;
+        }
+
+        template <class data_type>
+        void Operator<data_type>::
+        set_gradient(data_type _gradient)
+        {
+            this->gradient = _gradient;
+        }
+
+        template <class data_type>
+        UnaryOperator<data_type>::
+        UnaryOperator
         (std::string _name):
         x(NULL),
-        Operator::Operator(_name)
+        Operator<data_type>::Operator(_name)
         {}
 
-        UnaryOperator::UnaryOperator
-        (Operator* a,
+        template <class data_type>
+        UnaryOperator<data_type>::
+        UnaryOperator
+        (Operator<data_type>* a,
          std::string _name):
         x(a),
-        Operator::Operator(_name)
+        Operator<data_type>::Operator(_name)
         {}
 
-        Operator*
-        UnaryOperator::get_arg()
+        template <class data_type>
+        Operator<data_type>*
+        UnaryOperator<data_type>::get_arg()
         {
             return this->x;
         }
 
-        BinaryOperator::BinaryOperator
+        template <class data_type>
+        BinaryOperator<data_type>::
+        BinaryOperator
         (std::string _name):
         x(NULL),
         y(NULL),
-        Operator::Operator(_name)
+        Operator<data_type>::Operator(_name)
         {}
 
-        BinaryOperator::BinaryOperator
-        (Operator* a,
-         Operator* b,
+        template <class data_type>
+        BinaryOperator<data_type>::
+        BinaryOperator
+        (Operator<data_type>* a,
+         Operator<data_type>* b,
          std::string _name):
         x(a),
         y(b),
-        Operator::Operator(_name)
+        Operator<data_type>::Operator(_name)
         {}
 
-        Operator*
-        BinaryOperator::get_arg
+        template <class data_type>
+        Operator<data_type>* BinaryOperator<data_type>::
+        get_arg
         (bool idx)
         {
             return idx ? this->y : this->x;
@@ -87,7 +144,7 @@ namespace bnn
         TensorWrapper<data_type>::TensorWrapper
         ():
         t(NULL),
-        Operator::Operator
+        Operator<data_type>::Operator
         ("TensorWrapper")
         {}
 
@@ -95,7 +152,7 @@ namespace bnn
         TensorWrapper<data_type>::TensorWrapper
         (bnn::core::TensorCPU<data_type>& _t):
         t(&_t),
-        Operator::Operator
+        Operator<data_type>::Operator
         ("TensorWrapper_" + std::to_string(_id++))
         {}
 
@@ -113,31 +170,37 @@ namespace bnn
             return true;
         }
 
+        template <class data_type>
         unsigned long int
-        Add::_id = 0;
+        Add<data_type>::_id = 0;
 
-        Add::Add():
-        BinaryOperator::
+        template <class data_type>
+        Add<data_type>::Add():
+        BinaryOperator<data_type>::
         BinaryOperator("Add")
         {}
 
-        Add::Add
-        (Operator* a,
-         Operator* b):
-        BinaryOperator::BinaryOperator
+        template <class data_type>
+        Add<data_type>::Add
+        (Operator<data_type>* a,
+         Operator<data_type>* b):
+        BinaryOperator<data_type>::BinaryOperator
         (a, b, "Add_" + std::to_string(_id++))
         {}
 
+        template <class data_type>
         unsigned long int
-        Exp::_id = 0;
+        Exp<data_type>::_id = 0;
 
-        Exp::Exp():
-        UnaryOperator::
+        template <class data_type>
+        Exp<data_type>::Exp():
+        UnaryOperator<data_type>::
         UnaryOperator("Exp")
         {}
 
-        Exp::Exp(Operator* a):
-        UnaryOperator::UnaryOperator
+        template <class data_type>
+        Exp<data_type>::Exp(Operator<data_type>* a):
+        UnaryOperator<data_type>::UnaryOperator
         (a, "Exp_" + std::to_string(_id++))
         {}
 

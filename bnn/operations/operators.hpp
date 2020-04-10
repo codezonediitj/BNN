@@ -12,6 +12,7 @@ namespace bnn
         * This class represents generic
         * Operator class.
         */
+        template <class data_type>
         class Operator
         {
             protected:
@@ -20,6 +21,12 @@ namespace bnn
                 std::string name;
 
             public:
+
+                data_type value;
+
+                data_type gradient;
+
+                Operator<data_type>* variable;
 
                 /*
                 * Parametrized constructor.
@@ -45,7 +52,7 @@ namespace bnn
                 /*
                 * Reads the argument from a UnaryOperator.
                 */
-                virtual Operator*
+                virtual Operator<data_type>*
                 get_arg();
 
                 /*
@@ -55,17 +62,38 @@ namespace bnn
                 *    to return, if true/1 then second argument
                 *    is returned else first argument is returned.
                 */
-                virtual Operator*
+                virtual Operator<data_type>*
                 get_arg(bool idx);
+
+                virtual data_type
+                compute_gradient();
+
+                virtual data_type
+                compute_value();
+
+                virtual data_type
+                get_value();
+
+                virtual data_type
+                get_gradient();
+
+                virtual void
+                set_value
+                (data_type value);
+
+                virtual void
+                set_gradient
+                (data_type gradient);
 
         };
 
-        class UnaryOperator: public Operator
+        template <class data_type>
+        class UnaryOperator: public Operator<data_type>
         {
             protected:
 
                 //! The only argument of the operator.
-                Operator* x;
+                Operator<data_type>* x;
 
             public:
 
@@ -87,23 +115,24 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 UnaryOperator
-                (Operator* a,
+                (Operator<data_type>* a,
                  std::string _name);
 
-                virtual Operator*
+                virtual Operator<data_type>*
                 get_arg();
 
         };
 
-        class BinaryOperator: public Operator
+        template <class data_type>
+        class BinaryOperator: public Operator<data_type>
         {
             protected:
 
                 //! The first argument of the operator.
-                Operator* x;
+                Operator<data_type>* x;
 
                 //! The second argument of the operator.
-                Operator* y;
+                Operator<data_type>* y;
 
             public:
 
@@ -127,16 +156,16 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 BinaryOperator
-                (Operator* a,
-                 Operator* b,
+                (Operator<data_type>* a,
+                 Operator<data_type>* b,
                  std::string _name);
 
-                virtual Operator*
+                virtual Operator<data_type>*
                 get_arg(bool idx);
         };
 
         template <class data_type>
-        class TensorWrapper: public Operator
+        class TensorWrapper: public Operator<data_type>
         {
             protected:
 
@@ -174,7 +203,8 @@ namespace bnn
 
         };
 
-        class Add: public BinaryOperator
+        template <class data_type>
+        class Add: public BinaryOperator<data_type>
         {
             protected:
 
@@ -185,12 +215,13 @@ namespace bnn
                 Add();
 
                 Add
-                (Operator* a,
-                 Operator* b);
+                (Operator<data_type>* a,
+                 Operator<data_type>* b);
 
         };
 
-        class Exp: public UnaryOperator
+        template <class data_type>
+        class Exp: public UnaryOperator<data_type>
         {
             protected:
 
@@ -200,7 +231,7 @@ namespace bnn
 
                 Exp();
 
-                Exp(Operator* a);
+                Exp(Operator<data_type>* a);
 
         };
     }

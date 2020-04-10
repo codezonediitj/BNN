@@ -16,16 +16,16 @@ TEST(Operations, Add)
     TensorCPU<float> t1(shape), t2(shape);
     t1.set(1., 0);
     t2.set(3., 0);
-    Operator* res1 = add(t1, t2);
-    Operator* res2 = add(res1, t2);
-    Operator* res3 = add(t1, res2);
+    Operator<float>* res1 = add(t1, t2);
+    Operator<float>* res2 = add(res1, t2);
+    Operator<float>* res3 = add(t1, res2);
 
     EXPECT_EQ("Add_0", res1->get_name());
     EXPECT_EQ("Add_1", res2->get_name());
     EXPECT_EQ("Add_2", res3->get_name());
 
-    Operator* res1arg1 = res1->get_arg(0);
-    Operator* res1arg2 = res1->get_arg(1);
+    Operator<float>* res1arg1 = res1->get_arg(0);
+    Operator<float>* res1arg2 = res1->get_arg(1);
     TensorWrapper<float>* twa;
     if(res1arg1->is_tensor())
         twa = dynamic_cast<TensorWrapper<float>*>(res1arg1);
@@ -37,16 +37,16 @@ TEST(Operations, Add)
     EXPECT_EQ(1., ta->at(0));
     EXPECT_EQ(3., tb->at(0));
 
-    Operator* res2arg1 = res2->get_arg(0);
-    Operator* res2arg2 = res2->get_arg(1);
+    Operator<float>* res2arg1 = res2->get_arg(0);
+    Operator<float>* res2arg2 = res2->get_arg(1);
     EXPECT_EQ("Add_0", res2arg1->get_name());
     if(res2arg1->is_tensor())
         twb = dynamic_cast<TensorWrapper<float>*>(res2arg1);
     tb = twb->get_tensor();
     EXPECT_EQ(3., tb->at(0));
 
-    Operator* res3arg1 = res3->get_arg(0);
-    Operator* res3arg2 = res3->get_arg(1);
+    Operator<float>* res3arg1 = res3->get_arg(0);
+    Operator<float>* res3arg2 = res3->get_arg(1);
     EXPECT_EQ("Add_1", res3arg2->get_name());
     if(res3arg1->is_tensor())
         twa = dynamic_cast<TensorWrapper<float>*>(res3arg1);
@@ -60,20 +60,20 @@ TEST(Operations, Exp)
     TensorCPU<float> t1(shape), t2(shape);
     t1.set(1., 0);
     t2.set(3., 0);
-    Operator* res1 = exp(t1);
-    Operator* res2 = exp(res1);
+    Operator<float>* res1 = exp(t1);
+    Operator<float>* res2 = exp(res1);
 
     EXPECT_EQ("Exp_0", res1->get_name());
     EXPECT_EQ("Exp_1", res2->get_name());
 
-    Operator* res1arg1 = res1->get_arg();
+    Operator<float>* res1arg1 = res1->get_arg();
     TensorWrapper<float>* twa;
     if(res1arg1->is_tensor())
         twa = dynamic_cast<TensorWrapper<float>*>(res1arg1);
     TensorCPU<float>* ta = twa->get_tensor();
     EXPECT_EQ(1., ta->at(0));
 
-    Operator* res2arg1 = res2->get_arg();
+    Operator<float>* res2arg1 = res2->get_arg();
     EXPECT_EQ("Exp_0", res2arg1->get_name());
 }
 

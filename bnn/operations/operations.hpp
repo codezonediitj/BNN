@@ -20,7 +20,7 @@ namespace bnn
         * @param b TensorCPU object.
         */
         template <class data_type>
-        Add* add(TensorCPU<data_type>& a, TensorCPU<data_type>& b);
+        Add<data_type>* add(TensorCPU<data_type>& a, TensorCPU<data_type>& b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -31,7 +31,7 @@ namespace bnn
         * @param b Pointer to Operator object.
         */
         template <class data_type>
-        Add* add(TensorCPU<data_type>& a, Operator* b);
+        Add<data_type>* add(TensorCPU<data_type>& a, Operator<data_type>* b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -42,7 +42,7 @@ namespace bnn
         * @param b TensorCPU object.
         */
         template <class data_type>
-        Add* add(Operator* a, TensorCPU<data_type>& b);
+        Add<data_type>* add(Operator<data_type>* a, TensorCPU<data_type>& b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -50,7 +50,8 @@ namespace bnn
         * @param a Pointer to Operator object.
         * @param b Pointer to Operator object.
         */
-        Add* add(Operator* a, Operator* b);
+        template <class data_type>
+        Add<data_type>* add(Operator<data_type>* a, Operator<data_type>* b);
 
         /* @overload
         * Creates a bnn::operators::Exp object.
@@ -60,14 +61,15 @@ namespace bnn
         * @param a TensorCPU object.
         */
         template <class data_type>
-        Exp* exp(TensorCPU<data_type>& a);
+        Exp<data_type>* exp(TensorCPU<data_type>& a);
 
         /* @overload
         * Creates a bnn::operators::Exp object.
         *
         * @param a Pointer to Operator object.
         */
-        Exp* exp(Operator* a);
+        template <class data_type>
+        Exp<data_type>* exp(Operator<data_type>* a);
     }
 }
 

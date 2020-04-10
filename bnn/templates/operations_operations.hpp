@@ -1,149 +1,77 @@
 #ifndef BNN_BNN_TEMPLATES_OPERATIONS_OPERATIONS_HPP
 #define BNN_BNN_TEMPLATES_OPERATIONS_OPERATIONS_HPP
 
-template Add* add(
-TensorCPU<bool>& a,
-TensorCPU<bool>& b);
-template Add* add(
-TensorCPU<short>& a,
-TensorCPU<short>& b);
-template Add* add(
-TensorCPU<unsigned short>& a,
-TensorCPU<unsigned short>& b);
-template Add* add(
-TensorCPU<int>& a,
-TensorCPU<int>& b);
-template Add* add(
-TensorCPU<unsigned int>& a,
-TensorCPU<unsigned int>& b);
-template Add* add(
-TensorCPU<long>& a,
-TensorCPU<long>& b);
-template Add* add(
-TensorCPU<unsigned long>& a,
-TensorCPU<unsigned long>& b);
-template Add* add(
-TensorCPU<long long>& a,
-TensorCPU<long long>& b);
-template Add* add(
-TensorCPU<unsigned long long>& a,
-TensorCPU<unsigned long long>& b);
-template Add* add(
-TensorCPU<float>& a,
-TensorCPU<float>& b);
-template Add* add(
-TensorCPU<double>& a,
-TensorCPU<double>& b);
-template Add* add(
-TensorCPU<long double>& a,
-TensorCPU<long double>& b);
-template Add* add(
-TensorCPU<bool>& a,
-Operator* b);
-template Add* add(
-TensorCPU<short>& a,
-Operator* b);
-template Add* add(
-TensorCPU<unsigned short>& a,
-Operator* b);
-template Add* add(
-TensorCPU<int>& a,
-Operator* b);
-template Add* add(
-TensorCPU<unsigned int>& a,
-Operator* b);
-template Add* add(
-TensorCPU<long>& a,
-Operator* b);
-template Add* add(
-TensorCPU<unsigned long>& a,
-Operator* b);
-template Add* add(
-TensorCPU<long long>& a,
-Operator* b);
-template Add* add(
-TensorCPU<unsigned long long>& a,
-Operator* b);
-template Add* add(
-TensorCPU<float>& a,
-Operator* b);
-template Add* add(
-TensorCPU<double>& a,
-Operator* b);
-template Add* add(
-TensorCPU<long double>& a,
-Operator* b);
-template Add* add(
-Operator* a,
-TensorCPU<bool>& b);
-template Add* add(
-Operator* a,
-TensorCPU<short>& b);
-template Add* add(
-Operator* a,
-TensorCPU<unsigned short>& b);
-template Add* add(
-Operator* a,
-TensorCPU<int>& b);
-template Add* add(
-Operator* a,
-TensorCPU<unsigned int>& b);
-template Add* add(
-Operator* a,
-TensorCPU<long>& b);
-template Add* add(
-Operator* a,
-TensorCPU<unsigned long>& b);
-template Add* add(
-Operator* a,
-TensorCPU<long long>& b);
-template Add* add(
-Operator* a,
-TensorCPU<unsigned long long>& b);
-template Add* add(
-Operator* a,
-TensorCPU<float>& b);
-template Add* add(
-Operator* a,
-TensorCPU<double>& b);
-template Add* add(
-Operator* a,
-TensorCPU<long double>& b);
-template Exp*
-exp(
-TensorCPU<bool>& a);
-template Exp*
-exp(
-TensorCPU<short>& a);
-template Exp*
-exp(
-TensorCPU<unsigned short>& a);
-template Exp*
-exp(
-TensorCPU<int>& a);
-template Exp*
-exp(
-TensorCPU<unsigned int>& a);
-template Exp*
-exp(
-TensorCPU<long>& a);
-template Exp*
-exp(
-TensorCPU<unsigned long>& a);
-template Exp*
-exp(
-TensorCPU<long long>& a);
-template Exp*
-exp(
-TensorCPU<unsigned long long>& a);
-template Exp*
-exp(
-TensorCPU<float>& a);
-template Exp*
-exp(
-TensorCPU<double>& a);
-template Exp*
-exp(
-TensorCPU<long double>& a);
+template Add<bool>* add<bool>(TensorCPU<bool>& a, TensorCPU<bool>& b);
+template Add<short>* add<short>(TensorCPU<short>& a, TensorCPU<short>& b);
+template Add<unsigned short>* add<unsigned short>(TensorCPU<unsigned short>& a, TensorCPU<unsigned short>& b);
+template Add<int>* add<int>(TensorCPU<int>& a, TensorCPU<int>& b);
+template Add<unsigned int>* add<unsigned int>(TensorCPU<unsigned int>& a, TensorCPU<unsigned int>& b);
+template Add<long>* add<long>(TensorCPU<long>& a, TensorCPU<long>& b);
+template Add<unsigned long>* add<unsigned long>(TensorCPU<unsigned long>& a, TensorCPU<unsigned long>& b);
+template Add<long long>* add<long long>(TensorCPU<long long>& a, TensorCPU<long long>& b);
+template Add<unsigned long long>* add<unsigned long long>(TensorCPU<unsigned long long>& a, TensorCPU<unsigned long long>& b);
+template Add<float>* add<float>(TensorCPU<float>& a, TensorCPU<float>& b);
+template Add<double>* add<double>(TensorCPU<double>& a, TensorCPU<double>& b);
+template Add<long double>* add<long double>(TensorCPU<long double>& a, TensorCPU<long double>& b);
+template Add<bool>* add<bool>(TensorCPU<bool>& a, Operator<bool>* b);
+template Add<short>* add<short>(TensorCPU<short>& a, Operator<short>* b);
+template Add<unsigned short>* add<unsigned short>(TensorCPU<unsigned short>& a, Operator<unsigned short>* b);
+template Add<int>* add<int>(TensorCPU<int>& a, Operator<int>* b);
+template Add<unsigned int>* add<unsigned int>(TensorCPU<unsigned int>& a, Operator<unsigned int>* b);
+template Add<long>* add<long>(TensorCPU<long>& a, Operator<long>* b);
+template Add<unsigned long>* add<unsigned long>(TensorCPU<unsigned long>& a, Operator<unsigned long>* b);
+template Add<long long>* add<long long>(TensorCPU<long long>& a, Operator<long long>* b);
+template Add<unsigned long long>* add<unsigned long long>(TensorCPU<unsigned long long>& a, Operator<unsigned long long>* b);
+template Add<float>* add<float>(TensorCPU<float>& a, Operator<float>* b);
+template Add<double>* add<double>(TensorCPU<double>& a, Operator<double>* b);
+template Add<long double>* add<long double>(TensorCPU<long double>& a, Operator<long double>* b);
+template Add<bool>* add<bool>(Operator<bool>* a, TensorCPU<bool>& b);
+template Add<short>* add<short>(Operator<short>* a, TensorCPU<short>& b);
+template Add<unsigned short>* add<unsigned short>(Operator<unsigned short>* a, TensorCPU<unsigned short>& b);
+template Add<int>* add<int>(Operator<int>* a, TensorCPU<int>& b);
+template Add<unsigned int>* add<unsigned int>(Operator<unsigned int>* a, TensorCPU<unsigned int>& b);
+template Add<long>* add<long>(Operator<long>* a, TensorCPU<long>& b);
+template Add<unsigned long>* add<unsigned long>(Operator<unsigned long>* a, TensorCPU<unsigned long>& b);
+template Add<long long>* add<long long>(Operator<long long>* a, TensorCPU<long long>& b);
+template Add<unsigned long long>* add<unsigned long long>(Operator<unsigned long long>* a, TensorCPU<unsigned long long>& b);
+template Add<float>* add<float>(Operator<float>* a, TensorCPU<float>& b);
+template Add<double>* add<double>(Operator<double>* a, TensorCPU<double>& b);
+template Add<long double>* add<long double>(Operator<long double>* a, TensorCPU<long double>& b);
+template Add<bool>* add<bool>(Operator<bool>* a, Operator<bool>* b);
+template Add<short>* add<short>(Operator<short>* a, Operator<short>* b);
+template Add<unsigned short>* add<unsigned short>(Operator<unsigned short>* a, Operator<unsigned short>* b);
+template Add<int>* add<int>(Operator<int>* a, Operator<int>* b);
+template Add<unsigned int>* add<unsigned int>(Operator<unsigned int>* a, Operator<unsigned int>* b);
+template Add<long>* add<long>(Operator<long>* a, Operator<long>* b);
+template Add<unsigned long>* add<unsigned long>(Operator<unsigned long>* a, Operator<unsigned long>* b);
+template Add<long long>* add<long long>(Operator<long long>* a, Operator<long long>* b);
+template Add<unsigned long long>* add<unsigned long long>(Operator<unsigned long long>* a, Operator<unsigned long long>* b);
+template Add<float>* add<float>(Operator<float>* a, Operator<float>* b);
+template Add<double>* add<double>(Operator<double>* a, Operator<double>* b);
+template Add<long double>* add<long double>(Operator<long double>* a, Operator<long double>* b);
+template Exp<bool>* exp<bool>(TensorCPU<bool>& a);
+template Exp<short>* exp<short>(TensorCPU<short>& a);
+template Exp<unsigned short>* exp<unsigned short>(TensorCPU<unsigned short>& a);
+template Exp<int>* exp<int>(TensorCPU<int>& a);
+template Exp<unsigned int>* exp<unsigned int>(TensorCPU<unsigned int>& a);
+template Exp<long>* exp<long>(TensorCPU<long>& a);
+template Exp<unsigned long>* exp<unsigned long>(TensorCPU<unsigned long>& a);
+template Exp<long long>* exp<long long>(TensorCPU<long long>& a);
+template Exp<unsigned long long>* exp<unsigned long long>(TensorCPU<unsigned long long>& a);
+template Exp<float>* exp<float>(TensorCPU<float>& a);
+template Exp<double>* exp<double>(TensorCPU<double>& a);
+template Exp<long double>* exp<long double>(TensorCPU<long double>& a);
+template Exp<bool>* exp<bool>(Operator<bool>* a);
+template Exp<short>* exp<short>(Operator<short>* a);
+template Exp<unsigned short>* exp<unsigned short>(Operator<unsigned short>* a);
+template Exp<int>* exp<int>(Operator<int>* a);
+template Exp<unsigned int>* exp<unsigned int>(Operator<unsigned int>* a);
+template Exp<long>* exp<long>(Operator<long>* a);
+template Exp<unsigned long>* exp<unsigned long>(Operator<unsigned long>* a);
+template Exp<long long>* exp<long long>(Operator<long long>* a);
+template Exp<unsigned long long>* exp<unsigned long long>(Operator<unsigned long long>* a);
+template Exp<float>* exp<float>(Operator<float>* a);
+template Exp<double>* exp<double>(Operator<double>* a);
+template Exp<long double>* exp<long double>(Operator<long double>* a);
 
 #endif
