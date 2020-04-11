@@ -78,35 +78,37 @@ namespace bnn
                 get_arg
                 (bool idx);
 
-                virtual
                 data_type
                 compute_gradient
                 ();
 
-                virtual
                 data_type
                 compute_value
                 ();
 
-                virtual
                 data_type
                 get_value
                 ();
 
-                virtual
                 data_type
                 get_gradient
                 ();
 
-                virtual
                 void
                 set_value
                 (data_type value);
 
-                virtual
                 void
                 set_gradient
                 (data_type gradient);
+
+                Operator<data_type>*
+                get_variable
+                ();
+
+                void
+                set_variable
+                (Operator<data_type>* _var);
         };
 
         template <class data_type>

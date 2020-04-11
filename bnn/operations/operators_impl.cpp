@@ -102,12 +102,21 @@ namespace bnn
         }
 
         template <class data_type>
+        Operator<data_type>*
+        Operator<data_type>::
+        get_variable
+        ()
+        {
+            return this->variable;
+        }
+
+        template <class data_type>
         void
         Operator<data_type>::
-        set_gradient
-        (data_type _gradient)
+        set_variable
+        (Operator<data_type>* _var)
         {
-            this->gradient = _gradient;
+            this->variable = _var;
         }
 
         template <class data_type>

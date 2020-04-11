@@ -1,0 +1,6 @@
+#ifndef BNN_BNN_AUTODIFF_FORWARD_HPP
+#define BNN_BNN_AUTODIFF_FORWARD_HPP
+
+
+
+#endif
