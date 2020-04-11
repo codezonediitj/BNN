@@ -8,6 +8,9 @@ namespace bnn
 {
     namespace operators
     {
+
+        using namespace bnn::core;
+
         /*
         * This class represents generic
         * Operator class.
@@ -34,12 +37,15 @@ namespace bnn
                 * @param _name std::string which is to be
                 *    used to identify the operator.
                 */
-                Operator(std::string _name);
+                Operator
+                (std::string _name);
 
                 /*
                 * For obtaining name of the operator.
                 */
-                std::string get_name();
+                std::string
+                get_name
+                ();
 
                 /*
                 * For checking if the current operator
@@ -47,13 +53,18 @@ namespace bnn
                 * acts as a signal of reaching the leaf
                 * in the expression tree.
                 */
-                virtual bool is_tensor();
+                virtual
+                bool
+                is_tensor
+                ();
 
                 /*
                 * Reads the argument from a UnaryOperator.
                 */
-                virtual Operator<data_type>*
-                get_arg();
+                virtual
+                Operator<data_type>*
+                get_arg
+                ();
 
                 /*
                 * Reads the argument from a BinaryOperator.
@@ -62,29 +73,40 @@ namespace bnn
                 *    to return, if true/1 then second argument
                 *    is returned else first argument is returned.
                 */
-                virtual Operator<data_type>*
-                get_arg(bool idx);
+                virtual
+                Operator<data_type>*
+                get_arg
+                (bool idx);
 
-                virtual data_type
-                compute_gradient();
+                virtual
+                data_type
+                compute_gradient
+                ();
 
-                virtual data_type
-                compute_value();
+                virtual
+                data_type
+                compute_value
+                ();
 
-                virtual data_type
-                get_value();
+                virtual
+                data_type
+                get_value
+                ();
 
-                virtual data_type
-                get_gradient();
+                virtual
+                data_type
+                get_gradient
+                ();
 
-                virtual void
+                virtual
+                void
                 set_value
                 (data_type value);
 
-                virtual void
+                virtual
+                void
                 set_gradient
                 (data_type gradient);
-
         };
 
         template <class data_type>
@@ -115,12 +137,12 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 UnaryOperator
-                (Operator<data_type>* a,
-                 std::string _name);
+                (Operator<data_type>* a, std::string _name);
 
-                virtual Operator<data_type>*
-                get_arg();
-
+                virtual
+                Operator<data_type>*
+                get_arg
+                ();
         };
 
         template <class data_type>
@@ -156,12 +178,12 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 BinaryOperator
-                (Operator<data_type>* a,
-                 Operator<data_type>* b,
+                (Operator<data_type>* a, Operator<data_type>* b,
                  std::string _name);
 
                 virtual Operator<data_type>*
-                get_arg(bool idx);
+                get_arg
+                (bool idx);
         };
 
         template <class data_type>
@@ -174,14 +196,15 @@ namespace bnn
                 static unsigned long _id;
 
                 //! Pointer to the TensorCPU object.
-                bnn::core::TensorCPU<data_type>* t;
+                TensorCPU<data_type>* t;
 
             public:
 
                 /*
                 * Default constructor.
                 */
-                TensorWrapper();
+                TensorWrapper
+                ();
 
                 /*
                 * Parametrized constructor.
@@ -190,17 +213,20 @@ namespace bnn
                 *    referred.
                 */
                 TensorWrapper
-                (bnn::core::TensorCPU<data_type>& _t);
+                (TensorCPU<data_type>& _t);
 
                 /*
                 * Reads pointer to the TensorCPU
                 * object wrapped by TensorWrapper.
                 */
-                bnn::core::TensorCPU<data_type>*
-                get_tensor();
+                TensorCPU<data_type>*
+                get_tensor
+                ();
 
-                virtual bool is_tensor();
-
+                virtual
+                bool
+                is_tensor
+                ();
         };
 
         template <class data_type>
@@ -212,12 +238,11 @@ namespace bnn
 
             public:
 
-                Add();
+                Add
+                ();
 
                 Add
-                (Operator<data_type>* a,
-                 Operator<data_type>* b);
-
+                (Operator<data_type>* a, Operator<data_type>* b);
         };
 
         template <class data_type>
@@ -229,11 +254,13 @@ namespace bnn
 
             public:
 
-                Exp();
+                Exp
+                ();
 
-                Exp(Operator<data_type>* a);
-
+                Exp
+                (Operator<data_type>* a);
         };
+
     }
 }
 

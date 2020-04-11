@@ -10,6 +10,10 @@ namespace bnn
     {
         namespace core
         {
+
+            using namespace std;
+            using namespace bnn::core;
+
             /*
             * This class represents GPU version of
             * bnn::core::TensorCPU
@@ -18,7 +22,7 @@ namespace bnn
             *     supported by C++.
             */
             template <class data_type>
-            class TensorGPU: public bnn::core::TensorCPU<data_type>
+            class TensorGPU: public TensorCPU<data_type>
             {
                 private:
 
@@ -39,7 +43,8 @@ namespace bnn
                     * @param shape The shape vector for which the space
                     *     is to be reserved.
                     */
-                    static data_type*
+                    static
+                    data_type*
                     _reserve_space_gpu
                     (std::vector<unsigned>& shape);
 
@@ -50,7 +55,8 @@ namespace bnn
                     *
                     * @param shape The shape vector which is to be stored in array.
                     */
-                    static unsigned*
+                    static
+                    unsigned*
                     _init_shape_gpu
                     (std::vector<unsigned>& shape);
 
@@ -61,7 +67,8 @@ namespace bnn
                     * Sets all the pointers to NULL and
                     * integers to 0.
                     */
-                    TensorGPU();
+                    TensorGPU
+                    ();
 
                     /*
                     * Prameterized constructor.
@@ -69,7 +76,8 @@ namespace bnn
                     * @param shape std::vector which is to be used
                     *    for initialisation.
                     */
-                    TensorGPU(std::vector<unsigned>& shape);
+                    TensorGPU
+                    (vector<unsigned>& shape);
 
                     /*
                     * Used for obtaining the pointer to the shape array
@@ -79,7 +87,9 @@ namespace bnn
                     *    on GPU memory will be returned, otherwise,
                     *    shape of tensor on CPU memory will be returned.
                     */
-                    unsigned* get_shape(bool gpu);
+                    unsigned*
+                    get_shape
+                    (bool gpu);
 
                     /*
                     * Used for obtaining the number of dimensions in the tensor.
@@ -88,26 +98,35 @@ namespace bnn
                     *    in tensor on GPU memory will be returned, otherwise,
                     *    number of dimensions in tensor on CPU memory will be returned.
                     */
-                    unsigned get_ndims(bool gpu);
+                    unsigned
+                    get_ndims
+                    (bool gpu);
 
-                    data_type* get_data_pointer(bool gpu);
+                    data_type*
+                    get_data_pointer
+                    (bool gpu);
 
                      /*
                     * Copies the data from GPU to CPU.
                     */
-                    void copy_to_host();
+                    void
+                    copy_to_host
+                    ();
 
                     /*
                     * Copies the data from CPU to GPU.
                     */
-                    void copy_to_device();
+                    void
+                    copy_to_device
+                    ();
 
                     /*
                     * Used for freeing GPU memory.
                     */
-                    ~TensorGPU();
-
+                    ~TensorGPU
+                    ();
             };
+
         }
     }
 }

@@ -8,7 +8,13 @@ namespace bnn
 {
     namespace utils
     {
-        void check(bool exp, std::string msg);
+
+        using namespace std;
+
+        void
+        check
+        (bool exp, string msg);
+
     } // namespace utils
 } // namspace adaboost
 
