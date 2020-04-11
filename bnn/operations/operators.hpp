@@ -9,6 +9,7 @@ namespace bnn
     namespace operators
     {
 
+        using namespace std;
         using namespace bnn::core;
 
         /*
@@ -38,12 +39,12 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 Operator
-                (std::string _name);
+                (string _name);
 
                 /*
                 * For obtaining name of the operator.
                 */
-                std::string
+                string
                 get_name
                 ();
 
@@ -109,6 +110,10 @@ namespace bnn
                 void
                 set_variable
                 (Operator<data_type>* _var);
+
+                virtual
+                unsigned
+                num_args();
         };
 
         template <class data_type>
@@ -145,6 +150,10 @@ namespace bnn
                 Operator<data_type>*
                 get_arg
                 ();
+
+                virtual
+                unsigned
+                num_args();
         };
 
         template <class data_type>
@@ -186,6 +195,10 @@ namespace bnn
                 virtual Operator<data_type>*
                 get_arg
                 (bool idx);
+
+                virtual
+                unsigned
+                num_args();
         };
 
         template <class data_type>
@@ -229,6 +242,10 @@ namespace bnn
                 bool
                 is_tensor
                 ();
+
+                virtual
+                unsigned
+                num_args();
         };
 
         template <class data_type>

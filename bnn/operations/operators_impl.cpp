@@ -16,7 +16,10 @@ namespace bnn
         Operator<data_type>::
         Operator
         (string _name):
-        name(_name)
+        name(_name),
+        value(0),
+        gradient(0),
+        variable(NULL)
         {
         }
 
@@ -120,6 +123,15 @@ namespace bnn
         }
 
         template <class data_type>
+        unsigned
+        Operator<data_type>::
+        num_args
+        ()
+        {
+            return 0;
+        }
+
+        template <class data_type>
         UnaryOperator<data_type>::
         UnaryOperator
         (string _name):
@@ -144,6 +156,15 @@ namespace bnn
         ()
         {
             return this->x;
+        }
+
+        template <class data_type>
+        unsigned
+        UnaryOperator<data_type>::
+        num_args
+        ()
+        {
+            return 1;
         }
 
         template <class data_type>
@@ -175,6 +196,15 @@ namespace bnn
         (bool idx)
         {
             return idx ? this->y : this->x;
+        }
+
+        template <class data_type>
+        unsigned
+        BinaryOperator<data_type>::
+        num_args
+        ()
+        {
+            return 2;
         }
 
         template <class data_type>
@@ -217,6 +247,15 @@ namespace bnn
         ()
         {
             return true;
+        }
+
+        template <class data_type>
+        unsigned
+        TensorWrapper<data_type>::
+        num_args
+        ()
+        {
+            return 0;
         }
 
         template <class data_type>
