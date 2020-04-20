@@ -1,8 +1,8 @@
 #ifndef BNN_UTILS_UTILS_HPP
 #define BNN_UTILS_UTILS_HPP
 
-#include<string>
-#include<stdexcept>
+#include <string>
+#include <stdexcept>
 
 namespace bnn
 {

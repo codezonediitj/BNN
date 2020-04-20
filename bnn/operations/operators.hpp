@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_OPERATIONS_OPERATORS_HPP
 #define BNN_BNN_OPERATIONS_OPERATORS_HPP
 
-#include<bnn/core/tensor.hpp>
-#include<string>
+#include <string>
+#include <bnn/core/tensor.hpp>
 
 namespace bnn
 {
@@ -26,11 +26,9 @@ namespace bnn
 
             public:
 
-                data_type value;
+                TensorCPU<data_type>* value;
 
-                data_type gradient;
-
-                Operator<data_type>* variable;
+                TensorCPU<data_type>* gradient;
 
                 /*
                 * Parametrized constructor.
@@ -42,21 +40,19 @@ namespace bnn
                 (string _name);
 
                 /*
+                * Parametrized constructor.
+                *
+                * @param _name std::string which is to be
+                *    used to identify the operator.
+                */
+                Operator
+                (TensorCPU<data_type>* value, string _name);
+
+                /*
                 * For obtaining name of the operator.
                 */
                 string
                 get_name
-                ();
-
-                /*
-                * For checking if the current operator
-                * wraps a tensor. The bool value returned
-                * acts as a signal of reaching the leaf
-                * in the expression tree.
-                */
-                virtual
-                bool
-                is_tensor
                 ();
 
                 /*
@@ -79,37 +75,32 @@ namespace bnn
                 get_arg
                 (bool idx);
 
-                data_type
+                virtual
+                TensorCPU<data_type>*
                 compute_gradient
-                ();
+                (TensorCPU<data_type>* var);
 
-                data_type
+                virtual
+                TensorCPU<data_type>*
                 compute_value
                 ();
 
-                data_type
+                virtual
+                TensorCPU<data_type>*
                 get_value
                 ();
 
-                data_type
+                TensorCPU<data_type>*
                 get_gradient
                 ();
 
                 void
                 set_value
-                (data_type value);
+                (TensorCPU<data_type>* value);
 
                 void
                 set_gradient
-                (data_type gradient);
-
-                Operator<data_type>*
-                get_variable
-                ();
-
-                void
-                set_variable
-                (Operator<data_type>* _var);
+                (TensorCPU<data_type>* _gradient);
 
                 virtual
                 unsigned
@@ -192,7 +183,8 @@ namespace bnn
                 (Operator<data_type>* a, Operator<data_type>* b,
                  std::string _name);
 
-                virtual Operator<data_type>*
+                virtual
+                Operator<data_type>*
                 get_arg
                 (bool idx);
 
@@ -210,9 +202,6 @@ namespace bnn
                 //! Used in name.
                 static unsigned long _id;
 
-                //! Pointer to the TensorCPU object.
-                TensorCPU<data_type>* t;
-
             public:
 
                 /*
@@ -228,20 +217,21 @@ namespace bnn
                 *    referred.
                 */
                 TensorWrapper
-                (TensorCPU<data_type>& _t);
+                (TensorCPU<data_type>* _t);
 
                 /*
                 * Reads pointer to the TensorCPU
                 * object wrapped by TensorWrapper.
                 */
+                virtual
                 TensorCPU<data_type>*
-                get_tensor
+                compute_value
                 ();
 
                 virtual
-                bool
-                is_tensor
-                ();
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
 
                 virtual
                 unsigned
@@ -262,6 +252,16 @@ namespace bnn
 
                 Add
                 (Operator<data_type>* a, Operator<data_type>* b);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
         };
 
         template <class data_type>
@@ -278,6 +278,16 @@ namespace bnn
 
                 Exp
                 (Operator<data_type>* a);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
         };
 
     }

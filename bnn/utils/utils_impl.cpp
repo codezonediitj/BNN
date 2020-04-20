@@ -1,9 +1,9 @@
 #ifndef BNN_UTILS_UTILS_IMPL_CPP
 #define BNN_UTILS_UTILS_IMPL_CPP
 
-#include<bnn/utils/utils.hpp>
-#include<string>
-#include<stdexcept>
+#include <bnn/utils/utils.hpp>
+#include <string>
+#include <stdexcept>
 
 namespace bnn
 {

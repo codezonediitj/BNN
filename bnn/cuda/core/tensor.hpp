@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_CUDA_CORE_TENSOR_HPP
 #define BNN_BNN_CUDA_CORE_TENSOR_HPP
 
-#include<vector>
-#include<bnn/core/tensor.hpp>
+#include <vector>
+#include <bnn/core/tensor.hpp>
 
 namespace bnn
 {

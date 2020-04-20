@@ -1,7 +1,7 @@
 #ifndef BNN_BNN_AUTODIFF_GRAPH_IMPL_CPP
 #define BNN_BNN_AUTODIFF_GRAPH_IMPL_CPP
 
-#include<bnn/autodiff/graph.hpp>
+#include <bnn/autodiff/graph.hpp>
 
 namespace bnn
 {
@@ -11,34 +11,28 @@ namespace bnn
         using namespace bnn::operators;
 
         template <class data_type>
-        struct ForwardGraphNode
+        ForwardGraphNode<data_type>::
+        ~ForwardGraphNode()
         {
-            ForwardGraphNode<data_type> *prev;
-
-            Operator<data_type>** ops;
-
-            ~ForwardGraphNode()
+            unsigned i = 0;
+            while(i < this->len_ops)
             {
-                unsigned i = 0;
-                while(this->ops[i] != NULL)
-                {
-                    delete ops[i];
-                    i += 1;
-                }
+                delete this->ops[i];
+                i += 1;
             }
-        };
+        }
 
         template <class data_type>
         inline
         unsigned
         _sum
-        (Operator<data_type>** _ops)
+        (Operator<data_type>** _ops, unsigned len)
         {
             unsigned i = 0, total_args = 0;
-            while(_ops[i] != NULL)
+            while(i < len)
             {
                 total_args += _ops[i]->num_args();
-                i++;
+                i += 1;
             }
 
             return total_args;
@@ -47,23 +41,23 @@ namespace bnn
         template <class data_type>
         ForwardGraphNode<data_type>*
         build_graph_forward
-        (Operator<data_type>* expr, Operator<data_type>* var=NULL)
+        (Operator<data_type>* expr)
         {
             ForwardGraphNode<data_type>* layer =
             new ForwardGraphNode<data_type>;
             layer->prev = NULL;
-            layer->ops = new Operator<data_type>*[2];
-            layer->ops[0] = expr, layer->ops[1] = NULL;
-            layer->ops[0]->set_variable(var);
+            layer->ops = new Operator<data_type>*[1];
+            layer->len_ops = 1;
+            layer->ops[0] = expr;
 
-            unsigned total_args = _sum<data_type>(layer->ops);
+            unsigned total_args = _sum<data_type>(layer->ops, layer->len_ops);
             while(total_args > 0)
             {
                 ForwardGraphNode<data_type>* next_layer =
                 new ForwardGraphNode<data_type>;
                 next_layer->prev = layer;
-                next_layer->ops = new Operator*[total_args+1];
-                next_layer->ops[total_args] = NULL;
+                next_layer->ops = new Operator<data_type>*[total_args];
+                next_layer->len_ops = total_args;
 
                 Operator<data_type>* op;
                 unsigned i = 0, j = 0;
@@ -86,11 +80,13 @@ namespace bnn
                 }
 
                 layer = next_layer;
-                total_args = _sum<data_type>(layer->ops);
+                total_args = _sum<data_type>(layer->ops, layer->len_ops);
             }
 
             return layer;
         }
+
+        #include "bnn/templates/autodiff/graph.hpp"
 
     }
 }

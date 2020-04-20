@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_CORE_TENSOR_HPP
 #define BNN_BNN_CORE_TENSOR_HPP
 
-#include<vector>
-#include<cstdarg>
+#include <vector>
+#include <cstdarg>
 
 namespace bnn
 {
@@ -46,6 +46,11 @@ namespace bnn
                 _reserve_space_cpu
                 (vector<unsigned>& shape);
 
+                static
+                data_type*
+                _reserve_space_cpu
+                (unsigned* shape, unsigned ndims);
+
                 /*
                 * For reserving space in CPU memory for storing shape.
                 * Used in initializer list of parameterized constructors.
@@ -57,6 +62,11 @@ namespace bnn
                 unsigned*
                 _init_shape_cpu
                 (vector<unsigned>& shape);
+
+                static
+                unsigned*
+                _init_shape_cpu
+                (unsigned* shape, unsigned ndims);
 
             public:
 
@@ -77,6 +87,9 @@ namespace bnn
                 */
                 TensorCPU
                 (vector<unsigned>& shape);
+
+                TensorCPU
+                (unsigned* shape, unsigned ndims);
 
                 /*
                 * Used for accessing the element of the tensor

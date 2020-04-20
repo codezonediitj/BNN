@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_CORE_TENSOR_CPP
 #define BNN_BNN_CORE_TENSOR_CPP
 
-#include<bnn/core/tensor.hpp>
-#include<bnn/utils/utils.hpp>
+#include <bnn/core/tensor.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -25,6 +25,21 @@ namespace bnn
         }
 
         template <class data_type>
+        data_type*
+        TensorCPU<data_type>::
+        _reserve_space_cpu
+        (unsigned* shape, unsigned ndims)
+        {
+            unsigned total_space = 1;
+            for(unsigned i = 0; i < ndims; i++)
+            {
+                total_space *= shape[i];
+            }
+            data_type* pointer = new data_type[total_space];
+            return pointer;
+        }
+
+        template <class data_type>
         unsigned*
         TensorCPU<data_type>::
         _init_shape_cpu
@@ -36,6 +51,20 @@ namespace bnn
                 _shape[i] = shape.at(i);
             }
             return _shape;
+        }
+
+        template <class data_type>
+        unsigned*
+        TensorCPU<data_type>::
+        _init_shape_cpu
+        (unsigned* _shape, unsigned _ndims)
+        {
+            unsigned* shape = new unsigned[_ndims];
+            for(unsigned i = 0; i < _ndims; i++)
+            {
+                shape[i] = _shape[i];
+            }
+            return shape;
         }
 
         template <class data_type>
@@ -55,6 +84,16 @@ namespace bnn
         data_cpu(_reserve_space_cpu(shape)),
         ndims_cpu(shape.size()),
         shape_cpu(_init_shape_cpu(shape))
+        {
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>::
+        TensorCPU
+        (unsigned* _shape, unsigned _ndims):
+        data_cpu(_reserve_space_cpu(_shape, _ndims)),
+        ndims_cpu(_ndims),
+        shape_cpu(_init_shape_cpu(_shape, _ndims))
         {
         }
 
@@ -147,7 +186,7 @@ namespace bnn
                 delete [] this->data_cpu;
         }
 
-        #include "bnn/templates/core_tensor.hpp"
+        #include "bnn/templates/core/tensor.hpp"
 
     }
 }

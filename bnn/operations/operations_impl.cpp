@@ -17,7 +17,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (TensorCPU<data_type>& a, TensorCPU<data_type>& b)
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b)
         {
             TensorWrapper<data_type>* ta =
             new TensorWrapper<data_type>(a);
@@ -29,7 +29,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (TensorCPU<data_type>& a, Operator<data_type>* b)
+        (TensorCPU<data_type>* a, Operator<data_type>* b)
         {
             TensorWrapper<data_type>* ta =
             new TensorWrapper<data_type>(a);
@@ -39,7 +39,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (Operator<data_type>* a, TensorCPU<data_type>& b)
+        (Operator<data_type>* a, TensorCPU<data_type>* b)
         {
             TensorWrapper<data_type>* tb =
             new TensorWrapper<data_type>(b);
@@ -58,7 +58,7 @@ namespace bnn
         template <class data_type>
         Exp<data_type>*
         exp
-        (TensorCPU<data_type>& a)
+        (TensorCPU<data_type>* a)
         {
             TensorWrapper<data_type>* ta =
             new TensorWrapper<data_type>(a);
@@ -74,7 +74,7 @@ namespace bnn
             return result;
         }
 
-        #include "bnn/templates/operations_operations.hpp"
+        #include "bnn/templates/operations/operations.hpp"
 
     }
 }

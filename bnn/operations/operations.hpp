@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_OPERATIONS_OPERATIONS_HPP
 #define BNN_BNN_OPERATIONS_OPERATIONS_HPP
 
-#include<bnn/operations/operators.hpp>
-#include<bnn/core/tensor.hpp>
+#include <bnn/operations/operators.hpp>
+#include <bnn/core/tensor.hpp>
 
 namespace bnn
 {
@@ -23,7 +23,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (TensorCPU<data_type>& a, TensorCPU<data_type>& b);
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -36,7 +36,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (TensorCPU<data_type>& a, Operator<data_type>* b);
+        (TensorCPU<data_type>* a, Operator<data_type>* b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -49,7 +49,7 @@ namespace bnn
         template <class data_type>
         Add<data_type>*
         add
-        (Operator<data_type>* a, TensorCPU<data_type>& b);
+        (Operator<data_type>* a, TensorCPU<data_type>* b);
 
         /* @overload
         * Creates a bnn::operators::Add object.
@@ -72,7 +72,7 @@ namespace bnn
         template <class data_type>
         Exp<data_type>*
         exp
-        (TensorCPU<data_type>& a);
+        (TensorCPU<data_type>* a);
 
         /* @overload
         * Creates a bnn::operators::Exp object.

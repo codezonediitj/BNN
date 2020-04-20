@@ -1,8 +1,8 @@
 #ifndef BNN_BNN_UTILS_CUDA_WRAPPERS_HPP
 #define BNN_BNN_UTILS_CUDA_WRAPPERS_HPP
 
-#include<cuda.h>
-#include<cuda_runtime.h>
+#include <cuda.h>
+#include <cuda_runtime.h>
 
 namespace bnn
 {

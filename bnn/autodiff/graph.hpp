@@ -1,7 +1,7 @@
 #ifndef BNN_BNN_AUTODIFF_GRAPH_HPP
 #define BNN_BNN_AUTODIFF_GRAPH_HPP
 
-#include<bnn/operations/operators.hpp>
+#include <bnn/operations/operators.hpp>
 
 namespace bnn
 {
@@ -13,15 +13,19 @@ namespace bnn
         template <class data_type>
         struct ForwardGraphNode
         {
-            ForwardGraphNode<data_type> *prev;
+            ForwardGraphNode<data_type>* prev;
 
-            Operator<data_type>* ops;
+            Operator<data_type>** ops;
+
+            unsigned len_ops;
+
+            ~ForwardGraphNode();
         };
 
         template <class data_type>
         ForwardGraphNode<data_type>*
         build_graph_forward
-        (Operator<data_type>* expr, Operator<data_type>* var=NULL);
+        (Operator<data_type>* expr);
 
     }
 }

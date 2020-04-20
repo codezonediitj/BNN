@@ -147,7 +147,7 @@ namespace bnn
                     cuda_free((void*)this->data_gpu);
             }
 
-            #include "bnn/templates/cuda_core_tensor.hpp"
+            #include "bnn/templates/cuda/core/tensor.hpp"
 
         }
     }
