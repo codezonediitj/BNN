@@ -50,7 +50,7 @@ TEST(Autodiff, ComputeGradient)
     bnn::core::TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 3;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
     x1 = new bnn::core::TensorCPU<float>(shape, ndims);
     x2 = new bnn::core::TensorCPU<float>(shape, ndims);
     x3 = new bnn::core::TensorCPU<float>(shape, ndims);
@@ -62,7 +62,7 @@ TEST(Autodiff, ComputeGradient)
         bnn::operations::exp(bnn::operations::add(x1, x2)),
         bnn::operations::exp(bnn::operations::add(x2, x3))
     );
-    bnn::core::TensorCPU<float> *gradx2 =  bnn::autodiff::compute_gradient(expr, x2);
+    bnn::core::TensorCPU<float> *gradx2 =  bnn::autodiff::compute_gradient_forward(expr, x2);
     for(unsigned i = 0; i < gradx2->get_shape()[0]; i++)
     {
         for(unsigned j = 0; j < gradx2->get_shape()[1]; j++)
