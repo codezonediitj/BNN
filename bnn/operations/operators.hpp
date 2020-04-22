@@ -14,7 +14,12 @@ namespace bnn
 
         /*
         * This class represents generic
-        * Operator class.
+        * Operator class. The documentation
+        * of this class applies to all the sub
+        * classes.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
         */
         template <class data_type>
         class Operator
@@ -26,8 +31,14 @@ namespace bnn
 
             public:
 
+                //! The value of the sub expression
+                //! represented by this object. Used
+                //! only in automatic differentiation.
                 TensorCPU<data_type>* value;
 
+                //! The gradient of the sub expression
+                //! represented by this object. Used
+                //! only in automatic differentiation.
                 TensorCPU<data_type>* gradient;
 
                 /*
@@ -75,32 +86,46 @@ namespace bnn
                 get_arg
                 (bool idx);
 
+                /*
+                * Computes the gradient of the sub-expression
+                * w.r.t the given variable.
+                *
+                * @param var Tensor<data_type>* The variable.
+                */
                 virtual
                 TensorCPU<data_type>*
                 compute_gradient
                 (TensorCPU<data_type>* var);
 
+                /*
+                * Computes the value of the sub-expression
+                */
                 virtual
                 TensorCPU<data_type>*
                 compute_value
                 ();
 
+                //! Getter method for the member, value.
                 TensorCPU<data_type>*
                 get_value
                 ();
 
+                //! Getter method for the member, gradient.
                 TensorCPU<data_type>*
                 get_gradient
                 ();
 
+                //! Setter method for the member, value.
                 void
                 set_value
                 (TensorCPU<data_type>* value);
 
+                //! Setter method for the member, gradient.
                 void
                 set_gradient
                 (TensorCPU<data_type>* _gradient);
 
+                //! Returns the number of arguments in a operator.
                 virtual
                 unsigned
                 num_args
@@ -137,6 +162,7 @@ namespace bnn
                 UnaryOperator
                 (Operator<data_type>* a, std::string _name);
 
+                //! Getter method for the member, x.
                 virtual
                 Operator<data_type>*
                 get_arg
@@ -183,6 +209,12 @@ namespace bnn
                 (Operator<data_type>* a, Operator<data_type>* b,
                  std::string _name);
 
+                /*
+                * Getter method for the members, x and y.
+                *
+                * @param idx bool Returns the member x
+                *     if True else returns y.
+                */
                 virtual
                 Operator<data_type>*
                 get_arg

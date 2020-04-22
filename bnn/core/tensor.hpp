@@ -46,6 +46,16 @@ namespace bnn
                 _reserve_space_cpu
                 (vector<unsigned>& shape);
 
+                /* @overload
+                * For reserving space in CPU memory accoring to a given shape
+                * and number of dimensions.
+                * Used in initializer list of parameterized constructors.
+                * Returns a new pointer.
+                *
+                * @param shape unsigned* array according to which the space
+                *     is to be reserved.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
                 static
                 data_type*
                 _reserve_space_cpu
@@ -63,6 +73,14 @@ namespace bnn
                 _init_shape_cpu
                 (vector<unsigned>& shape);
 
+                /* @overload
+                * For reserving space in CPU memory for storing shape.
+                * Used in initializer list of parameterized constructors.
+                * Returns a new pointer.
+                *
+                * @param shape unsigned* The shape of the tensor.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
                 static
                 unsigned*
                 _init_shape_cpu
@@ -78,7 +96,7 @@ namespace bnn
                 TensorCPU
                 ();
 
-                /*
+                /* @overload
                 * Prameterized constructor.
                 *
                 * @param shape std::vector The shape
@@ -88,6 +106,12 @@ namespace bnn
                 TensorCPU
                 (vector<unsigned>& shape);
 
+                /* @overload
+                * Prameterized constructor.
+                *
+                * @param shape unsigned* The shape of the tensor.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
                 TensorCPU
                 (unsigned* shape, unsigned ndims);
 
