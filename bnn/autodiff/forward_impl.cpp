@@ -6,7 +6,6 @@
 #include <bnn/core/tensor.hpp>
 #include <bnn/operations/operators.hpp>
 #include <bnn/autodiff/graph.hpp>
-#include <iostream>
 
 
 namespace bnn

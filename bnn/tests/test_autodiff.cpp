@@ -8,7 +8,6 @@
 #include <bnn/autodiff/graph.hpp>
 #include <bnn/autodiff/forward.hpp>
 #include <bnn/core/tensor_ops.hpp>
-#include <iostream>
 
 using namespace bnn::core;
 using namespace bnn::operators;

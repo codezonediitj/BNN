@@ -2,7 +2,6 @@
 #define BNN_BNN_OPERATIONS_OPERATORS_IMPL_CPP
 
 #include <vector>
-#include <iostream>
 #include <bnn/core/tensor.hpp>
 #include <bnn/core/tensor_ops.hpp>
 #include <bnn/operations/operators.hpp>
