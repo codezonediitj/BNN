@@ -25,4 +25,3 @@ before_scirpt:
 script:
   - ./bin/test_core
   - ./bin/test_operations
-  - ./bin/test_autodiff

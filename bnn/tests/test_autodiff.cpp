@@ -49,7 +49,7 @@ TEST(Autodiff, ComputeGradient)
     bnn::core::TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 3;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
     x1 = new bnn::core::TensorCPU<float>(shape, ndims);
     x2 = new bnn::core::TensorCPU<float>(shape, ndims);
     x3 = new bnn::core::TensorCPU<float>(shape, ndims);
