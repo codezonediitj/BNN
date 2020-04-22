@@ -1,8 +1,8 @@
-#include<gtest/gtest.h>
-#include<string>
-#include<stdexcept>
-#include<vector>
-#include<bnn/core/tensor.hpp>
+#include <gtest/gtest.h>
+#include <string>
+#include <stdexcept>
+#include <vector>
+#include <bnn/core/tensor.hpp>
 
 TEST(Core, TensorCPU)
 {

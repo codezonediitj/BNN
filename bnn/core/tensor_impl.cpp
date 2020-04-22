@@ -1,16 +1,18 @@
 #ifndef BNN_BNN_CORE_TENSOR_CPP
 #define BNN_BNN_CORE_TENSOR_CPP
 
-#include<bnn/core/tensor.hpp>
-#include<bnn/utils/utils.hpp>
+#include <bnn/core/tensor.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
     namespace core
     {
+
         template <class data_type>
         data_type*
-        TensorCPU<data_type>::_reserve_space_cpu
+        TensorCPU<data_type>::
+        _reserve_space_cpu
         (std::vector<unsigned>& shape)
         {
             unsigned total_space = 1;
@@ -23,8 +25,24 @@ namespace bnn
         }
 
         template <class data_type>
+        data_type*
+        TensorCPU<data_type>::
+        _reserve_space_cpu
+        (unsigned* shape, unsigned ndims)
+        {
+            unsigned total_space = 1;
+            for(unsigned i = 0; i < ndims; i++)
+            {
+                total_space *= shape[i];
+            }
+            data_type* pointer = new data_type[total_space];
+            return pointer;
+        }
+
+        template <class data_type>
         unsigned*
-        TensorCPU<data_type>::_init_shape_cpu
+        TensorCPU<data_type>::
+        _init_shape_cpu
         (std::vector<unsigned>& shape)
         {
             unsigned* _shape = new unsigned[shape.size()];
@@ -36,7 +54,23 @@ namespace bnn
         }
 
         template <class data_type>
-        TensorCPU<data_type>::TensorCPU():
+        unsigned*
+        TensorCPU<data_type>::
+        _init_shape_cpu
+        (unsigned* _shape, unsigned _ndims)
+        {
+            unsigned* shape = new unsigned[_ndims];
+            for(unsigned i = 0; i < _ndims; i++)
+            {
+                shape[i] = _shape[i];
+            }
+            return shape;
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>::
+        TensorCPU
+        ():
         data_cpu(NULL),
         ndims_cpu(0),
         shape_cpu(NULL)
@@ -44,7 +78,8 @@ namespace bnn
         }
 
         template <class data_type>
-        TensorCPU<data_type>::TensorCPU
+        TensorCPU<data_type>::
+        TensorCPU
         (std::vector<unsigned>& shape):
         data_cpu(_reserve_space_cpu(shape)),
         ndims_cpu(shape.size()),
@@ -53,8 +88,20 @@ namespace bnn
         }
 
         template <class data_type>
+        TensorCPU<data_type>::
+        TensorCPU
+        (unsigned* _shape, unsigned _ndims):
+        data_cpu(_reserve_space_cpu(_shape, _ndims)),
+        ndims_cpu(_ndims),
+        shape_cpu(_init_shape_cpu(_shape, _ndims))
+        {
+        }
+
+        template <class data_type>
         data_type
-        TensorCPU<data_type>::at(unsigned s, ...)
+        TensorCPU<data_type>::
+        at
+        (unsigned s, ...)
         {
             va_list args;
             va_start(args, s);
@@ -78,7 +125,9 @@ namespace bnn
 
         template <class data_type>
         void
-        TensorCPU<data_type>::set(data_type value, ...)
+        TensorCPU<data_type>::
+        set
+        (data_type value, ...)
         {
             va_list args;
             va_start(args, value);
@@ -101,27 +150,35 @@ namespace bnn
 
         template <class data_type>
         unsigned*
-        TensorCPU<data_type>::get_shape()
+        TensorCPU<data_type>::
+        get_shape
+        ()
         {
             return this->shape_cpu;
         }
 
         template <class data_type>
         unsigned
-        TensorCPU<data_type>::get_ndims()
+        TensorCPU<data_type>::
+        get_ndims
+        ()
         {
             return this->ndims_cpu;
         }
 
         template <class data_type>
         data_type*
-        TensorCPU<data_type>::get_data_pointer()
+        TensorCPU<data_type>::
+        get_data_pointer
+        ()
         {
             return this->data_cpu;
         }
 
         template <class data_type>
-        TensorCPU<data_type>::~TensorCPU()
+        TensorCPU<data_type>::
+        ~TensorCPU
+        ()
         {
             if(this->shape_cpu != NULL)
                 delete [] this->shape_cpu;
@@ -129,7 +186,8 @@ namespace bnn
                 delete [] this->data_cpu;
         }
 
-        #include "bnn/templates/core_tensor.hpp"
+        #include "bnn/templates/core/tensor.hpp"
+
     }
 }
 

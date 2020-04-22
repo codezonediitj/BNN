@@ -11,10 +11,16 @@ namespace bnn
     {
         namespace core
         {
+
+            using namespace std;
+            using namespace bnn::core;
+            using namespace bnn::cuda::utils;
+
             template <class data_type>
             data_type*
-            TensorGPU<data_type>::_reserve_space_gpu
-            (std::vector<unsigned>& shape)
+            TensorGPU<data_type>::
+            _reserve_space_gpu
+            (vector<unsigned>& shape)
             {
                 unsigned total_space = 1;
                 for(unsigned i = 0; i < shape.size(); i++)
@@ -22,14 +28,15 @@ namespace bnn
                     total_space *= shape.at(i);
                 }
                 data_type* pointer;
-                bnn::cuda::utils::cuda_malloc((void**)(&pointer),
-                                              total_space*sizeof(data_type));
+                cuda_malloc((void**)(&pointer),
+                            total_space*sizeof(data_type));
                 return pointer;
             }
 
             template <class data_type>
             unsigned*
-            TensorGPU<data_type>::_init_shape_gpu
+            TensorGPU<data_type>::
+            _init_shape_gpu
             (std::vector<unsigned>& shape)
             {
                 unsigned* _shape = new unsigned[shape.size()];
@@ -41,8 +48,10 @@ namespace bnn
             }
 
             template <class data_type>
-            TensorGPU<data_type>::TensorGPU():
-            bnn::core::TensorCPU<data_type>::TensorCPU(),
+            TensorGPU<data_type>::
+            TensorGPU
+            ():
+            TensorCPU<data_type>::TensorCPU(),
             data_gpu(NULL),
             ndims_gpu(0),
             shape_gpu(NULL)
@@ -50,9 +59,10 @@ namespace bnn
             }
 
             template <class data_type>
-            TensorGPU<data_type>::TensorGPU
-            (std::vector<unsigned>& shape):
-            bnn::core::TensorCPU<data_type>::TensorCPU(shape),
+            TensorGPU<data_type>::
+            TensorGPU
+            (vector<unsigned>& shape):
+            TensorCPU<data_type>::TensorCPU(shape),
             data_gpu(_reserve_space_gpu(shape)),
             ndims_gpu(shape.size()),
             shape_gpu(_init_shape_gpu(shape))
@@ -61,73 +71,83 @@ namespace bnn
 
             template <class data_type>
             unsigned*
-            TensorGPU<data_type>::get_shape(bool gpu)
+            TensorGPU<data_type>::
+            get_shape
+            (bool gpu)
             {
                 return gpu ? this->shape_gpu :
-                             this->bnn::core::TensorCPU<data_type>
+                             this->TensorCPU<data_type>
                              ::get_shape();
             }
 
             template <class data_type>
             unsigned
-            TensorGPU<data_type>::get_ndims(bool gpu)
+            TensorGPU<data_type>::
+            get_ndims
+            (bool gpu)
             {
                 return gpu ? this->ndims_gpu :
-                             this->bnn::core::TensorCPU<data_type>
+                             this->TensorCPU<data_type>
                              ::get_ndims();
             }
 
             template <class data_type>
             data_type*
-            TensorGPU<data_type>::get_data_pointer(bool gpu)
+            TensorGPU<data_type>::
+            get_data_pointer
+            (bool gpu)
             {
                 return gpu ? this->data_gpu :
-                             this->bnn::core::TensorCPU<data_type>
+                             this->TensorCPU<data_type>
                              ::get_data_pointer();
             }
 
             template <class data_type>
             void
-            TensorGPU<data_type>::copy_to_host()
+            TensorGPU<data_type>::
+            copy_to_host
+            ()
             {
                 unsigned size = 1;
                 for(unsigned i = 0; i < this->get_ndims(true); i++)
                 {
                     size *= this->get_shape(true)[i];
                 }
-                bnn::cuda::utils::cuda_memcpy(
+                cuda_memcpy(
                 this->get_data_pointer(false),
                 this->get_data_pointer(true),
-                size*sizeof(data_type),
-                bnn::cuda::utils::DeviceToHost);
+                size*sizeof(data_type), DeviceToHost);
             }
 
             template <class data_type>
             void
-            TensorGPU<data_type>::copy_to_device()
+            TensorGPU<data_type>::
+            copy_to_device
+            ()
             {
                 unsigned size = 1;
                 for(unsigned i = 0; i < this->get_ndims(false); i++)
                 {
                     size *= this->get_shape(false)[i];
                 }
-                bnn::cuda::utils::cuda_memcpy(
+                cuda_memcpy(
                 this->get_data_pointer(true),
                 this->get_data_pointer(false),
-                size*sizeof(data_type),
-                bnn::cuda::utils::HostToDevice);
+                size*sizeof(data_type), HostToDevice);
             }
 
             template <class data_type>
-            TensorGPU<data_type>::~TensorGPU()
+            TensorGPU<data_type>::
+            ~TensorGPU
+            ()
             {
                 if(this->shape_gpu != NULL)
-                    bnn::cuda::utils::cuda_free((void*)this->shape_gpu);
+                    cuda_free((void*)this->shape_gpu);
                 if(this->data_gpu != NULL)
-                    bnn::cuda::utils::cuda_free((void*)this->data_gpu);
+                    cuda_free((void*)this->data_gpu);
             }
 
-            #include "bnn/templates/cuda_core_tensor.hpp"
+            #include "bnn/templates/cuda/core/tensor.hpp"
 
         }
     }

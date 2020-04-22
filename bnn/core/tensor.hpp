@@ -1,13 +1,16 @@
 #ifndef BNN_BNN_CORE_TENSOR_HPP
 #define BNN_BNN_CORE_TENSOR_HPP
 
-#include<vector>
-#include<cstdarg>
+#include <vector>
+#include <cstdarg>
 
 namespace bnn
 {
     namespace core
     {
+
+        using namespace std;
+
         /*
         * This class represents tensors used for storing data
         * in multiple dimensions using internal 1D layout,
@@ -35,23 +38,53 @@ namespace bnn
                 * Used in initializer list of parameterized constructors.
                 * Returns a new pointer.
                 *
-                * @param shape The shape vector according to which the space
+                * @param shape The shape std::vector according to which the space
                 *     is to be reserved.
                 */
-                static data_type*
+                static
+                data_type*
                 _reserve_space_cpu
-                (std::vector<unsigned>& shape);
+                (vector<unsigned>& shape);
+
+                /* @overload
+                * For reserving space in CPU memory accoring to a given shape
+                * and number of dimensions.
+                * Used in initializer list of parameterized constructors.
+                * Returns a new pointer.
+                *
+                * @param shape unsigned* array according to which the space
+                *     is to be reserved.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
+                static
+                data_type*
+                _reserve_space_cpu
+                (unsigned* shape, unsigned ndims);
 
                 /*
                 * For reserving space in CPU memory for storing shape.
                 * Used in initializer list of parameterized constructors.
                 * Returns a new pointer.
                 *
-                * @param shape The shape vector which is to be stored in array.
+                * @param shape The shape std::vector which is to be stored in array.
                 */
-                static unsigned*
+                static
+                unsigned*
                 _init_shape_cpu
-                (std::vector<unsigned>& shape);
+                (vector<unsigned>& shape);
+
+                /* @overload
+                * For reserving space in CPU memory for storing shape.
+                * Used in initializer list of parameterized constructors.
+                * Returns a new pointer.
+                *
+                * @param shape unsigned* The shape of the tensor.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
+                static
+                unsigned*
+                _init_shape_cpu
+                (unsigned* shape, unsigned ndims);
 
             public:
 
@@ -60,16 +93,27 @@ namespace bnn
                 * Sets all the pointers to NULL and
                 * integers to 0.
                 */
-                TensorCPU();
+                TensorCPU
+                ();
 
-                /*
+                /* @overload
                 * Prameterized constructor.
                 *
                 * @param shape std::vector The shape
-                *    vector which is to be used
+                *    std::vector which is to be used
                 *    for initialisation.
                 */
-                TensorCPU(std::vector<unsigned>& shape);
+                TensorCPU
+                (vector<unsigned>& shape);
+
+                /* @overload
+                * Prameterized constructor.
+                *
+                * @param shape unsigned* The shape of the tensor.
+                * @param ndims unsigned Number dimensions in the tensor.
+                */
+                TensorCPU
+                (unsigned* shape, unsigned ndims);
 
                 /*
                 * Used for accessing the element of the tensor
@@ -78,7 +122,9 @@ namespace bnn
                 * @param ... Accepts variable number of integer
                 *    arugments as indices.
                 */
-                data_type at(unsigned s, ...);
+                data_type
+                at
+                (unsigned s, ...);
 
                 /*
                 * Used for setting the element of the tensor
@@ -89,26 +135,36 @@ namespace bnn
                 * @param ... Accepts variable number of integer
                 *    arugments as indices.
                 */
-                void set(data_type value, ...);
+                void
+                set
+                (data_type value, ...);
 
                 /*
                 * Used for obtaining the pointer to the shape array
                 * of the tensor.
                 */
-                unsigned* get_shape();
+                unsigned*
+                get_shape
+                ();
 
                 /*
                 * Used for obtaining the number of dimensions in the tensor.
                 */
-                unsigned get_ndims();
+                unsigned
+                get_ndims
+                ();
 
-                data_type* get_data_pointer();
+                data_type*
+                get_data_pointer
+                ();
 
                 /*
                 * Used for freeing CPU memory.
                 */
-                ~TensorCPU();
+                ~TensorCPU
+                ();
         };
+
     }
 }
 

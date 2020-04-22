@@ -1,17 +1,27 @@
 #ifndef BNN_BNN_OPERATIONS_OPERATORS_HPP
 #define BNN_BNN_OPERATIONS_OPERATORS_HPP
 
-#include<bnn/core/tensor.hpp>
-#include<string>
+#include <string>
+#include <bnn/core/tensor.hpp>
 
 namespace bnn
 {
     namespace operators
     {
+
+        using namespace std;
+        using namespace bnn::core;
+
         /*
         * This class represents generic
-        * Operator class.
+        * Operator class. The documentation
+        * of this class applies to all the sub
+        * classes.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
         */
+        template <class data_type>
         class Operator
         {
             protected:
@@ -21,32 +31,48 @@ namespace bnn
 
             public:
 
+                //! The value of the sub expression
+                //! represented by this object. Used
+                //! only in automatic differentiation.
+                TensorCPU<data_type>* value;
+
+                //! The gradient of the sub expression
+                //! represented by this object. Used
+                //! only in automatic differentiation.
+                TensorCPU<data_type>* gradient;
+
                 /*
                 * Parametrized constructor.
                 *
                 * @param _name std::string which is to be
                 *    used to identify the operator.
                 */
-                Operator(std::string _name);
+                Operator
+                (string _name);
+
+                /*
+                * Parametrized constructor.
+                *
+                * @param _name std::string which is to be
+                *    used to identify the operator.
+                */
+                Operator
+                (TensorCPU<data_type>* value, string _name);
 
                 /*
                 * For obtaining name of the operator.
                 */
-                std::string get_name();
-
-                /*
-                * For checking if the current operator
-                * wraps a tensor. The bool value returned
-                * acts as a signal of reaching the leaf
-                * in the expression tree.
-                */
-                virtual bool is_tensor();
+                string
+                get_name
+                ();
 
                 /*
                 * Reads the argument from a UnaryOperator.
                 */
-                virtual Operator*
-                get_arg();
+                virtual
+                Operator<data_type>*
+                get_arg
+                ();
 
                 /*
                 * Reads the argument from a BinaryOperator.
@@ -55,17 +81,64 @@ namespace bnn
                 *    to return, if true/1 then second argument
                 *    is returned else first argument is returned.
                 */
-                virtual Operator*
-                get_arg(bool idx);
+                virtual
+                Operator<data_type>*
+                get_arg
+                (bool idx);
 
+                /*
+                * Computes the gradient of the sub-expression
+                * w.r.t the given variable.
+                *
+                * @param var Tensor<data_type>* The variable.
+                */
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                /*
+                * Computes the value of the sub-expression
+                */
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                //! Getter method for the member, value.
+                TensorCPU<data_type>*
+                get_value
+                ();
+
+                //! Getter method for the member, gradient.
+                TensorCPU<data_type>*
+                get_gradient
+                ();
+
+                //! Setter method for the member, value.
+                void
+                set_value
+                (TensorCPU<data_type>* value);
+
+                //! Setter method for the member, gradient.
+                void
+                set_gradient
+                (TensorCPU<data_type>* _gradient);
+
+                //! Returns the number of arguments in a operator.
+                virtual
+                unsigned
+                num_args
+                ();
         };
 
-        class UnaryOperator: public Operator
+        template <class data_type>
+        class UnaryOperator: public Operator<data_type>
         {
             protected:
 
                 //! The only argument of the operator.
-                Operator* x;
+                Operator<data_type>* x;
 
             public:
 
@@ -87,23 +160,29 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 UnaryOperator
-                (Operator* a,
-                 std::string _name);
+                (Operator<data_type>* a, std::string _name);
 
-                virtual Operator*
-                get_arg();
+                //! Getter method for the member, x.
+                virtual
+                Operator<data_type>*
+                get_arg
+                ();
 
+                virtual
+                unsigned
+                num_args();
         };
 
-        class BinaryOperator: public Operator
+        template <class data_type>
+        class BinaryOperator: public Operator<data_type>
         {
             protected:
 
                 //! The first argument of the operator.
-                Operator* x;
+                Operator<data_type>* x;
 
                 //! The second argument of the operator.
-                Operator* y;
+                Operator<data_type>* y;
 
             public:
 
@@ -127,16 +206,27 @@ namespace bnn
                 *    used to identify the operator.
                 */
                 BinaryOperator
-                (Operator* a,
-                 Operator* b,
+                (Operator<data_type>* a, Operator<data_type>* b,
                  std::string _name);
 
-                virtual Operator*
-                get_arg(bool idx);
+                /*
+                * Getter method for the members, x and y.
+                *
+                * @param idx bool Returns the member x
+                *     if True else returns y.
+                */
+                virtual
+                Operator<data_type>*
+                get_arg
+                (bool idx);
+
+                virtual
+                unsigned
+                num_args();
         };
 
         template <class data_type>
-        class TensorWrapper: public Operator
+        class TensorWrapper: public Operator<data_type>
         {
             protected:
 
@@ -144,15 +234,13 @@ namespace bnn
                 //! Used in name.
                 static unsigned long _id;
 
-                //! Pointer to the TensorCPU object.
-                bnn::core::TensorCPU<data_type>* t;
-
             public:
 
                 /*
                 * Default constructor.
                 */
-                TensorWrapper();
+                TensorWrapper
+                ();
 
                 /*
                 * Parametrized constructor.
@@ -161,36 +249,55 @@ namespace bnn
                 *    referred.
                 */
                 TensorWrapper
-                (bnn::core::TensorCPU<data_type>& _t);
+                (TensorCPU<data_type>* _t);
 
                 /*
                 * Reads pointer to the TensorCPU
                 * object wrapped by TensorWrapper.
                 */
-                bnn::core::TensorCPU<data_type>*
-                get_tensor();
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
 
-                virtual bool is_tensor();
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
 
+                virtual
+                unsigned
+                num_args();
         };
 
-        class Add: public BinaryOperator
+        template <class data_type>
+        class Add: public BinaryOperator<data_type>
         {
             protected:
 
                 static unsigned long _id;
 
             public:
-
-                Add();
 
                 Add
-                (Operator* a,
-                 Operator* b);
+                ();
 
+                Add
+                (Operator<data_type>* a, Operator<data_type>* b);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
         };
 
-        class Exp: public UnaryOperator
+        template <class data_type>
+        class Exp: public UnaryOperator<data_type>
         {
             protected:
 
@@ -198,11 +305,23 @@ namespace bnn
 
             public:
 
-                Exp();
+                Exp
+                ();
 
-                Exp(Operator* a);
+                Exp
+                (Operator<data_type>* a);
 
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
         };
+
     }
 }
 
