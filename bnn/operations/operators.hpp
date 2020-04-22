@@ -85,7 +85,6 @@ namespace bnn
                 compute_value
                 ();
 
-                virtual
                 TensorCPU<data_type>*
                 get_value
                 ();
@@ -104,7 +103,8 @@ namespace bnn
 
                 virtual
                 unsigned
-                num_args();
+                num_args
+                ();
         };
 
         template <class data_type>

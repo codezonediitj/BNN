@@ -6,6 +6,7 @@
 #include <bnn/core/tensor.hpp>
 #include <bnn/operations/operators.hpp>
 #include <bnn/autodiff/graph.hpp>
+#include <iostream>
 
 
 namespace bnn
@@ -70,6 +71,22 @@ namespace bnn
            ForwardGraphNode<data_type>* layer = build_graph_forward(expr);
            while(layer != NULL)
            {
+               if((layer->next != NULL) && layer->next->next != NULL)
+               {
+                   ForwardGraphNode<data_type>* last2last =  layer->next->next;
+                   for(unsigned i = 0; i < last2last->len_ops; i++)
+                   {
+                       if(last2last->ops[i]->get_gradient() != NULL)
+                       {
+                            delete last2last->ops[i]->get_gradient();
+                       }
+                       if(last2last->ops[i]->num_args() != 0)
+                       {
+                            delete last2last->ops[i]->get_value();
+                       }
+                   }
+               }
+
                unsigned threads = layer->len_ops;
                thread* pool[threads];
                op_queue<data_type>* jobs[threads][2];
@@ -103,6 +120,8 @@ namespace bnn
 
                layer = layer->prev;
            }
+
+           return expr->get_gradient();
         }
 
         #include "bnn/templates/autodiff/forward.hpp"

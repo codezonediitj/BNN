@@ -46,6 +46,7 @@ namespace bnn
             ForwardGraphNode<data_type>* layer =
             new ForwardGraphNode<data_type>;
             layer->prev = NULL;
+            layer->next = NULL;
             layer->ops = new Operator<data_type>*[1];
             layer->len_ops = 1;
             layer->ops[0] = expr;
@@ -55,7 +56,9 @@ namespace bnn
             {
                 ForwardGraphNode<data_type>* next_layer =
                 new ForwardGraphNode<data_type>;
+                layer->next = next_layer;
                 next_layer->prev = layer;
+                next_layer->next = NULL;
                 next_layer->ops = new Operator<data_type>*[total_args];
                 next_layer->len_ops = total_args;
 

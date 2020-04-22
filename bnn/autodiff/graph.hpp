@@ -15,6 +15,8 @@ namespace bnn
         {
             ForwardGraphNode<data_type>* prev;
 
+            ForwardGraphNode<data_type>* next;
+
             Operator<data_type>** ops;
 
             unsigned len_ops;
