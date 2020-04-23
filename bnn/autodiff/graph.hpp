@@ -35,6 +35,7 @@ namespace bnn
             ~ForwardGraphNode
             ();
 
+            //! Constructor
             ForwardGraphNode
             ();
         };

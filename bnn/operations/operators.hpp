@@ -133,6 +133,7 @@ namespace bnn
                 num_args
                 ();
 
+                //! Destructor
                 virtual
                 ~Operator
                 ();
