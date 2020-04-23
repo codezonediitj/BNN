@@ -145,6 +145,7 @@ namespace bnn
                     cuda_free((void*)this->shape_gpu);
                 if(this->data_gpu != NULL)
                     cuda_free((void*)this->data_gpu);
+                BNNMemory->invalidate(this);
             }
 
             #include "bnn/templates/cuda/core/tensor.hpp"

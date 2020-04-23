@@ -9,6 +9,7 @@ add_library(bnn_operations SHARED
 add_library(bnn_autodiff SHARED
             autodiff/graph_impl.cpp
             autodiff/forward_impl.cpp)
+target_link_libraries(bnn_utils pthread)
 target_link_libraries(bnn_core bnn_utils m)
 target_link_libraries(bnn_operations bnn_utils)
 target_link_libraries(bnn_autodiff bnn_utils)

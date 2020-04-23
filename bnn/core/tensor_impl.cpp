@@ -75,6 +75,7 @@ namespace bnn
         ndims_cpu(0),
         shape_cpu(NULL)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -85,6 +86,7 @@ namespace bnn
         ndims_cpu(shape.size()),
         shape_cpu(_init_shape_cpu(shape))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -184,6 +186,7 @@ namespace bnn
                 delete [] this->shape_cpu;
             if(this->data_cpu != NULL)
                 delete [] this->data_cpu;
+            BNNMemory->invalidate(this);
         }
 
         #include "bnn/templates/core/tensor.hpp"

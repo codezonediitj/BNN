@@ -5,6 +5,7 @@
 #include <bnn/core/tensor.hpp>
 #include <bnn/core/tensor_ops.hpp>
 #include <bnn/operations/operators.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -22,6 +23,7 @@ namespace bnn
         value(NULL),
         gradient(NULL)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -32,6 +34,7 @@ namespace bnn
         value(_value),
         gradient(NULL)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -106,7 +109,6 @@ namespace bnn
             this->gradient = _gradient;
         }
 
-
         template <class data_type>
         void
         Operator<data_type>::
@@ -126,12 +128,21 @@ namespace bnn
         }
 
         template <class data_type>
+        Operator<data_type>::
+        ~Operator
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
         UnaryOperator<data_type>::
         UnaryOperator
         (string _name):
         x(NULL),
         Operator<data_type>::Operator(_name)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -141,6 +152,7 @@ namespace bnn
         x(a),
         Operator<data_type>::Operator(_name)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -162,6 +174,14 @@ namespace bnn
         }
 
         template <class data_type>
+        UnaryOperator<data_type>::
+        ~UnaryOperator
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
         BinaryOperator<data_type>::
         BinaryOperator
         (string _name):
@@ -169,6 +189,7 @@ namespace bnn
         y(NULL),
         Operator<data_type>::Operator(_name)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -181,6 +202,7 @@ namespace bnn
         y(b),
         Operator<data_type>::Operator(_name)
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -202,6 +224,14 @@ namespace bnn
         }
 
         template <class data_type>
+        BinaryOperator<data_type>::
+        ~BinaryOperator
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
         unsigned long int
         TensorWrapper<data_type>::_id = 0;
 
@@ -212,6 +242,7 @@ namespace bnn
         Operator<data_type>::Operator
         ("TensorWrapper")
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -221,6 +252,7 @@ namespace bnn
         Operator<data_type>::Operator
         (_t, "TensorWrapper_" + to_string(_id++))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -257,6 +289,14 @@ namespace bnn
         }
 
         template <class data_type>
+        TensorWrapper<data_type>::
+        ~TensorWrapper
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
         unsigned long int
         Add<data_type>::_id = 0;
 
@@ -266,6 +306,7 @@ namespace bnn
         ():
         BinaryOperator<data_type>::BinaryOperator("Add")
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -275,6 +316,7 @@ namespace bnn
         BinaryOperator<data_type>::BinaryOperator
         (a, b, "Add_" + std::to_string(_id++))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -300,6 +342,14 @@ namespace bnn
         }
 
         template <class data_type>
+        Add<data_type>::
+        ~Add
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
         unsigned long int
         Exp<data_type>::_id = 0;
 
@@ -309,6 +359,7 @@ namespace bnn
         ():
         UnaryOperator<data_type>::UnaryOperator("Exp")
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -318,6 +369,7 @@ namespace bnn
         UnaryOperator<data_type>::UnaryOperator
         (a, "Exp_" + std::to_string(_id++))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -340,6 +392,14 @@ namespace bnn
             Operator<data_type> *x;
             x = this->get_arg();
             return mul(exp(x->get_value()), x->get_gradient());
+        }
+
+        template <class data_type>
+        Exp<data_type>::
+        ~Exp
+        ()
+        {
+            BNNMemory->invalidate(this);
         }
 
         #include "bnn/templates/operations/operators.hpp"

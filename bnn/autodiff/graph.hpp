@@ -2,6 +2,7 @@
 #define BNN_BNN_AUTODIFF_GRAPH_HPP
 
 #include <bnn/operations/operators.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -16,7 +17,7 @@ namespace bnn
         * differentiation.
         */
         template <class data_type>
-        struct ForwardGraphNode
+        struct ForwardGraphNode: public BNNBase
         {
             //! The node previous to the current node.
             ForwardGraphNode<data_type>* prev;
@@ -31,7 +32,11 @@ namespace bnn
             unsigned len_ops;
 
             //! Destructor
-            ~ForwardGraphNode();
+            ~ForwardGraphNode
+            ();
+
+            ForwardGraphNode
+            ();
         };
 
         /*
