@@ -6,6 +6,7 @@
 #include <bnn/core/tensor.hpp>
 #include <bnn/operations/operators.hpp>
 #include <bnn/autodiff/graph.hpp>
+#include <bnn/utils/utils.hpp>
 
 
 namespace bnn
@@ -19,7 +20,7 @@ namespace bnn
         using namespace bnn::operators;
 
         template <class data_type>
-        struct op_queue
+        struct op_queue: public BNNBase
         {
             Operator<data_type>* op;
 
@@ -29,6 +30,7 @@ namespace bnn
             next(NULL),
             op(NULL)
             {
+                BNNMemory->push(this);
             }
 
             static
@@ -40,7 +42,7 @@ namespace bnn
                 while(curr != NULL)
                 {
                     curr_next = curr->next;
-                    delete curr;
+                    BNNMemory->free_memory(curr);
                     curr = curr_next;
                 }
             }
@@ -77,11 +79,11 @@ namespace bnn
                    {
                        if(last2last->ops[i]->get_gradient() != NULL)
                        {
-                            delete last2last->ops[i]->get_gradient();
+                            BNNMemory->free_memory(last2last->ops[i]->get_gradient());
                        }
                        if(last2last->ops[i]->num_args() != 0)
                        {
-                            delete last2last->ops[i]->get_value();
+                            BNNMemory->free_memory(last2last->ops[i]->get_value());
                        }
                    }
                }
@@ -105,15 +107,17 @@ namespace bnn
                    jobs[j][0] = task;
                }
 
+
+
                for(unsigned i = 0; i < threads; i++)
                {
                    pool[i] = new thread(exec_compute_gradient_jobs<data_type>, jobs[i][1], var);
+                   BNNThreads->push(pool[i]);
                }
 
                for(unsigned i = 0; i < threads; i++)
                {
-                   pool[i]->join();
-                   delete pool[i];
+                   BNNThreads->free_thread(pool[i]);
                    op_queue<data_type>::clear(jobs[i][1]);
                }
 

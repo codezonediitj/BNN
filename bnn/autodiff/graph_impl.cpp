@@ -2,6 +2,7 @@
 #define BNN_BNN_AUTODIFF_GRAPH_IMPL_CPP
 
 #include <bnn/autodiff/graph.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -17,9 +18,17 @@ namespace bnn
             unsigned i = 0;
             while(i < this->len_ops)
             {
-                delete this->ops[i];
+                BNNMemory->free_memory(this->ops[i]);
                 i += 1;
             }
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
+        ForwardGraphNode<data_type>::
+        ForwardGraphNode()
+        {
+            BNNMemory->push(this);
         }
 
         template <class data_type>

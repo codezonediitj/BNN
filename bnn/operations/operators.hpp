@@ -3,6 +3,7 @@
 
 #include <string>
 #include <bnn/core/tensor.hpp>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -11,6 +12,7 @@ namespace bnn
 
         using namespace std;
         using namespace bnn::core;
+        using namespace bnn::utils;
 
         /*
         * This class represents generic
@@ -22,7 +24,7 @@ namespace bnn
         *     supported by C++.
         */
         template <class data_type>
-        class Operator
+        class Operator: public BNNBase
         {
             protected:
 
@@ -130,6 +132,11 @@ namespace bnn
                 unsigned
                 num_args
                 ();
+
+                //! Destructor
+                virtual
+                ~Operator
+                ();
         };
 
         template <class data_type>
@@ -171,6 +178,10 @@ namespace bnn
                 virtual
                 unsigned
                 num_args();
+
+                virtual
+                ~UnaryOperator
+                ();
         };
 
         template <class data_type>
@@ -223,6 +234,10 @@ namespace bnn
                 virtual
                 unsigned
                 num_args();
+
+                virtual
+                ~BinaryOperator
+                ();
         };
 
         template <class data_type>
@@ -268,6 +283,10 @@ namespace bnn
                 virtual
                 unsigned
                 num_args();
+
+                virtual
+                ~TensorWrapper
+                ();
         };
 
         template <class data_type>
@@ -294,6 +313,10 @@ namespace bnn
                 TensorCPU<data_type>*
                 compute_value
                 ();
+
+                virtual
+                ~Add
+                ();
         };
 
         template <class data_type>
@@ -319,6 +342,10 @@ namespace bnn
                 virtual
                 TensorCPU<data_type>*
                 compute_value
+                ();
+
+                virtual
+                ~Exp
                 ();
         };
 

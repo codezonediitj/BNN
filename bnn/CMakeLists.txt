@@ -9,6 +9,7 @@ add_library(bnn_operations SHARED
 add_library(bnn_autodiff SHARED
             autodiff/graph_impl.cpp
             autodiff/forward_impl.cpp)
+target_link_libraries(bnn_utils pthread)
 target_link_libraries(bnn_core bnn_utils m)
 target_link_libraries(bnn_operations bnn_utils)
 target_link_libraries(bnn_autodiff bnn_utils)
@@ -33,7 +34,7 @@ if(BUILD_TESTS)
     target_link_libraries(test_autodiff ${GTEST} ${AUTODIFF})
     if(BUILD_CUDA)
         add_executable(test_cuda_core tests/test_cuda_core.cpp)
-        target_link_libraries(test_cuda_core ${LINK_LIBRARIES}
-                              bnn_cuda_core)
+        set(CUDA_CORE bnn_cuda_core)
+        target_link_libraries(test_cuda_core ${GTEST} ${CUDA_CORE})
     endif()
 endif()

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdarg>
+#include <bnn/utils/utils.hpp>
 
 namespace bnn
 {
@@ -10,6 +11,7 @@ namespace bnn
     {
 
         using namespace std;
+        using namespace bnn::utils;
 
         /*
         * This class represents tensors used for storing data
@@ -20,7 +22,7 @@ namespace bnn
         *     supported by C++.
         */
         template <class data_type>
-        class TensorCPU
+        class TensorCPU: public BNNBase
         {
             private:
 

@@ -6,20 +6,22 @@
 #include <bnn/operations/operations.hpp>
 #include <bnn/operations/operators.hpp>
 
-
+using namespace std;
 using namespace bnn::core;
 using namespace bnn::operators;
 using namespace bnn::operations;
+using namespace bnn::utils;
 
 TEST(Operations, Add)
 {
-    std::vector<unsigned> shape = {1};
-    TensorCPU<float> t1(shape), t2(shape);
-    t1.set(1., 0);
-    t2.set(3., 0);
-    Operator<float>* res1 = add(&t1, &t2);
-    Operator<float>* res2 = add(res1, &t1);
-    Operator<float>* res3 = add(&t2, res2);
+    vector<unsigned> shape = {1};
+    TensorCPU<float>* t1 = new TensorCPU<float>(shape);
+    TensorCPU<float>* t2 = new TensorCPU<float>(shape);
+    t1->set(1., 0);
+    t2->set(3., 0);
+    Operator<float>* res1 = add(t1, t2);
+    Operator<float>* res2 = add(res1, t1);
+    Operator<float>* res3 = add(t2, res2);
 
     EXPECT_EQ("Add_0", res1->get_name());
     EXPECT_EQ("Add_1", res2->get_name());
@@ -47,11 +49,12 @@ TEST(Operations, Add)
 
 TEST(Operations, Exp)
 {
-    std::vector<unsigned> shape = {1};
-    TensorCPU<float> t1(shape), t2(shape);
-    t1.set(1., 0);
-    t2.set(3., 0);
-    Operator<float>* res1 = exp(&t1);
+    vector<unsigned> shape = {1};
+    TensorCPU<float>* t1 = new TensorCPU<float>(shape);
+    TensorCPU<float>* t2 = new TensorCPU<float>(shape);
+    t1->set(1., 0);
+    t2->set(3., 0);
+    Operator<float>* res1 = exp(t1);
     Operator<float>* res2 = exp(res1);
 
     EXPECT_EQ("Exp_0", res1->get_name());
@@ -63,6 +66,9 @@ TEST(Operations, Exp)
 
     Operator<float>* res2arg1 = res2->get_arg();
     EXPECT_EQ("Exp_0", res2arg1->get_name());
+
+    delete BNNMemory;
+    delete BNNThreads;
 }
 
 int main(int ac, char* av[])
