@@ -35,12 +35,12 @@ namespace bnn
          unsigned ndimsx, unsigned ndimsy)
         {
             string msg = "Tensors should be of same dimensions, " +
-                         to_string(ndimsx) + "!=" + to_string(ndimsy);
+                         to_string(ndimsx) + " != " + to_string(ndimsy);
             check(ndimsx == ndimsy, msg);
             for(unsigned i = 0; i < ndimsx; i++)
             {
                 msg = "Tensors should be of same shape, " +
-                      to_string(shapex[i]) + "!=" + to_string(shapey[i]);
+                      to_string(shapex[i]) + " != " + to_string(shapey[i]);
                 check(shapex[i] == shapey[i], msg);
             }
         }

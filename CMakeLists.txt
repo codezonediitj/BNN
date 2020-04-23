@@ -51,6 +51,7 @@ install(FILES
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 if(BUILD_CUDA)
   install(FILES
-          ${CMAKE_BINARY_DIR}/libs/libbnn_cuda.so
+          ${CMAKE_BINARY_DIR}/libs/libbnn_cuda_core.so
+          ${CMAKE_BINARY_DIR}/libs/libbnn_cuda_utils.so
           DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 endif()

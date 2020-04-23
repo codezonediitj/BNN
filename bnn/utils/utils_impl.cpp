@@ -5,6 +5,7 @@
 #include <string>
 #include <stdexcept>
 #include <thread>
+#include <iostream>
 
 namespace bnn
 {
@@ -57,8 +58,11 @@ namespace bnn
         free_memory
         (BNNBase* obj)
         {
-            delete obj;
-            this->invalidate(obj);
+            if(this->objects[obj])
+            {
+                delete obj;
+                this->invalidate(obj);
+            }
         }
 
         void
@@ -89,11 +93,7 @@ namespace bnn
             ObjectStack* curr = this->pop();
             while(curr != NULL)
             {
-                if(this->objects[curr->ptr])
-                {
-                    delete curr->ptr;
-                    this->invalidate(curr->ptr);
-                }
+                this->free_memory(curr->ptr);
                 delete curr;
                 curr = this->pop();
             }
@@ -121,12 +121,15 @@ namespace bnn
         free_thread
         (thread* t)
         {
-            if(t->joinable())
+            if(this->threads[t])
             {
-                t->join();
+                if(t->joinable())
+                {
+                    t->join();
+                }
+                delete t;
+                this->invalidate(t);
             }
-            delete t;
-            this->invalidate(t);
         }
 
         void
@@ -134,12 +137,15 @@ namespace bnn
         stop_thread
         (thread* t)
         {
-            if(t->joinable())
+            if(this->threads[t])
             {
-                t->detach();
+                if(t->joinable())
+                {
+                    t->detach();
+                }
+                delete t;
+                this->invalidate(t);
             }
-            delete t;
-            this->invalidate(t);
         }
 
         void
