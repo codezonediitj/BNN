@@ -5,7 +5,6 @@
 #include <string>
 #include <stdexcept>
 #include <thread>
-#include <iostream>
 
 namespace bnn
 {
