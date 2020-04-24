@@ -15,12 +15,6 @@ namespace bnn
         ForwardGraphNode<data_type>::
         ~ForwardGraphNode()
         {
-            unsigned i = 0;
-            while(i < this->len_ops)
-            {
-                BNNMemory->free_memory(this->ops[i]);
-                i += 1;
-            }
             BNNMemory->invalidate(this);
         }
 

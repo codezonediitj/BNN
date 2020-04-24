@@ -30,6 +30,12 @@ namespace bnn
         compute_gradient_forward
         (Operator<data_type>* expr, TensorCPU<data_type>* var);
 
+        template <class data_type>
+        TensorCPU<data_type>**
+        compute_gradient_forward
+        (Operator<data_type>* expr, TensorCPU<data_type>** var,
+         unsigned num_vars);
+
     }
 }
 
