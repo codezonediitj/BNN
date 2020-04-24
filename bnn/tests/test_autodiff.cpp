@@ -60,16 +60,22 @@ TEST(Autodiff, ComputeGradient)
         bnn::operations::exp(bnn::operations::add(x1, x2)),
         bnn::operations::exp(bnn::operations::add(x2, x3))
     );
-    TensorCPU<float> *gradx2 =  compute_gradient_forward(expr, x2);
-    for(unsigned i = 0; i < gradx2->get_shape()[0]; i++)
+    TensorCPU<float>** vars = new TensorCPU<float>*[2];
+    vars[0] = x1, vars[1] = x2;
+    TensorCPU<float>** grads =  compute_gradient_forward(expr, vars, 2);
+    float gradvals[] = {148.41316223144531, 168.49870300292969};
+    for(unsigned n = 0; n < 2; n++)
     {
-        for(unsigned j = 0; j < gradx2->get_shape()[1]; j++)
+        TensorCPU<float>* gradx = grads[n];
+        for(unsigned i = 0; i < gradx->get_shape()[0]; i++)
         {
-            for(unsigned k = 0; k < gradx2->get_shape()[2]; k++)
+            for(unsigned j = 0; j < gradx->get_shape()[1]; j++)
             {
-                float gradval = 168.49870300292969;
-                EXPECT_NEAR(gradval, gradx2->at(i, j, k), 1.e-6)<<
-                "Expected value of graident with respect to x2 is 168.4987";
+                for(unsigned k = 0; k < gradx->get_shape()[2]; k++)
+                {
+                    EXPECT_NEAR(gradvals[n], gradx->at(i, j, k), 1.e-6)<<
+                    "Expected value of graident with respect to x2 is "<<gradvals[n];
+                }
             }
         }
     }

@@ -32,6 +32,7 @@ namespace bnn
             unsigned len_ops;
 
             //! Destructor
+            virtual
             ~ForwardGraphNode
             ();
 
