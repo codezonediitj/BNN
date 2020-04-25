@@ -22,13 +22,13 @@ TEST(Autodiff, BuildGraphForward)
         bnn::operations::exp(&x2)
     );
 
-    ForwardGraphNode<float>* graph = build_graph_forward(expr);
+    GraphNode<float>* graph = build_graph(expr);
     vector<string>* _graph = new vector<string>[4];
     _graph[0] = {"Add_1"};
     _graph[1] = {"Exp_1", "Exp_0"};
     _graph[2] = {"Add_0", "TensorWrapper_0"};
     _graph[3] = {"TensorWrapper_1", "TensorWrapper_2"};
-    ForwardGraphNode<float>* layer = graph;
+    GraphNode<float>* layer = graph;
     unsigned j = 3;
     while(layer != NULL)
     {

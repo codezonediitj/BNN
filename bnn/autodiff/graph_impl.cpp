@@ -12,17 +12,32 @@ namespace bnn
         using namespace bnn::operators;
 
         template <class data_type>
-        ForwardGraphNode<data_type>::
-        ~ForwardGraphNode()
+        GraphNode<data_type>::
+        ~GraphNode()
         {
             BNNMemory->invalidate(this);
         }
 
         template <class data_type>
-        ForwardGraphNode<data_type>::
-        ForwardGraphNode()
+        GraphNode<data_type>::
+        GraphNode()
         {
             BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        void
+        GraphNode<data_type>::
+        clear_graph
+        (GraphNode<data_type>* layer)
+        {
+            GraphNode<data_type>* curr = layer;
+            while(curr != NULL)
+            {
+                GraphNode<data_type>* prev = curr->prev;
+                BNNMemory->free_memory(curr);
+                curr = prev;
+            }
         }
 
         template <class data_type>
@@ -42,12 +57,12 @@ namespace bnn
         }
 
         template <class data_type>
-        ForwardGraphNode<data_type>*
-        build_graph_forward
+        GraphNode<data_type>*
+        build_graph
         (Operator<data_type>* expr)
         {
-            ForwardGraphNode<data_type>* layer =
-            new ForwardGraphNode<data_type>;
+            GraphNode<data_type>* layer =
+            new GraphNode<data_type>;
             layer->prev = NULL;
             layer->next = NULL;
             layer->ops = new Operator<data_type>*[1];
@@ -57,8 +72,8 @@ namespace bnn
             unsigned total_args = _sum<data_type>(layer->ops, layer->len_ops);
             while(total_args > 0)
             {
-                ForwardGraphNode<data_type>* next_layer =
-                new ForwardGraphNode<data_type>;
+                GraphNode<data_type>* next_layer =
+                new GraphNode<data_type>;
                 layer->next = next_layer;
                 next_layer->prev = layer;
                 next_layer->next = NULL;
@@ -91,6 +106,42 @@ namespace bnn
 
             return layer;
         }
+
+        template <class data_type>
+        void
+        _rr_scheduler
+        (GraphNode<data_type>* layer, op_queue<data_type>* jobs[][2],
+         unsigned threads)
+        {
+            for(unsigned i = 0; i < threads; i++)
+            {
+                jobs[i][0] = new op_queue<data_type>;
+                jobs[i][1] = jobs[i][0];
+            }
+
+            for(unsigned i = 0; i < layer->len_ops; i++)
+            {
+                unsigned j = i%layer->len_ops;
+                jobs[j][0]->op = layer->ops[i];
+                op_queue<data_type>* task = new op_queue<data_type>;
+                jobs[j][0]->next = task;
+                jobs[j][0] = task;
+            }
+        }
+
+        template <class data_type>
+        void
+        _clear_jobs
+        (thread* pool, op_queue<data_type>* jobs[][2],
+         unsigned threads)
+        {
+            for(unsigned i = 0; i < threads; i++)
+            {
+                BNNThreads->free_thread(pool[i]);
+                op_queue<data_type>::clear(jobs[i][1]);
+            }
+        }
+
 
         #include "bnn/templates/autodiff/graph.hpp"
 

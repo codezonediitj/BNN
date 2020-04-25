@@ -3,12 +3,14 @@
 
 #include <bnn/operations/operators.hpp>
 #include <bnn/utils/utils.hpp>
+#include <thread>
 
 namespace bnn
 {
     namespace autodiff
     {
 
+        using namespace std;
         using namespace bnn::operators;
 
         /*
@@ -17,13 +19,13 @@ namespace bnn
         * differentiation.
         */
         template <class data_type>
-        struct ForwardGraphNode: public BNNBase
+        struct GraphNode: public BNNBase
         {
             //! The node previous to the current node.
-            ForwardGraphNode<data_type>* prev;
+            GraphNode<data_type>* prev;
 
             //! The node next to the current node.
-            ForwardGraphNode<data_type>* next;
+            GraphNode<data_type>* next;
 
             //! An array of Operator<data_type>* elements.
             Operator<data_type>** ops;
@@ -31,13 +33,18 @@ namespace bnn
             //! The length of ops array.
             unsigned len_ops;
 
+            static
+            void
+            clear_graph
+            (GraphNode<data_type>* layer);
+
             //! Destructor
             virtual
-            ~ForwardGraphNode
+            ~GraphNode
             ();
 
             //! Constructor
-            ForwardGraphNode
+            GraphNode
             ();
         };
 
@@ -50,9 +57,21 @@ namespace bnn
         *     the graph is to be built.
         */
         template <class data_type>
-        ForwardGraphNode<data_type>*
-        build_graph_forward
+        GraphNode<data_type>*
+        build_graph
         (Operator<data_type>* expr);
+
+        template <class data_type>
+        void
+        _rr_scheduler
+        (GraphNode<data_type>* layer, op_queue<data_type>* jobs[][2],
+         unsigned threads);
+
+        template <class data_type>
+        void
+        _clear_jobs
+        (thread* pool, op_queue<data_type>* jobs[][2],
+         unsigned threads);
 
     }
 }
