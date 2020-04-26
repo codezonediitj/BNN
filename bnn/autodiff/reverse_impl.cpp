@@ -7,6 +7,7 @@
 #include <bnn/autodiff/graph.hpp>
 #include <bnn/utils/utils.hpp>
 #include <unordered_map>
+#include <vector>
 
 namespace bnn
 {
@@ -58,6 +59,50 @@ namespace bnn
 
         template <class data_type>
         void
+        _add_grad
+        (TensorWrapper<data_type>* x, TensorWrapper<data_type>* y)
+        {
+            TensorCPU<data_type>* grad;
+            grad = bnn::core::add(x->get_gradient(), y->get_gradient());
+            BNNMemory->free_memory(x->get_gradient());
+            BNNMemory->free_memory(y->get_gradient());
+            x->set_gradient(grad);
+        }
+
+        template <class data_type>
+        void
+        _final_grad_job
+        (vector<TensorWrapper<data_type>*>& tws, TensorCPU<data_type>** grads,
+         unsigned idx)
+        {
+            unsigned nthreads = tws.size()/2;
+            thread* pool[nthreads];
+            unsigned gap = 1;
+            while(gap < tws.size())
+            {
+                for(unsigned i = 0; i < tws.size(); i += 2*gap)
+                {
+                    if(i + gap < tws.size())
+                    {
+                        pool[i] = new thread(_add_grad<data_type>, tws[i], tws[i+gap]);
+                        BNNThreads->push(pool[i]);
+                    }
+                }
+                for(unsigned i = 0; i < tws.size(); i += 2*gap)
+                {
+                    if(i + gap < tws.size())
+                    {
+                        BNNThreads->free_thread(pool[i]);
+                    }
+                }
+                gap *= 2;
+            }
+
+            grads[idx] = tws[0]->get_gradient();
+        }
+
+        template <class data_type>
+        void
         _compute_gradient_reverse_jobs
         (op_queue<data_type>* job_head,
          unordered_map<data_type>& var_map)
@@ -80,7 +125,7 @@ namespace bnn
             GraphNode<data_type>* _layer = layer;
             _compute_value<data_type>(layer);
             unordered_map<TensorCPU<data_type>*, unsigned> var_map;
-            unordered_map<TensorCPU<data_type>*, TensorWrapper<data_type>*> t2tw;
+            unordered_map<TensorCPU<data_type>*, vector<TensorWrapper<data_type>*>> t2tw;
             for(unsigned i = 0; i < num_vars; i++)
             {
                 var_map[vars[i]] = i;
@@ -106,9 +151,9 @@ namespace bnn
                 {
                     unsigned j = i%layer->len_ops;
                     jobs[j][0]->op = layer->ops[i];
-                    if(var_map.contains(layer->ops[i]))
+                    if(var_map.contains(layer->ops[i]->get_value()))
                     {
-                        t2tw[layer->ops[i]] = layer->ops[i]->get_value();
+                        t2tw[layer->ops[i]->get_value()].push_back(layer->ops[i]);
                     }
                     op_queue<data_type>* task = new op_queue<data_type>;
                     jobs[j][0]->next = task;
@@ -141,20 +186,19 @@ namespace bnn
             std::fill(grads, grads + num_vars, null_ptr);
             GraphNode<data_type>::clear_graph(_layer);
 
+            thread* _pool[t2tw.size()];
+
+            unsigned i = 0;
             for(auto& it: t2tw)
             {
-                unsigned idx = var_map[it.first];
-                if(grads[idx] == NULL)
-                {
-                    grads[idx] = it.second->get_gradient();
-                }
-                else
-                {
-                    TensorCPU<float>* new_grad =
-                    bnn::core::add(grads[idx],  it.second->get_gradient());
-                    BNNMemory->free_memory(grads[idx]);
-                    grads[idx] = new_grad;
-                }
+                _pool[i] = new thread(_final_grad_job<data_type>,
+                                      it.second, grads, var_map[it.first]);
+                BNNThreads->push(_pool[i]);
+                i++;
+            }
+            for(i = 0; i < t2tw.size(); i++)
+            {
+                BNNThreads->free_thread(_pool[i]);
             }
 
             return grads;

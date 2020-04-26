@@ -41,6 +41,32 @@ namespace bnn
         }
 
         template <class data_type>
+        op_queue<data_type>::
+        op_queue
+        ():
+        next(NULL),
+        op(NULL)
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        void
+        op_queue<data_type>::
+        clear
+        (op_queue<data_type>* ptr)
+        {
+            op_queue<data_type>* curr = ptr;
+            op_queue<data_type>* curr_next;
+            while(curr != NULL)
+            {
+                curr_next = curr->next;
+                BNNMemory->free_memory(curr);
+                curr = curr_next;
+            }
+        }
+
+        template <class data_type>
         inline
         unsigned
         _sum
@@ -132,7 +158,7 @@ namespace bnn
         template <class data_type>
         void
         _clear_jobs
-        (thread* pool, op_queue<data_type>* jobs[][2],
+        (thread* pool[], op_queue<data_type>* jobs[][2],
          unsigned threads)
         {
             for(unsigned i = 0; i < threads; i++)

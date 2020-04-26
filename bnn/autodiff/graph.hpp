@@ -48,6 +48,22 @@ namespace bnn
             ();
         };
 
+        template <class data_type>
+        struct op_queue: public BNNBase
+        {
+            Operator<data_type>* op;
+
+            op_queue<data_type>* next;
+
+            op_queue
+            ();
+
+            static
+            void
+            clear
+            (op_queue<data_type>* ptr);
+        };
+
         /*
         * Build the graph for forward
         * mode automatic differentiation.
@@ -70,7 +86,7 @@ namespace bnn
         template <class data_type>
         void
         _clear_jobs
-        (thread* pool, op_queue<data_type>* jobs[][2],
+        (thread* pool[], op_queue<data_type>* jobs[][2],
          unsigned threads);
 
     }

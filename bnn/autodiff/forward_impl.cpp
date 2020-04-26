@@ -61,7 +61,7 @@ namespace bnn
 
                 for(unsigned i = 0; i < threads; i++)
                 {
-                    pool[i] = new thread(_compute_gradient_froward_jobs<data_type>, jobs[i][1], var);
+                    pool[i] = new thread(_compute_gradient_forward_jobs<data_type>, jobs[i][1], var);
                     BNNThreads->push(pool[i]);
                 }
 

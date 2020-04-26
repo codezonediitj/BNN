@@ -120,22 +120,6 @@ namespace bnn
 
         extern ThreadManager* BNNThreads;
 
-        template <class data_type>
-        struct op_queue: public BNNBase
-        {
-            Operator<data_type>* op;
-
-            op_queue<data_type>* next;
-
-            op_queue
-            ();
-
-            static
-            void
-            clear
-            (op_queue<data_type>* ptr);
-        };
-
     } // namespace utils
 } // namspace bnn
 

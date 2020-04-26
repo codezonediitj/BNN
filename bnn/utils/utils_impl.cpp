@@ -200,32 +200,6 @@ namespace bnn
             }
         }
 
-        template <class data_type>
-        op_queue<data_type>::
-        op_queue
-        ():
-        next(NULL),
-        op(NULL)
-        {
-            BNNMemory->push(this);
-        }
-
-        template <class data_type>
-        op_queue<data_type>::
-        void
-        clear
-        (op_queue<data_type>* ptr)
-        {
-            op_queue<data_type>* curr = ptr;
-            op_queue<data_type>* curr_next;
-            while(curr != NULL)
-            {
-                curr_next = curr->next;
-                BNNMemory->free_memory(curr);
-                curr = curr_next;
-            }
-        }
-
     } // namespace utils
 } // namspace adaboost
 
