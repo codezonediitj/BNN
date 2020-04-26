@@ -20,7 +20,9 @@ namespace bnn
 
         template <class data_type>
         GraphNode<data_type>::
-        GraphNode()
+        GraphNode():
+        next(NULL),
+        prev(NULL)
         {
             BNNMemory->push(this);
         }

@@ -160,6 +160,10 @@ namespace bnn
                 get_data_pointer
                 ();
 
+                void
+                copy_form
+                (TensorCPU<data_type>* t);
+
                 /*
                 * Used for freeing CPU memory.
                 */

@@ -1,6 +1,7 @@
 #ifndef BNN_BNN_CORE_TENSOR_CPP
 #define BNN_BNN_CORE_TENSOR_CPP
 
+#include <cstring>
 #include <bnn/core/tensor.hpp>
 #include <bnn/utils/utils.hpp>
 

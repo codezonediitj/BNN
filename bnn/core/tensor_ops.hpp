@@ -64,6 +64,11 @@ namespace bnn
         fill
         (TensorCPU<data_type>* x, data_type val);
 
+        template <class data_type>
+        void
+        copy
+        (TensorCPU<data_type>* dest, TensorCPU<data_type>* src);
+
     }
 }
 

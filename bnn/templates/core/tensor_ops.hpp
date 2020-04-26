@@ -49,5 +49,17 @@ template void fill<unsigned long long>(TensorCPU<unsigned long long>* x, unsigne
 template void fill<float>(TensorCPU<float>* x, float val);
 template void fill<double>(TensorCPU<double>* x, double val);
 template void fill<long double>(TensorCPU<long double>* x, long double val);
+template void copy<bool>(TensorCPU<bool>* dest, TensorCPU<bool>* src);
+template void copy<short>(TensorCPU<short>* dest, TensorCPU<short>* src);
+template void copy<unsigned short>(TensorCPU<unsigned short>* dest, TensorCPU<unsigned short>* src);
+template void copy<int>(TensorCPU<int>* dest, TensorCPU<int>* src);
+template void copy<unsigned int>(TensorCPU<unsigned int>* dest, TensorCPU<unsigned int>* src);
+template void copy<long>(TensorCPU<long>* dest, TensorCPU<long>* src);
+template void copy<unsigned long>(TensorCPU<unsigned long>* dest, TensorCPU<unsigned long>* src);
+template void copy<long long>(TensorCPU<long long>* dest, TensorCPU<long long>* src);
+template void copy<unsigned long long>(TensorCPU<unsigned long long>* dest, TensorCPU<unsigned long long>* src);
+template void copy<float>(TensorCPU<float>* dest, TensorCPU<float>* src);
+template void copy<double>(TensorCPU<double>* dest, TensorCPU<double>* src);
+template void copy<long double>(TensorCPU<long double>* dest, TensorCPU<long double>* src);
 
 #endif
