@@ -15,6 +15,8 @@ namespace bnn
         using namespace std;
         using namespace bnn::core;
 
+        string msg = "This is an abstract method";
+
         template <class data_type>
         Operator<data_type>::
         Operator
@@ -52,7 +54,7 @@ namespace bnn
         get_arg
         ()
         {
-            return NULL;
+            check(false, msg);
         }
 
         template <class data_type>
@@ -61,7 +63,7 @@ namespace bnn
         get_arg
         (bool index)
         {
-            return NULL;
+            check(false, msg);
         }
 
         template <class data_type>
@@ -88,7 +90,7 @@ namespace bnn
         compute_gradient
         (TensorCPU<data_type>* var)
         {
-            return 0;
+            check(false, msg);
         }
 
         template <class data_type>
@@ -97,6 +99,7 @@ namespace bnn
         compute_gradient_reverse
         ()
         {
+            check(false, msg);
         }
 
         template <class data_type>
@@ -105,7 +108,7 @@ namespace bnn
         compute_value
         ()
         {
-            return 0;
+            check(false, msg);
         }
 
         template <class data_type>
