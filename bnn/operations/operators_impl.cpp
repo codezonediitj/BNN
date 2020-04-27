@@ -381,17 +381,23 @@ namespace bnn
         compute_gradient_reverse
         ()
         {
-            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
-            TensorCPU<data_type>* dy_darg1 = new TensorCPU<data_type>
-            (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
-            TensorCPU<data_type>* dy_darg2 = new TensorCPU<data_type>
-            (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
-            bnn::core::copy(dy_darg1, dy_dcurr);
-            bnn::core::copy(dy_darg2, dy_dcurr);
             Operator<data_type>* arg1 = this->get_arg(0);
             Operator<data_type>* arg2 = this->get_arg(1);
-            arg1->set_gradient(dy_darg1);
-            arg2->set_gradient(dy_darg2);
+            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+            if(arg1->is_variable())
+            {
+                TensorCPU<data_type>* dy_darg1 = new TensorCPU<data_type>
+                (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
+                bnn::core::copy(dy_darg1, dy_dcurr);
+                arg1->set_gradient(dy_darg1);
+            }
+            if(arg2->is_variable())
+            {
+                TensorCPU<data_type>* dy_darg2 = new TensorCPU<data_type>
+                (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
+                bnn::core::copy(dy_darg2, dy_dcurr);
+                arg2->set_gradient(dy_darg2);
+            }
         }
 
         template <class data_type>
@@ -453,10 +459,13 @@ namespace bnn
         compute_gradient_reverse
         ()
         {
-            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
-            TensorCPU<data_type>* dcurr_darg = this->get_value();
             Operator<data_type>* arg = this->get_arg();
-            arg->set_gradient(bnn::core::mul(dy_dcurr, dcurr_darg));
+            if(arg->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                TensorCPU<data_type>* dcurr_darg = this->get_value();
+                arg->set_gradient(bnn::core::mul(dy_dcurr, dcurr_darg));
+            }
         }
 
         template <class data_type>

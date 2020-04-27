@@ -94,16 +94,14 @@ TEST(Autodiff, ComputeGradientReverse)
         bnn::operations::exp(bnn::operations::add(x1, x2)),
         bnn::operations::exp(bnn::operations::add(x2, x3))
     );
-    TensorCPU<float>** vars = new TensorCPU<float>*[3];
-    vars[0] = x1, vars[1] = x2, vars[2] = x3;
-    TensorCPU<float>** grads =  compute_gradient_reverse(expr, vars, 3);
-    float gradvals[] = {148.41316223144531, 168.49870300292969, 20.085536956787109};
+    TensorCPU<float>** vars = new TensorCPU<float>*[2];
+    vars[0] = x1, vars[1] = x3;
+    TensorCPU<float>** grads =  compute_gradient_reverse(expr, vars, 2);
+    float gradvals[] = {148.41316223144531, 20.085536956787109};
     EXPECT_NEAR(gradvals[0], grads[0]->at(0, 0, 0), 1.e-6)<<
     "Expected value of graident with respect to x2 is "<<gradvals[0];
     EXPECT_NEAR(gradvals[1], grads[1]->at(0, 0, 0), 1.e-6)<<
     "Expected value of graident with respect to x2 is "<<gradvals[1];
-    EXPECT_NEAR(gradvals[2], grads[2]->at(0, 0, 0), 1.e-6)<<
-    "Expected value of graident with respect to x2 is "<<gradvals[2];
 
     delete BNNMemory;
     delete BNNThreads;

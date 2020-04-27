@@ -33,6 +33,14 @@ namespace bnn
             //! The length of ops array.
             unsigned len_ops;
 
+            /*
+            * Clears the graph from memory.
+            *
+            * @tparam data_type Data type of the elements
+            *     supported by C++.
+            * @param layer GraphNode<data_type>* The layer
+            *     and the graph lying below it are cleared.
+            */
             static
             void
             clear_graph

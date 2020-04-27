@@ -102,6 +102,10 @@ namespace bnn
                 compute_gradient
                 (TensorCPU<data_type>* var);
 
+                /*
+                * Computes gradient of operator's
+                * variable arguments.
+                */
                 virtual
                 void
                 compute_gradient_reverse
