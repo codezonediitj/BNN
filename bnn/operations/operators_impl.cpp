@@ -65,12 +65,38 @@ namespace bnn
         }
 
         template <class data_type>
+        bool
+        Operator<data_type>::
+        is_variable
+        ()
+        {
+            return variable;
+        }
+
+        template <class data_type>
+        void
+        Operator<data_type>::
+        set_variable
+        (bool _val)
+        {
+            this->variable = _val;
+        }
+
+        template <class data_type>
         TensorCPU<data_type>*
         Operator<data_type>::
         compute_gradient
         (TensorCPU<data_type>* var)
         {
             return 0;
+        }
+
+        template <class data_type>
+        void
+        Operator<data_type>::
+        compute_gradient_reverse
+        ()
+        {
         }
 
         template <class data_type>
@@ -280,6 +306,14 @@ namespace bnn
         }
 
         template <class data_type>
+        void
+        TensorWrapper<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+        }
+
+        template <class data_type>
         unsigned
         TensorWrapper<data_type>::
         num_args
@@ -342,6 +376,31 @@ namespace bnn
         }
 
         template <class data_type>
+        void
+        Add<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg1 = this->get_arg(0);
+            Operator<data_type>* arg2 = this->get_arg(1);
+            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+            if(arg1->is_variable())
+            {
+                TensorCPU<data_type>* dy_darg1 = new TensorCPU<data_type>
+                (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
+                bnn::core::copy(dy_darg1, dy_dcurr);
+                arg1->set_gradient(dy_darg1);
+            }
+            if(arg2->is_variable())
+            {
+                TensorCPU<data_type>* dy_darg2 = new TensorCPU<data_type>
+                (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
+                bnn::core::copy(dy_darg2, dy_dcurr);
+                arg2->set_gradient(dy_darg2);
+            }
+        }
+
+        template <class data_type>
         Add<data_type>::
         ~Add
         ()
@@ -392,6 +451,21 @@ namespace bnn
             Operator<data_type> *x;
             x = this->get_arg();
             return mul(exp(x->get_value()), x->get_gradient());
+        }
+
+        template <class data_type>
+        void
+        Exp<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg = this->get_arg();
+            if(arg->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                TensorCPU<data_type>* dcurr_darg = this->get_value();
+                arg->set_gradient(bnn::core::mul(dy_dcurr, dcurr_darg));
+            }
         }
 
         template <class data_type>

@@ -64,6 +64,22 @@ namespace bnn
         fill
         (TensorCPU<data_type>* x, data_type val);
 
+        /*
+        * Performs a deep copy from the destination
+        * tensor to source tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param des Tensor<data_type>* Destination
+        *     tensor.
+        * @param src Tensor<data_type>* Source
+        *     tensor.
+        */
+        template <class data_type>
+        void
+        copy
+        (TensorCPU<data_type>* dest, TensorCPU<data_type>* src);
+
     }
 }
 

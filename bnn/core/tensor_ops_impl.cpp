@@ -2,6 +2,7 @@
 #define BNN_BNN_CORE_TENSOR_OPS_IMPL_CPP
 
 #include <thread>
+#include <cstring>
 #include <string>
 #include <cmath>
 #include <bnn/utils/utils.hpp>
@@ -261,6 +262,17 @@ namespace bnn
             {
                 _fill_job<data_type>(xd, val, 0, size);
             }
+        }
+
+        template <class data_type>
+        void
+        copy
+        (TensorCPU<data_type>* dest, TensorCPU<data_type>* src)
+        {
+            _check_dimensions(dest->get_shape(), src->get_shape(),
+                              dest->get_ndims(), src->get_ndims());
+            unsigned size = _calc_size(dest->get_shape(), dest->get_ndims());
+            memcpy(dest->get_data_pointer(), src->get_data_pointer(), sizeof(data_type)*size);
         }
 
         #include "bnn/templates/core/tensor_ops.hpp"

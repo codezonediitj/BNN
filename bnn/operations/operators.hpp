@@ -2,6 +2,7 @@
 #define BNN_BNN_OPERATIONS_OPERATORS_HPP
 
 #include <string>
+#include <unordered_map>
 #include <bnn/core/tensor.hpp>
 #include <bnn/utils/utils.hpp>
 
@@ -42,6 +43,8 @@ namespace bnn
                 //! represented by this object. Used
                 //! only in automatic differentiation.
                 TensorCPU<data_type>* gradient;
+
+                bool variable;
 
                 /*
                 * Parametrized constructor.
@@ -100,6 +103,15 @@ namespace bnn
                 (TensorCPU<data_type>* var);
 
                 /*
+                * Computes gradient of operator's
+                * variable arguments.
+                */
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                /*
                 * Computes the value of the sub-expression
                 */
                 virtual
@@ -132,6 +144,16 @@ namespace bnn
                 unsigned
                 num_args
                 ();
+
+                virtual
+                bool
+                is_variable
+                ();
+
+                virtual
+                void
+                set_variable
+                (bool _val);
 
                 //! Destructor
                 virtual
@@ -281,8 +303,14 @@ namespace bnn
                 (TensorCPU<data_type>* var);
 
                 virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
                 unsigned
-                num_args();
+                num_args
+                ();
 
                 virtual
                 ~TensorWrapper
@@ -308,6 +336,11 @@ namespace bnn
                 TensorCPU<data_type>*
                 compute_gradient
                 (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
 
                 virtual
                 TensorCPU<data_type>*
@@ -338,6 +371,11 @@ namespace bnn
                 TensorCPU<data_type>*
                 compute_gradient
                 (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
 
                 virtual
                 TensorCPU<data_type>*

@@ -3,7 +3,6 @@
 
 #include <bnn/core/tensor.hpp>
 #include <bnn/operations/operators.hpp>
-#include <thread>
 
 namespace bnn
 {
