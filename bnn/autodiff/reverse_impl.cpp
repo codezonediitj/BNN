@@ -90,7 +90,7 @@ namespace bnn
                 _clear_jobs<data_type>(pool, jobs, threads);
 
                 layer = layer->prev;
-                if(layer->prev == NULL)
+                if(layer != NULL && layer->prev == NULL)
                 {
                     top = layer;
                 }
@@ -102,7 +102,7 @@ namespace bnn
         template <class data_type>
         void
         _add_grad
-        (Operator<data_type>* x, Operator<data_type>* y)
+        (Operator<data_type>* x, Operator<data_type>* y, unsigned size)
         {
             TensorCPU<data_type>* grad;
             grad = bnn::core::add(x->get_gradient(), y->get_gradient());
@@ -126,7 +126,7 @@ namespace bnn
                 {
                     if(i + gap < size)
                     {
-                        pool[i] = new thread(_add_grad<data_type>, tws[i], tws[i+gap]);
+                        pool[i] = new thread(_add_grad<data_type>, tws[i], tws[i+gap], size);
                         BNNThreads->push(pool[i]);
                     }
                 }
@@ -172,9 +172,10 @@ namespace bnn
             {
                 var_map[vars[i]] = i;
             }
-            _compute_value<data_type>(layer, var_map);
+            layer = _compute_value<data_type>(layer, var_map);
 
-            TensorCPU<data_type>* exprgrad = new TensorCPU<data_type>;
+            TensorCPU<data_type>* exprgrad = new TensorCPU<data_type>
+            (expr->get_value()->get_shape(), expr->get_value()->get_ndims());
             bnn::core::fill(exprgrad, (data_type)1.);
             expr->set_gradient(exprgrad);
             while(layer != NULL)
@@ -220,7 +221,7 @@ namespace bnn
 
                 _clear_jobs<data_type>(pool, jobs, threads);
 
-                if(layer != _layer)
+                if(layer != _layer && layer->next != NULL)
                 {
                     for(unsigned i = 0; i < layer->len_ops; i++)
                     {
@@ -236,21 +237,22 @@ namespace bnn
             GraphNode<data_type>::clear_graph(_layer);
 
             thread* _pool[t2tw.size()];
+            Operator<data_type>** arr[t2tw.size()];
 
             unsigned i = 0;
             for(auto& it: t2tw)
             {
-                Operator<data_type>** arr = new Operator<data_type>*[it.second.size()];
-                copy(it.second.begin(), it.second.end(), arr);
+                arr[i] = new Operator<data_type>*[it.second.size()];
+                copy(it.second.begin(), it.second.end(), arr[i]);
                 _pool[i] = new thread(_final_grad_job<data_type>,
-                                      arr, it.second.size(), grads, var_map[it.first]);
+                                    arr[i], it.second.size(), grads, var_map[it.first]);
                 BNNThreads->push(_pool[i]);
-                delete arr;
                 i++;
             }
             for(i = 0; i < t2tw.size(); i++)
             {
                 BNNThreads->free_thread(_pool[i]);
+                delete arr[i];
             }
 
             return grads;

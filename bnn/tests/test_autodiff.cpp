@@ -65,21 +65,16 @@ TEST(Autodiff, ComputeGradientForward)
     vars[0] = x1, vars[1] = x2;
     TensorCPU<float>** grads =  compute_gradient_forward(expr, vars, 2);
     float gradvals[] = {148.41316223144531, 168.49870300292969};
-    for(unsigned n = 0; n < 2; n++)
-    {
-        TensorCPU<float>* gradx = grads[n];
-        for(unsigned i = 0; i < gradx->get_shape()[0]; i++)
-        {
-            for(unsigned j = 0; j < gradx->get_shape()[1]; j++)
-            {
-                for(unsigned k = 0; k < gradx->get_shape()[2]; k++)
-                {
-                    EXPECT_NEAR(gradvals[n], gradx->at(i, j, k), 1.e-6)<<
-                    "Expected value of graident with respect to x2 is "<<gradvals[n];
-                }
-            }
-        }
-    }
+    EXPECT_NEAR(gradvals[0], grads[0]->at(0, 0, 0), 1.e-6)<<
+    "Expected value of graident with respect to x2 is "<<gradvals[0];
+    EXPECT_NEAR(gradvals[1], grads[1]->at(0, 0, 0), 1.e-6)<<
+    "Expected value of graident with respect to x2 is "<<gradvals[1];
+
+    BNNMemory->free_memory(x1);
+    BNNMemory->free_memory(x2);
+    BNNMemory->free_memory(x3);
+    BNNMemory->free_memory(grads[0]);
+    BNNMemory->free_memory(grads[1]);
 }
 
 TEST(Autodiff, ComputeGradientReverse)
@@ -102,22 +97,13 @@ TEST(Autodiff, ComputeGradientReverse)
     TensorCPU<float>** vars = new TensorCPU<float>*[3];
     vars[0] = x1, vars[1] = x2, vars[2] = x3;
     TensorCPU<float>** grads =  compute_gradient_reverse(expr, vars, 3);
-    float gradvals[] = {148.41316223144531, 168.49870300292969};
-    for(unsigned n = 0; n < 2; n++)
-    {
-        TensorCPU<float>* gradx = grads[n];
-        for(unsigned i = 0; i < gradx->get_shape()[0]; i++)
-        {
-            for(unsigned j = 0; j < gradx->get_shape()[1]; j++)
-            {
-                for(unsigned k = 0; k < gradx->get_shape()[2]; k++)
-                {
-                    EXPECT_NEAR(gradvals[n], gradx->at(i, j, k), 1.e-6)<<
-                    "Expected value of graident with respect to x2 is "<<gradvals[n];
-                }
-            }
-        }
-    }
+    float gradvals[] = {148.41316223144531, 168.49870300292969, 20.085536956787109};
+    EXPECT_NEAR(gradvals[0], grads[0]->at(0, 0, 0), 1.e-6)<<
+    "Expected value of graident with respect to x2 is "<<gradvals[0];
+    EXPECT_NEAR(gradvals[1], grads[1]->at(0, 0, 0), 1.e-6)<<
+    "Expected value of graident with respect to x2 is "<<gradvals[1];
+    EXPECT_NEAR(gradvals[2], grads[2]->at(0, 0, 0), 1.e-6)<<
+    "Expected value of graident with respect to x2 is "<<gradvals[2];
 
     delete BNNMemory;
     delete BNNThreads;

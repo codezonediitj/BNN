@@ -454,10 +454,9 @@ namespace bnn
         ()
         {
             TensorCPU<data_type>* dy_dcurr = this->get_gradient();
-            TensorCPU<data_type>* dcurr_darg = bnn::core::exp(this->get_value());
+            TensorCPU<data_type>* dcurr_darg = this->get_value();
             Operator<data_type>* arg = this->get_arg();
             arg->set_gradient(bnn::core::mul(dy_dcurr, dcurr_darg));
-            BNNMemory->free_memory(dcurr_darg);
         }
 
         template <class data_type>
