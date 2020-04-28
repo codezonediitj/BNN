@@ -6,7 +6,8 @@ BNN
 About Us
 --------
 
-We are a group of deep learning enthusiasts aiming to implement Binarized Neural Networks from scratch.
+A simple, light weight deep learning framework with a specialisation aimed for Binarized Neural Networks. 
+This project aims to overcome some problems with existing deep learning frameworks without compromising performance, like most of the time they are quite heavy, come with a lot of dependencies, require innumerable extra packages for accelerated computing. This project will just depend on CUDA C for NVIDIA GPUs. In future, support may be added for Intel GPUs.
 
 Technologies
 ------------
