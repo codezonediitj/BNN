@@ -14,6 +14,19 @@ namespace bnn
         using namespace bnn::operators;
 
         /*
+        * Computes value of an expression.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param expr Operator<data_type>* The expression
+        *     whose value is to be computed.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        compute_value
+        (Operator<data_type>* expr);
+
+        /*
         * For computing gradients using forward mode.
         *
         * @tparam data_type Data type of the elements

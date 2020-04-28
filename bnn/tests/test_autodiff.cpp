@@ -44,6 +44,34 @@ TEST(Autodiff, BuildGraph)
     }
 }
 
+TEST(Autodiff, ComputeValue)
+{
+    TensorCPU<float> *x1, *x2, *x3;
+    unsigned ndims = 3;
+    unsigned* shape = new unsigned[ndims];
+    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
+    x1 = new TensorCPU<float>(shape, ndims);
+    x2 = new TensorCPU<float>(shape, ndims);
+    x3 = new TensorCPU<float>(shape, ndims);
+    bnn::core::fill<float>(x1, 3.);
+    bnn::core::fill<float>(x2, 2.);
+    bnn::core::fill<float>(x3, 1.);
+    Operator<float>* expr =
+    bnn::operations::add(
+        bnn::operations::exp(bnn::operations::add(x1, x2)),
+        bnn::operations::exp(bnn::operations::add(x2, x3))
+    );
+    TensorCPU<float>* val =  compute_value(expr);
+    float expecval = 168.49870300292969;
+    EXPECT_NEAR(expecval, val->at(0, 0, 0), 1.e-6)<<
+    "Expected value of the expression is "<<val;
+
+    BNNMemory->free_memory(x1);
+    BNNMemory->free_memory(x2);
+    BNNMemory->free_memory(x3);
+    BNNMemory->free_memory(expr->get_value());
+}
+
 TEST(Autodiff, ComputeGradientForward)
 {
     TensorCPU<float> *x1, *x2, *x3;

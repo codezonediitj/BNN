@@ -19,6 +19,76 @@ namespace bnn
 
         template <class data_type>
         void
+        _compute_value_jobs
+        (op_queue<data_type>* job_head, bool val)
+        {
+            op_queue<data_type>* job = job_head;
+            while(job->op != NULL)
+            {
+                if(job->op->num_args() == 1)
+                {
+                    job->op->set_variable
+                    (job->op->get_arg()->is_variable());
+                }
+                else if(job->op->num_args() == 2)
+                {
+                    job->op->set_variable
+                    (job->op->get_arg(0)->is_variable() ||
+                        job->op->get_arg(1)->is_variable());
+                }
+                TensorCPU<data_type>* val = job->op->compute_value();
+                job->op->set_value(val);
+                job = job->next;
+            }
+        }
+
+        template <class data_type>
+        void
+        _compute_value
+        (GraphNode<data_type>* layer)
+        {
+            while(layer != NULL)
+            {
+                unsigned threads = layer->len_ops, i;
+                thread* pool[threads];
+                op_queue<data_type>* jobs[threads][2];
+
+                _rr_scheduler<data_type>(layer, jobs, threads);
+
+                for(i = 0; i < threads; i++)
+                {
+                    pool[i] = new thread(_compute_value_jobs<data_type>, jobs[i][1], true);
+                    BNNThreads->push(pool[i]);
+                }
+
+                _clear_jobs<data_type>(pool, jobs, threads);
+
+                if(layer->next != NULL)
+                {
+                    GraphNode<data_type>* next_layer = layer->next;
+                    for(i = 0; i < next_layer->len_ops; i++)
+                    {
+                        BNNMemory->free_memory(next_layer->ops[i]->get_value());
+                    }
+                }
+
+                layer = layer->prev;
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        compute_value
+        (Operator<data_type>* expr)
+        {
+            GraphNode<data_type>* layer = build_graph(expr);
+            _compute_value(layer);
+            GraphNode<data_type>::clear_graph(layer);
+            return expr->get_value();
+        }
+
+        template <class data_type>
+        void
         _compute_gradient_forward_jobs
         (op_queue<data_type>* job_head, TensorCPU<data_type>* var)
         {
