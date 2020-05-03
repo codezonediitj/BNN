@@ -48,6 +48,7 @@ install(FILES
         ${CMAKE_BINARY_DIR}/libs/libbnn_utils.so
         ${CMAKE_BINARY_DIR}/libs/libbnn_operations.so
         ${CMAKE_BINARY_DIR}/libs/libbnn_autodiff.so
+        ${CMAKE_BINARY_DIR}/libs/libbnn_io.so
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 if(BUILD_CUDA)
   install(FILES

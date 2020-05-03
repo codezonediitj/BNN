@@ -200,6 +200,18 @@ namespace bnn
             }
         }
 
+        unsigned
+        _calc_size
+        (unsigned* shape, unsigned ndims)
+        {
+            unsigned size = 1;
+            for(unsigned i = 0; i < ndims; i++)
+            {
+                size *= shape[i];
+            }
+            return size;
+        }
+
     } // namespace utils
 } // namspace adaboost
 

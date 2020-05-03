@@ -10,10 +10,13 @@ add_library(bnn_autodiff SHARED
             autodiff/graph_impl.cpp
             autodiff/forward_impl.cpp
             autodiff/reverse_impl.cpp)
+add_library(bnn_io SHARED
+            io/input_impl.cpp)
 target_link_libraries(bnn_utils pthread)
 target_link_libraries(bnn_core bnn_utils m)
 target_link_libraries(bnn_operations bnn_utils)
 target_link_libraries(bnn_autodiff bnn_utils)
+target_link_libraries(bnn_io bnn_utils)
 if(BUILD_CUDA)
     add_library(bnn_cuda_utils SHARED
                 cuda/utils/cuda_wrappers_impl.cu)
