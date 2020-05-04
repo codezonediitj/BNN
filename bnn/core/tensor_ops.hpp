@@ -80,6 +80,11 @@ namespace bnn
         copy
         (TensorCPU<data_type>* dest, TensorCPU<data_type>* src);
 
+        template <class data_type>
+        TensorCPU<data_type>*
+        sum
+        (TensorCPU<data_type>* x, int axis=-1);
+
     }
 }
 
