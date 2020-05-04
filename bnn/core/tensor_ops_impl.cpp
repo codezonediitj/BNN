@@ -35,16 +35,36 @@ namespace bnn
         }
 
         template <class data_type>
-        TensorCPU<data_type>*
-        unary_op
-        (TensorCPU<data_type>* x,  void (*thread_job)
-         (data_type*, data_type*,
-          unsigned, unsigned))
+        struct Args
         {
-            TensorCPU<data_type>* z = new TensorCPU<data_type>
-                                       (x->get_shape(), x->get_ndims());
+            data_type *xd;
+        };
+
+        template <class data_type>
+        struct UnaryArgs: Args<data_type>
+        {
+            data_type *zd;
+        };
+
+        template <class data_type>
+        struct BinaryArgs: Args<data_type>
+        {
+            data_type *yd, *zd;
+        };
+
+        template <class data_type>
+        struct FillArgs: Args<data_type>
+        {
+            data_type val;
+        };
+
+        template <class data_type>
+        void
+        op
+        (TensorCPU<data_type>* x, Args<data_type>* args,
+         void (*thread_job)(Args<data_type>*, unsigned, unsigned))
+        {
             data_type *xd = x->get_data_pointer();
-            data_type *zd = z->get_data_pointer();
             unsigned size = _calc_size(x->get_shape(), x->get_ndims());
             unsigned nthreads = thread::hardware_concurrency();
             if(size/nthreads > 0)
@@ -53,6 +73,7 @@ namespace bnn
                 std::fill(pool, pool + nthreads, null_ptr);
                 unsigned sizet = size/nthreads;
                 unsigned idx = 0, i = 0;
+                args->xd = xd;
                 while(idx < size)
                 {
                     unsigned ti = i%nthreads;
@@ -61,8 +82,8 @@ namespace bnn
                         BNNThreads->free_thread(pool[ti]);
                         pool[ti] = NULL;
                     }
-                    pool[ti] = new thread(thread_job, xd, zd,
-                                          idx, min(idx + sizet, size));
+                    unsigned start = idx, end = min(idx + sizet, size);
+                    pool[ti] = new thread(thread_job, args, start, end);
                     BNNThreads->push(pool[ti]);
                     idx += sizet;
                     i++;
@@ -77,75 +98,21 @@ namespace bnn
             }
             else
             {
-                thread_job(xd, zd, 0, size);
+                unsigned start = 0, end = size;
+                thread_job(args, start, end);
             }
-
-            return z;
-        }
-
-        template <class data_type>
-        TensorCPU<data_type>*
-        binary_op
-        (TensorCPU<data_type>* x, TensorCPU<data_type>* y,
-         void (*thread_job)(data_type*,
-         data_type*, data_type*,
-         unsigned, unsigned))
-        {
-            _check_dimensions(x->get_shape(), y->get_shape(),
-                              x->get_ndims(), y->get_ndims());
-            TensorCPU<data_type>* z = new TensorCPU<data_type>
-                                       (x->get_shape(), x->get_ndims());
-            data_type *xd = x->get_data_pointer();
-            data_type *yd = y->get_data_pointer();
-            data_type *zd = z->get_data_pointer();
-            unsigned size = _calc_size(x->get_shape(), x->get_ndims());
-            unsigned nthreads = thread::hardware_concurrency();
-            if(size/nthreads > 0)
-            {
-                thread* pool[nthreads];
-                std::fill(pool, pool + nthreads, null_ptr);
-                unsigned sizet = size/nthreads;
-                unsigned idx = 0, i = 0;
-                while(idx < size)
-                {
-                    unsigned ti = idx%nthreads;
-                    if(pool[ti] != NULL)
-                    {
-                        BNNThreads->free_thread(pool[ti]);
-                        pool[ti] = NULL;
-                    }
-                    pool[ti] = new thread(thread_job, xd, yd, zd,
-                                          idx, min(idx + sizet, size));
-                    BNNThreads->push(pool[ti]);
-                    idx += sizet;
-                    i++;
-                }
-                for(i = 0; i < nthreads; i++)
-                {
-                    if(pool[i] != NULL)
-                    {
-                        BNNThreads->free_thread(pool[i]);
-                    }
-                }
-            }
-            else
-            {
-                thread_job(xd, yd, zd, 0, size);
-            }
-
-            return z;
         }
 
         template <class data_type>
         void
         _add_job
-        (data_type* xd, data_type* yd,
-         data_type* zd, unsigned start,
+        (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
+            BinaryArgs<data_type>* args = reinterpret_cast<BinaryArgs<data_type>*>(_args);
             for(unsigned i = start; i < end; i++)
             {
-                zd[i] = xd[i] + yd[i];
+                args->zd[i] = args->xd[i] + args->yd[i];
             }
         }
 
@@ -154,19 +121,24 @@ namespace bnn
         add
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
         {
-            return binary_op(x, y, &_add_job<data_type>);
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            BinaryArgs<data_type> args;
+            args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
+            op(x, &args, &_add_job<data_type>);
+            return z;
         }
 
         template <class data_type>
         void
         _mul_job
-        (data_type* xd, data_type* yd,
-         data_type* zd, unsigned start,
+        (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
+            BinaryArgs<data_type>* args = reinterpret_cast<BinaryArgs<data_type>*>(_args);
             for(unsigned i = start; i < end; i++)
             {
-                zd[i] = xd[i]*yd[i];
+                args->zd[i] = args->xd[i]*args->yd[i];
             }
         }
 
@@ -175,18 +147,24 @@ namespace bnn
         mul
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
         {
-            return binary_op(x, y, &_mul_job<data_type>);
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            BinaryArgs<data_type> args;
+            args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
+            op(x, &args, &_mul_job<data_type>);
+            return z;
         }
 
         template <class data_type>
         void
         _exp_job
-        (data_type* xd, data_type* zd,
-         unsigned start, unsigned end)
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
         {
+            UnaryArgs<data_type>* args = reinterpret_cast<UnaryArgs<data_type>*>(_args);
             for(unsigned i = start; i < end; i++)
             {
-                zd[i] = std::exp(xd[i]);
+                args->zd[i] = std::exp(args->xd[i]);
             }
         }
 
@@ -195,18 +173,24 @@ namespace bnn
         exp
         (TensorCPU<data_type>* x)
         {
-            return unary_op(x, &_exp_job<data_type>);
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            UnaryArgs<data_type> args;
+            args.zd = z->get_data_pointer();
+            op(x, &args, &_exp_job<data_type>);
+            return z;
         }
 
         template <class data_type>
         void
         _fill_job
-        (data_type* xd, data_type val,
-         unsigned start, unsigned end)
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
         {
+            FillArgs<data_type>* args = reinterpret_cast<FillArgs<data_type>*>(_args);
             for(unsigned i = start; i < end; i++)
             {
-                xd[i] = val;
+                args->xd[i] = args->val;
             }
         }
 
@@ -215,41 +199,9 @@ namespace bnn
         fill
         (TensorCPU<data_type>* x, data_type val)
         {
-            data_type *xd = x->get_data_pointer();
-            unsigned size = _calc_size(x->get_shape(), x->get_ndims());
-            unsigned nthreads = thread::hardware_concurrency();
-            if(size/nthreads > 0)
-            {
-                thread* pool[nthreads];
-                std::fill(pool, pool + nthreads, null_ptr);
-                unsigned sizet = size/nthreads;
-                unsigned idx = 0, i = 0;
-                while(idx < size)
-                {
-                    unsigned ti = i%nthreads;
-                    if(pool[ti] != NULL)
-                    {
-                        BNNThreads->free_thread(pool[ti]);
-                        pool[ti] = NULL;
-                    }
-                    pool[ti] = new thread(_fill_job<data_type>, xd, val,
-                                          idx, min(idx + sizet, size));
-                    BNNThreads->push(pool[ti]);
-                    idx += sizet;
-                    i++;
-                }
-                for(i = 0; i < nthreads; i++)
-                {
-                    if(pool[i] != NULL)
-                    {
-                        BNNThreads->free_thread(pool[i]);
-                    }
-                }
-            }
-            else
-            {
-                _fill_job<data_type>(xd, val, 0, size);
-            }
+            FillArgs<data_type> args;
+            args.val = val;
+            op(x, &args, &_fill_job<data_type>);
         }
 
         template <class data_type>

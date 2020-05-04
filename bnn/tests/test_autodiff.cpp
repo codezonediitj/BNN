@@ -77,7 +77,7 @@ TEST(Autodiff, ComputeGradientForward)
     TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 100;
     x1 = new TensorCPU<float>(shape, ndims);
     x2 = new TensorCPU<float>(shape, ndims);
     x3 = new TensorCPU<float>(shape, ndims);
@@ -110,7 +110,7 @@ TEST(Autodiff, ComputeGradientReverse)
     TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 100;
     x1 = new TensorCPU<float>(shape, ndims);
     x2 = new TensorCPU<float>(shape, ndims);
     x3 = new TensorCPU<float>(shape, ndims);
