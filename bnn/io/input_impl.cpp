@@ -38,6 +38,8 @@ namespace bnn
                     ((unsigned)c2 << 16) +
                     ((unsigned)c3 << 8) + c4;
             }
+
+            return i;
         }
 
         template <class data_type>
