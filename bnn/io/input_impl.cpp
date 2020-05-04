@@ -5,7 +5,6 @@
 #include <bnn/io/input.hpp>
 #include <fstream>
 #include <bnn/utils/utils.hpp>
-#include <iostream>
 
 namespace bnn
 {

@@ -212,7 +212,7 @@ namespace bnn
             return size;
         }
 
-    } // namespace utils
-} // namspace adaboost
+    }
+}
 
 #endif

@@ -1,7 +1,6 @@
 #include <bnn/core/tensor.hpp>
 #include <bnn/io/input.hpp>
 #include <gtest/gtest.h>
-#include <iostream>
 
 using namespace bnn::core;
 using namespace bnn::io;
