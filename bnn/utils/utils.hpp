@@ -17,6 +17,10 @@ namespace bnn
         check
         (bool exp, string msg);
 
+        unsigned
+        _calc_size
+        (unsigned* shape, unsigned ndims);
+
         class BNNBase
         {
             public:

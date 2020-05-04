@@ -21,7 +21,12 @@ before_scirpt:
   - cd build-BNN
   - sudo ../cmake-3.10.2-Linux-x86_64/bin/cmake -DBUILD_TESTS=ON -DINSTALL_GOOGLETEST=OFF -DCMAKE_PREFIX_PATH=/usr/local/include ../BNN
   - sudo make -j5
+  - wget http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+  - gzip -d t10k-images-idx3-ubyte.gz
+  - wget http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+  - gzip -d t10k-labels-idx1-ubyte.gz
 
 script:
   - ./bin/test_core
   - ./bin/test_operations
+  - ./bin/test_io

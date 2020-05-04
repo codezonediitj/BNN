@@ -18,18 +18,6 @@ namespace bnn
 
         thread* null_ptr = NULL;
 
-        unsigned
-        _calc_size
-        (unsigned* shape, unsigned ndims)
-        {
-            unsigned size = 1;
-            for(unsigned i = 0; i < ndims; i++)
-            {
-                size *= shape[i];
-            }
-            return size;
-        }
-
         void
         _check_dimensions
         (unsigned* shapex, unsigned* shapey,
