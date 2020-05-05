@@ -7,6 +7,7 @@
 #include <cmath>
 #include <bnn/utils/utils.hpp>
 #include <bnn/core/tensor_ops.hpp>
+#include <iostream>
 
 namespace bnn
 {
@@ -222,11 +223,12 @@ namespace bnn
          unsigned start, unsigned end,
          data_type* res)
         {
-            *(res) = 0;
+            data_type _res = 0;
             for(unsigned i = start; i < end; i += gap)
             {
-                *(res) += x[i];
+                _res += x[i];
             }
+            *res = _res;
         }
 
         template <class data_type>
@@ -234,18 +236,20 @@ namespace bnn
         unsigned
         _rmo_mapped
         (unsigned i, int axis,
-         TensorCPU<data_type>* x, TensorCPU<data_type>* z)
+         TensorCPU<data_type>* x, TensorCPU<data_type>* z,
+         unsigned axis_val)
         {
             if(axis == -1)
             {
                 return 0;
             }
+
             unsigned ndims = x->get_ndims();
             unsigned* shape = x->get_shape();
             unsigned indices[ndims];
-            indices[axis] = 0;
-            unsigned n = ndims - 1;
-            for(; n >= 0; n--)
+            indices[axis] = axis_val;
+            int n;
+            for(n = ndims - 1; n >= 0; n--)
             {
                 if(n != axis)
                 {
@@ -270,7 +274,8 @@ namespace bnn
         (TensorCPU<data_type>* x, int axis)
         {
             vector<unsigned> shape;
-            unsigned size = 1, gap = 1;
+            unsigned sizex = _calc_size(x->get_shape(), x->get_ndims());
+            unsigned sizez = 1, gap = 1;
             if(axis == -1)
             {
                 shape.push_back(1);
@@ -282,7 +287,7 @@ namespace bnn
                     if(i != axis)
                     {
                         shape.push_back(x->get_shape()[i]);
-                        size *= x->get_shape()[i];
+                        sizez *= x->get_shape()[i];
                     }
                     if(i > axis)
                     {
@@ -292,24 +297,43 @@ namespace bnn
             }
             TensorCPU<data_type>* z = new TensorCPU<data_type>(shape);
             data_type* zd = z->get_data_pointer();
-            for(unsigned i = 0; i < size; i++)
+            unsigned nthreads = thread::hardware_concurrency();
+            unsigned sizet;
+            if(axis == -1)
             {
-                unsigned nthreads = thread::hardware_concurrency();
-                unsigned sizet = size/nthreads;
+                sizet = sizex/nthreads;
+            }
+            else
+            {
+                sizet = x->get_shape()[axis]/nthreads;
+            }
+            for(unsigned i = 0; i < sizez; i++)
+            {
                 if(sizet > 0)
                 {
                     zd[i] = 0;
                     thread* pool[nthreads];
                     data_type results[nthreads];
+                    std::fill(results, results + nthreads, (data_type)0);
                     std::fill(pool, pool + nthreads, null_ptr);
-                    unsigned start = 0, end = _rmo_mapped(i, axis, x, z) + (sizet - 1)*gap + 1;
-                    for(unsigned j = 0; j < nthreads; j++)
+                    unsigned start = _rmo_mapped(i, axis, x, z, 0);
+                    unsigned end = start + (sizet - 1)*gap;
+                    unsigned upper_bound =
+                    axis == -1 ? sizex : _rmo_mapped(i, axis, x, z, x->get_shape()[axis] - 1) + 1;
+                    for(unsigned j = 0; start < upper_bound; j++)
                     {
-                        pool[j] = new thread(_sum_job<data_type>, x->get_data_pointer(),
-                                             gap, start, min(end, size), results + j);
-                        BNNThreads->push(pool[j]);
+                        unsigned _j = j%nthreads;
+                        if(pool[_j] != NULL)
+                        {
+                            BNNThreads->free_thread(pool[_j]);
+                            zd[i] += results[_j];
+                            results[_j] = 0;
+                        }
+                        pool[_j] = new thread(_sum_job<data_type>, x->get_data_pointer(),
+                                              gap, start, min(end, upper_bound), results + _j);
+                        BNNThreads->push(pool[_j]);
                         start = end;
-                        end = start + (sizet - 1)*gap + 1;
+                        end = start + (sizet - 1)*gap;
                     }
 
                     for(unsigned j = 0; j < nthreads; j++)
@@ -320,7 +344,16 @@ namespace bnn
                 }
                 else
                 {
-                    _sum_job<data_type>(x->get_data_pointer(), gap, 0, size, zd + i);
+                    unsigned _end;
+                    if(axis == -1)
+                    {
+                        _end = sizex;
+                    }
+                    else
+                    {
+                        _end = x->get_shape()[axis];
+                    }
+                    _sum_job<data_type>(x->get_data_pointer(), gap, 0, _end, zd + i);
                 }
             }
             return z;

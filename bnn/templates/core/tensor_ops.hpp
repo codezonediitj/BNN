@@ -61,5 +61,17 @@ template void copy<unsigned long long>(TensorCPU<unsigned long long>* dest, Tens
 template void copy<float>(TensorCPU<float>* dest, TensorCPU<float>* src);
 template void copy<double>(TensorCPU<double>* dest, TensorCPU<double>* src);
 template void copy<long double>(TensorCPU<long double>* dest, TensorCPU<long double>* src);
+template TensorCPU<bool>* sum<bool>(TensorCPU<bool>* x, int axis);
+template TensorCPU<short>* sum<short>(TensorCPU<short>* x, int axis);
+template TensorCPU<unsigned short>* sum<unsigned short>(TensorCPU<unsigned short>* x, int axis);
+template TensorCPU<int>* sum<int>(TensorCPU<int>* x, int axis);
+template TensorCPU<unsigned int>* sum<unsigned int>(TensorCPU<unsigned int>* x, int axis);
+template TensorCPU<long>* sum<long>(TensorCPU<long>* x, int axis);
+template TensorCPU<unsigned long>* sum<unsigned long>(TensorCPU<unsigned long>* x, int axis);
+template TensorCPU<long long>* sum<long long>(TensorCPU<long long>* x, int axis);
+template TensorCPU<unsigned long long>* sum<unsigned long long>(TensorCPU<unsigned long long>* x, int axis);
+template TensorCPU<float>* sum<float>(TensorCPU<float>* x, int axis);
+template TensorCPU<double>* sum<double>(TensorCPU<double>* x, int axis);
+template TensorCPU<long double>* sum<long double>(TensorCPU<long double>* x, int axis);
 
 #endif
