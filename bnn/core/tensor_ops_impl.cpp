@@ -53,12 +53,6 @@ namespace bnn
         };
 
         template <class data_type>
-        struct FillArgs: Args<data_type>
-        {
-            data_type val;
-        };
-
-        template <class data_type>
         void
         op
         (TensorCPU<data_type>* x, Args<data_type>* args,
@@ -182,6 +176,12 @@ namespace bnn
         }
 
         template <class data_type>
+        struct FillArgs: Args<data_type>
+        {
+            data_type val;
+        };
+
+        template <class data_type>
         void
         _fill_job
         (Args<data_type>* _args, unsigned start,
@@ -213,6 +213,117 @@ namespace bnn
                               dest->get_ndims(), src->get_ndims());
             unsigned size = _calc_size(dest->get_shape(), dest->get_ndims());
             memcpy(dest->get_data_pointer(), src->get_data_pointer(), sizeof(data_type)*size);
+        }
+
+        template <class data_type>
+        void
+        _sum_job
+        (data_type* x, unsigned gap,
+         unsigned start, unsigned end,
+         data_type* res)
+        {
+            *(res) = 0;
+            for(unsigned i = start; i < end; i += gap)
+            {
+                *(res) += x[i];
+            }
+        }
+
+        template <class data_type>
+        inline
+        unsigned
+        _rmo_mapped
+        (unsigned i, int axis,
+         TensorCPU<data_type>* x, TensorCPU<data_type>* z)
+        {
+            if(axis == -1)
+            {
+                return 0;
+            }
+            unsigned ndims = x->get_ndims();
+            unsigned* shape = x->get_shape();
+            unsigned indices[ndims];
+            indices[axis] = 0;
+            unsigned n = ndims - 1;
+            for(; n >= 0; n--)
+            {
+                if(n != axis)
+                {
+                    indices[n] = i%shape[n];
+                    i = (i - indices[n])/shape[n];
+                }
+            }
+
+            unsigned prods = 1, index = 0;
+            for(n = ndims - 1; n >= 0; n--)
+            {
+                index += prods*indices[n];
+                prods *= shape[n];
+            }
+
+            return index;
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        sum
+        (TensorCPU<data_type>* x, int axis)
+        {
+            vector<unsigned> shape;
+            unsigned size = 1, gap = 1;
+            if(axis == -1)
+            {
+                shape.push_back(1);
+            }
+            else
+            {
+                for(unsigned i = 0; i < x->get_ndims(); i++)
+                {
+                    if(i != axis)
+                    {
+                        shape.push_back(x->get_shape()[i]);
+                        size *= x->get_shape()[i];
+                    }
+                    if(i > axis)
+                    {
+                        gap *= x->get_shape()[i];
+                    }
+                }
+            }
+            TensorCPU<data_type>* z = new TensorCPU<data_type>(shape);
+            data_type* zd = z->get_data_pointer();
+            for(unsigned i = 0; i < size; i++)
+            {
+                unsigned nthreads = thread::hardware_concurrency();
+                unsigned sizet = size/nthreads;
+                if(sizet > 0)
+                {
+                    zd[i] = 0;
+                    thread* pool[nthreads];
+                    data_type results[nthreads];
+                    std::fill(pool, pool + nthreads, null_ptr);
+                    unsigned start = 0, end = _rmo_mapped(i, axis, x, z) + (sizet - 1)*gap + 1;
+                    for(unsigned j = 0; j < nthreads; j++)
+                    {
+                        pool[j] = new thread(_sum_job<data_type>, x->get_data_pointer(),
+                                             gap, start, min(end, size), results + j);
+                        BNNThreads->push(pool[j]);
+                        start = end;
+                        end = start + (sizet - 1)*gap + 1;
+                    }
+
+                    for(unsigned j = 0; j < nthreads; j++)
+                    {
+                        BNNThreads->free_thread(pool[j]);
+                        zd[i] += results[j];
+                    }
+                }
+                else
+                {
+                    _sum_job<data_type>(x->get_data_pointer(), gap, 0, size, zd + i);
+                }
+            }
+            return z;
         }
 
         #include "bnn/templates/core/tensor_ops.hpp"
