@@ -74,7 +74,7 @@ TEST(Operations, Exp)
 int main(int ac, char* av[])
 {
     testing::InitGoogleTest(&ac, av);
-    if(ac == 1)
+    if(ac == 2)
     {
         if(strcmp(av[1], "--CI=ON") == 0)
         {

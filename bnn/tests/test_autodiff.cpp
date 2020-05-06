@@ -138,7 +138,7 @@ TEST(Autodiff, ComputeGradientReverse)
 
 int main(int ac, char* av[])
 {
-    if(ac == 1 && strcmp(av[1], "--CI=ON") == 0)
+    if(ac == 2 && strcmp(av[1], "--CI=ON") == 0)
     {
         testing::GTEST_FLAG(filter) = "Autodiff.BuildGraph";
     }
