@@ -96,12 +96,12 @@ TEST(Core, TensorCPU)
         {
             q->reshape(_new_shape, 2);
         }
-        catch(const std::logic_error& e)
+        catch(const std::runtime_error& e)
         {
             EXPECT_STREQ("The new shape consumes different amount of memory.", e.what());
             throw;
         }
-    }, std::logic_error);
+    }, std::runtime_error);
 }
 
 int main(int ac, char* av[])
