@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <vector>
 #include <bnn/core/tensor.hpp>
+#include <bnn/core/tensor_ops.hpp>
 
 using namespace std;
 using namespace bnn::core;
@@ -33,6 +34,25 @@ TEST(Core, TensorCPU)
     }
     t->set(3., 1, 2, 2);
     EXPECT_EQ(3., t->at(1, 2, 2));
+}
+
+TEST(Core, TensorOpsSum)
+{
+
+    vector<unsigned> shape = {2, 9, 16, 100};
+    TensorCPU<unsigned>* t = new TensorCPU<unsigned>(shape);
+    bnn::core::fill(t, (unsigned)3);
+    TensorCPU<unsigned> *s0, *s1, *s2, *s3, *ts0, *ts1, *ts2, *ts3;
+    s0 = sum(t, 0), s1 = sum(t, 1), s2 = sum(t, 2), s3 = sum(t, 3);
+    ts0 = sum(s0), ts1 = sum(s1), ts2 = sum(s2), ts3 = sum(s3);
+    EXPECT_EQ(s0->at(0, 0, 0), 6)<<"Expected sum along axis 0 is 6";
+    EXPECT_EQ(s1->at(1, 4, 50), 27)<<"Expected sum along axis 1 is 27";
+    EXPECT_EQ(s2->at(0, 4, 99), 48)<<"Expected sum along axis 2 is 48";
+    EXPECT_EQ(s3->at(1, 7, 8), 300)<<"Expected sum along axis 3 is 300";
+    EXPECT_EQ(ts0->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts1->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts2->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts3->at(0), 86400)<<"Expected sum is 86400";
 
     delete BNNMemory;
     delete BNNThreads;
@@ -40,6 +60,10 @@ TEST(Core, TensorCPU)
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
-  return RUN_ALL_TESTS();
+    if(ac == 1 && strcmp(av[1], "--CI=ON") == 0)
+    {
+        testing::GTEST_FLAG(filter) = "Core.TensorCPU";
+    }
+    testing::InitGoogleTest(&ac, av);
+    return RUN_ALL_TESTS();
 }

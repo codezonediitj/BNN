@@ -160,6 +160,14 @@ namespace bnn
                 get_data_pointer
                 ();
 
+                void
+                reshape
+                (vector<unsigned>& shape);
+
+                void
+                reshape
+                (unsigned* shape, unsigned ndims);
+
                 /*
                 * Used for freeing CPU memory.
                 */

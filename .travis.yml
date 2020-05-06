@@ -27,6 +27,7 @@ before_scirpt:
   - gzip -d t10k-labels-idx1-ubyte.gz
 
 script:
-  - ./bin/test_core
-  - ./bin/test_operations
-  - ./bin/test_io
+  - ./bin/test_core --CI=ON
+  - ./bin/test_operations --CI=ON
+  - ./bin/test_io --CI=ON
+  - ./bin/test_autodiff --CI=ON

@@ -176,7 +176,7 @@ namespace bnn
         }
 
         template <class data_type>
-        struct FillArgs: Args<data_type>
+        struct ScalarArgs: Args<data_type>
         {
             data_type val;
         };
@@ -187,7 +187,7 @@ namespace bnn
         (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
-            FillArgs<data_type>* args = reinterpret_cast<FillArgs<data_type>*>(_args);
+            ScalarArgs<data_type>* args = reinterpret_cast<ScalarArgs<data_type>*>(_args);
             for(unsigned i = start; i < end; i++)
             {
                 args->xd[i] = args->val;
@@ -199,9 +199,43 @@ namespace bnn
         fill
         (TensorCPU<data_type>* x, data_type val)
         {
-            FillArgs<data_type> args;
+            ScalarArgs<data_type> args;
             args.val = val;
             op(x, &args, &_fill_job<data_type>);
+        }
+
+        template <class data_type>
+        struct DivideArgs: ScalarArgs<data_type>
+        {
+            data_type val;
+
+            data_type* zd;
+        };
+
+        template <class data_type>
+        void
+        _divide_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            DivideArgs<data_type>* args = reinterpret_cast<DivideArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = args->xd[i]/args->val;
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        divide
+        (TensorCPU<data_type>* x, data_type divisor)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                        (x->get_shape(), x->get_ndims());
+            DivideArgs<data_type> args;
+            args.val = divisor, args.zd = z->get_data_pointer();
+            op(x, &args, &_divide_job<data_type>);
+            return z;
         }
 
         template <class data_type>
@@ -308,9 +342,9 @@ namespace bnn
             }
             for(unsigned i = 0; i < sizez; i++)
             {
-                if(sizet > 0)
+                zd[i] = 0;
+                if(sizet > 1)
                 {
-                    zd[i] = 0;
                     thread* pool[nthreads];
                     data_type results[nthreads];
                     std::fill(results, results + nthreads, (data_type)0);
@@ -343,16 +377,17 @@ namespace bnn
                 }
                 else
                 {
-                    unsigned _end;
+                    unsigned _start, _end;
+                    _start = _rmo_mapped(i, axis, x, z, 0);
                     if(axis == -1)
                     {
                         _end = sizex;
                     }
                     else
                     {
-                        _end = x->get_shape()[axis];
+                        _end = _rmo_mapped(i, axis, x, z, x->get_shape()[axis] - 1) + 1;
                     }
-                    _sum_job<data_type>(x->get_data_pointer(), gap, 0, _end, zd + i);
+                    _sum_job<data_type>(x->get_data_pointer(), gap, _start, _end, zd + i);
                 }
             }
             return z;

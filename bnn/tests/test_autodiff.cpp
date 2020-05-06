@@ -9,6 +9,7 @@
 #include <bnn/autodiff/forward.hpp>
 #include <bnn/autodiff/reverse.hpp>
 #include <bnn/core/tensor_ops.hpp>
+#include <iostream>
 
 using namespace bnn::core;
 using namespace bnn::operators;
@@ -137,6 +138,10 @@ TEST(Autodiff, ComputeGradientReverse)
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
-  return RUN_ALL_TESTS();
+    if(ac == 1 && strcmp(av[1], "--CI=ON") == 0)
+    {
+        testing::GTEST_FLAG(filter) = "Autodiff.BuildGraph";
+    }
+    testing::InitGoogleTest(&ac, av);
+    return RUN_ALL_TESTS();
 }
