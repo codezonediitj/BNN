@@ -4,7 +4,6 @@
 #include <cstring>
 #include <bnn/core/tensor.hpp>
 #include <bnn/utils/utils.hpp>
-#include <iostream>
 
 namespace bnn
 {
