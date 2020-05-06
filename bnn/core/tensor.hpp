@@ -160,6 +160,29 @@ namespace bnn
                 get_data_pointer
                 ();
 
+                /*@overload
+                * Reshapes the tensor.
+                *
+                * @param shape vector<unsigned>&
+                *     New shape of the tensor.
+                */
+                void
+                reshape
+                (vector<unsigned>& shape);
+
+                /*@overload
+                * Reshapes the tensor.
+                *
+                * @param shape unsigned*
+                *     New shape of the tensor.
+                * @param ndims unsigned
+                *     New number of dimensions
+                *     of the tensor.
+                */
+                void
+                reshape
+                (unsigned* shape, unsigned ndims);
+
                 /*
                 * Used for freeing CPU memory.
                 */

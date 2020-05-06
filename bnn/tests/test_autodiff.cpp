@@ -9,6 +9,7 @@
 #include <bnn/autodiff/forward.hpp>
 #include <bnn/autodiff/reverse.hpp>
 #include <bnn/core/tensor_ops.hpp>
+#include <iostream>
 
 using namespace bnn::core;
 using namespace bnn::operators;
@@ -77,7 +78,7 @@ TEST(Autodiff, ComputeGradientForward)
     TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 100;
     x1 = new TensorCPU<float>(shape, ndims);
     x2 = new TensorCPU<float>(shape, ndims);
     x3 = new TensorCPU<float>(shape, ndims);
@@ -110,7 +111,7 @@ TEST(Autodiff, ComputeGradientReverse)
     TensorCPU<float> *x1, *x2, *x3;
     unsigned ndims = 3;
     unsigned* shape = new unsigned[ndims];
-    shape[0] = 1, shape[1] = 1000, shape[2] = 1000;
+    shape[0] = 1, shape[1] = 1000, shape[2] = 100;
     x1 = new TensorCPU<float>(shape, ndims);
     x2 = new TensorCPU<float>(shape, ndims);
     x3 = new TensorCPU<float>(shape, ndims);
@@ -137,6 +138,10 @@ TEST(Autodiff, ComputeGradientReverse)
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
-  return RUN_ALL_TESTS();
+    if(ac == 2 && strcmp(av[1], "--CI=ON") == 0)
+    {
+        testing::GTEST_FLAG(filter) = "Autodiff.BuildGraph";
+    }
+    testing::InitGoogleTest(&ac, av);
+    return RUN_ALL_TESTS();
 }

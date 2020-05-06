@@ -80,6 +80,39 @@ namespace bnn
         copy
         (TensorCPU<data_type>* dest, TensorCPU<data_type>* src);
 
+        /*
+        * Performs summation of elements of the given
+        * Tensor along the given axis.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>* Tensor whose
+        *     elements are to be summed up.
+        * @param axis int The axis along which summation
+        *     is to be done.
+        *     By default, performs summation along all
+        *     the axis.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        sum
+        (TensorCPU<data_type>* x, int axis=-1);
+
+        /*
+        * Performs division of elements of the given
+        * Tensor by a scalar.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>* Tensor whose
+        *     elements are to be considered.
+        * @param divisor data_type
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        divide
+        (TensorCPU<data_type>* x, data_type divisor);
+
     }
 }
 

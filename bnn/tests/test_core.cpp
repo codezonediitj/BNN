@@ -3,10 +3,50 @@
 #include <stdexcept>
 #include <vector>
 #include <bnn/core/tensor.hpp>
+#include <bnn/core/tensor_ops.hpp>
 
 using namespace std;
 using namespace bnn::core;
 using namespace bnn::utils;
+
+TEST(Core, TensorOpsSum)
+{
+
+    vector<unsigned> shape = {2, 9, 16, 100};
+    TensorCPU<unsigned>* t = new TensorCPU<unsigned>(shape);
+    bnn::core::fill(t, (unsigned)3);
+    TensorCPU<unsigned> *s0, *s1, *s2, *s3, *ts0, *ts1, *ts2, *ts3;
+    s0 = sum(t, 0), s1 = sum(t, 1), s2 = sum(t, 2), s3 = sum(t, 3);
+    ts0 = sum(s0), ts1 = sum(s1), ts2 = sum(s2), ts3 = sum(s3);
+    EXPECT_EQ(s0->at(0, 0, 0), 6)<<"Expected sum along axis 0 is 6";
+    EXPECT_EQ(s1->at(1, 4, 50), 27)<<"Expected sum along axis 1 is 27";
+    EXPECT_EQ(s2->at(0, 4, 99), 48)<<"Expected sum along axis 2 is 48";
+    EXPECT_EQ(s3->at(1, 7, 8), 300)<<"Expected sum along axis 3 is 300";
+    EXPECT_EQ(ts0->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts1->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts2->at(0), 86400)<<"Expected sum is 86400";
+    EXPECT_EQ(ts3->at(0), 86400)<<"Expected sum is 86400";
+
+    BNNMemory->free_memory(t);
+    BNNMemory->free_memory(s0);
+    BNNMemory->free_memory(s1);
+    BNNMemory->free_memory(s2);
+    BNNMemory->free_memory(s3);
+    BNNMemory->free_memory(ts0);
+    BNNMemory->free_memory(ts1);
+    BNNMemory->free_memory(ts2);
+    BNNMemory->free_memory(ts3);
+
+}
+
+TEST(Core, TensorOpsDivide)
+{
+    vector<unsigned> shape = {2, 9, 16, 100};
+    TensorCPU<unsigned>* t = new TensorCPU<unsigned>(shape);
+    bnn::core::fill(t, (unsigned)6);
+    TensorCPU<unsigned>* z = divide(t, (unsigned)3);
+    EXPECT_EQ(z->at(0, 4, 8, 50), 2)<<"Expected quotient is 2.";
+}
 
 TEST(Core, TensorCPU)
 {
@@ -34,12 +74,42 @@ TEST(Core, TensorCPU)
     t->set(3., 1, 2, 2);
     EXPECT_EQ(3., t->at(1, 2, 2));
 
-    delete BNNMemory;
-    delete BNNThreads;
+    shape = {100, 28, 28};
+    TensorCPU<unsigned>* p = new TensorCPU<unsigned>(shape);
+    TensorCPU<unsigned>* q = new TensorCPU<unsigned>(shape);
+    vector<unsigned> new_shape = {100, 784};
+    unsigned _new_shape[] = {100, 784};
+    p->reshape(new_shape);
+    q->reshape(_new_shape, (unsigned)2);
+    EXPECT_EQ((p->get_shape()[0] == 100) && (p->get_shape()[1], 784), true)
+    <<"Expected shape is {100, 784}";
+    EXPECT_EQ((q->get_shape()[0] == 100) && (q->get_shape()[1], 784), true)
+    <<"Expected shape is {100, 784}";
+    EXPECT_EQ((p->get_ndims() == 2) && (q->get_ndims() == 2), true)
+    <<"Expected number of dimensions is 2";
+
+    new_shape = {10, 78};
+    _new_shape[0] = 10, _new_shape[1] = 78;
+
+    EXPECT_THROW({
+        try
+        {
+            q->reshape(_new_shape, 2);
+        }
+        catch(const std::logic_error& e)
+        {
+            EXPECT_STREQ("The new shape consumes different amount of memory.", e.what());
+            throw;
+        }
+    }, std::logic_error);
 }
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
-  return RUN_ALL_TESTS();
+    if(ac == 2 && strcmp(av[1], "--CI=ON") == 0)
+    {
+        testing::GTEST_FLAG(filter) = "Core.TensorCPU";
+    }
+    testing::InitGoogleTest(&ac, av);
+    return RUN_ALL_TESTS();
 }

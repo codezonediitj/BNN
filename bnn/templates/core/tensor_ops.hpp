@@ -61,5 +61,29 @@ template void copy<unsigned long long>(TensorCPU<unsigned long long>* dest, Tens
 template void copy<float>(TensorCPU<float>* dest, TensorCPU<float>* src);
 template void copy<double>(TensorCPU<double>* dest, TensorCPU<double>* src);
 template void copy<long double>(TensorCPU<long double>* dest, TensorCPU<long double>* src);
+template TensorCPU<bool>* sum<bool>(TensorCPU<bool>* x, int axis);
+template TensorCPU<short>* sum<short>(TensorCPU<short>* x, int axis);
+template TensorCPU<unsigned short>* sum<unsigned short>(TensorCPU<unsigned short>* x, int axis);
+template TensorCPU<int>* sum<int>(TensorCPU<int>* x, int axis);
+template TensorCPU<unsigned int>* sum<unsigned int>(TensorCPU<unsigned int>* x, int axis);
+template TensorCPU<long>* sum<long>(TensorCPU<long>* x, int axis);
+template TensorCPU<unsigned long>* sum<unsigned long>(TensorCPU<unsigned long>* x, int axis);
+template TensorCPU<long long>* sum<long long>(TensorCPU<long long>* x, int axis);
+template TensorCPU<unsigned long long>* sum<unsigned long long>(TensorCPU<unsigned long long>* x, int axis);
+template TensorCPU<float>* sum<float>(TensorCPU<float>* x, int axis);
+template TensorCPU<double>* sum<double>(TensorCPU<double>* x, int axis);
+template TensorCPU<long double>* sum<long double>(TensorCPU<long double>* x, int axis);
+template TensorCPU<bool>* divide<bool>(TensorCPU<bool>* x, bool divisor);
+template TensorCPU<short>* divide<short>(TensorCPU<short>* x, short divisor);
+template TensorCPU<unsigned short>* divide<unsigned short>(TensorCPU<unsigned short>* x, unsigned short divisor);
+template TensorCPU<int>* divide<int>(TensorCPU<int>* x, int divisor);
+template TensorCPU<unsigned int>* divide<unsigned int>(TensorCPU<unsigned int>* x, unsigned int divisor);
+template TensorCPU<long>* divide<long>(TensorCPU<long>* x, long divisor);
+template TensorCPU<unsigned long>* divide<unsigned long>(TensorCPU<unsigned long>* x, unsigned long divisor);
+template TensorCPU<long long>* divide<long long>(TensorCPU<long long>* x, long long divisor);
+template TensorCPU<unsigned long long>* divide<unsigned long long>(TensorCPU<unsigned long long>* x, unsigned long long divisor);
+template TensorCPU<float>* divide<float>(TensorCPU<float>* x, float divisor);
+template TensorCPU<double>* divide<double>(TensorCPU<double>* x, double divisor);
+template TensorCPU<long double>* divide<long double>(TensorCPU<long double>* x, long double divisor);
 
 #endif

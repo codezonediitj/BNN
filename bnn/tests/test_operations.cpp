@@ -73,6 +73,16 @@ TEST(Operations, Exp)
 
 int main(int ac, char* av[])
 {
-  testing::InitGoogleTest(&ac, av);
-  return RUN_ALL_TESTS();
+    testing::InitGoogleTest(&ac, av);
+    if(ac == 2)
+    {
+        if(strcmp(av[1], "--CI=ON") == 0)
+        {
+            return 0;
+        }
+        else if(strcmp(av[1], "--CI=OFF") == 0)
+        {
+            return RUN_ALL_TESTS();
+        }
+    }
 }

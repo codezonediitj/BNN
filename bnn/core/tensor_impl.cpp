@@ -179,6 +179,41 @@ namespace bnn
         }
 
         template <class data_type>
+        void
+        TensorCPU<data_type>::
+        reshape
+        (vector<unsigned>& shape)
+        {
+            unsigned size = _calc_size(this->shape_cpu, this->ndims_cpu);
+            unsigned* new_shape = new unsigned[shape.size()];
+            copy(shape.begin(), shape.end(), new_shape);
+            this->reshape(new_shape, shape.size());
+        }
+
+        template <class data_type>
+        void
+        TensorCPU<data_type>::
+        reshape
+        (unsigned* shape, unsigned ndims)
+        {
+            unsigned size = _calc_size(this->shape_cpu, this->ndims_cpu);
+            unsigned* new_shape = new unsigned[ndims];
+            for(unsigned i = 0; i < ndims; i++)
+            {
+                new_shape[i] = shape[i];
+            }
+            unsigned _size = _calc_size(new_shape, ndims);
+            if(size != _size)
+            {
+                delete new_shape;
+                string msg = "The new shape consumes different amount of memory.";
+                check(false, msg);
+            }
+            this->shape_cpu = new_shape;
+            this->ndims_cpu = ndims;
+        }
+
+        template <class data_type>
         TensorCPU<data_type>::
         ~TensorCPU
         ()
