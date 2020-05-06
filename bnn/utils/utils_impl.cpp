@@ -196,7 +196,7 @@ namespace bnn
             {
                 delete BNNThreads;
                 delete BNNMemory;
-                throw std::logic_error(msg);
+                throw std::runtime_error(msg);
             }
         }
 
