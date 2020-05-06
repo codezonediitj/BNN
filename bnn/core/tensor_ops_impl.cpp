@@ -7,7 +7,6 @@
 #include <cmath>
 #include <bnn/utils/utils.hpp>
 #include <bnn/core/tensor_ops.hpp>
-#include <iostream>
 
 namespace bnn
 {
