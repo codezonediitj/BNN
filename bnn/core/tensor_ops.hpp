@@ -113,6 +113,34 @@ namespace bnn
         divide
         (TensorCPU<data_type>* x, data_type divisor);
 
+        /*
+        * Returns a one hot tensor with a new axis appended
+        * in its shape.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>* Tensor whose
+        *     elements are to be converted to one
+        *     hot notation.
+        * @param on_value data_type The value which
+        *     is to be used for filling in the one
+        *     hot tensor when the value in the original
+        *     tensor matches with the index in the
+        *     range [0, depth) for the new axis.
+        * @param off_value data_type The value which
+        *     is to be used for filling in the one
+        *     hot tensor when the value in the original
+        *     tensor doesn't match with the index in the
+        *     range [0, depth) for the new axis.
+        * @param depth unsigned The size of the axis which
+        *     is to be appended.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        one_hot
+        (TensorCPU<data_type>* x, data_type on_value,
+         data_type off_value, unsigned depth);
+
     }
 }
 
