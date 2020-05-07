@@ -85,5 +85,17 @@ template TensorCPU<unsigned long long>* divide<unsigned long long>(TensorCPU<uns
 template TensorCPU<float>* divide<float>(TensorCPU<float>* x, float divisor);
 template TensorCPU<double>* divide<double>(TensorCPU<double>* x, double divisor);
 template TensorCPU<long double>* divide<long double>(TensorCPU<long double>* x, long double divisor);
+template TensorCPU<bool>* one_hot<bool>(TensorCPU<bool>* x, bool on_value, bool off_value, unsigned depth);
+template TensorCPU<short>* one_hot<short>(TensorCPU<short>* x, short on_value, short off_value, unsigned depth);
+template TensorCPU<unsigned short>* one_hot<unsigned short>(TensorCPU<unsigned short>* x, unsigned short on_value, unsigned short off_value, unsigned depth);
+template TensorCPU<int>* one_hot<int>(TensorCPU<int>* x, int on_value, int off_value, unsigned depth);
+template TensorCPU<unsigned int>* one_hot<unsigned int>(TensorCPU<unsigned int>* x, unsigned int on_value, unsigned int off_value, unsigned depth);
+template TensorCPU<long>* one_hot<long>(TensorCPU<long>* x, long on_value, long off_value, unsigned depth);
+template TensorCPU<unsigned long>* one_hot<unsigned long>(TensorCPU<unsigned long>* x, unsigned long on_value, unsigned long off_value, unsigned depth);
+template TensorCPU<long long>* one_hot<long long>(TensorCPU<long long>* x, long long on_value, long long off_value, unsigned depth);
+template TensorCPU<unsigned long long>* one_hot<unsigned long long>(TensorCPU<unsigned long long>* x, unsigned long long on_value, unsigned long long off_value, unsigned depth);
+template TensorCPU<float>* one_hot<float>(TensorCPU<float>* x, float on_value, float off_value, unsigned depth);
+template TensorCPU<double>* one_hot<double>(TensorCPU<double>* x, double on_value, double off_value, unsigned depth);
+template TensorCPU<long double>* one_hot<long double>(TensorCPU<long double>* x, long double on_value, long double off_value, unsigned depth);
 
 #endif

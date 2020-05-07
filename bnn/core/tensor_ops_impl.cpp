@@ -207,8 +207,6 @@ namespace bnn
         template <class data_type>
         struct DivideArgs: ScalarArgs<data_type>
         {
-            data_type val;
-
             data_type* zd;
         };
 
@@ -390,6 +388,52 @@ namespace bnn
                     _sum_job<data_type>(x->get_data_pointer(), gap, _start, _end, zd + i);
                 }
             }
+            return z;
+        }
+
+        template <class data_type>
+        struct OneHot: UnaryArgs<data_type>
+        {
+            data_type* zd;
+
+            data_type on, off;
+
+            unsigned depth;
+
+        };
+
+        template <class data_type>
+        void
+        _one_hot_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            OneHot<data_type>* args = reinterpret_cast<OneHot<data_type>*>(_args);
+            unsigned k = start;
+            for(unsigned i = start; i < end; i++)
+            {
+                for(unsigned j = 0; j < args->depth; j++)
+                {
+                    args->zd[k] = j == args->xd[i] ? args->on : args->off;
+                    k++;
+                }
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        one_hot
+        (TensorCPU<data_type>* x, data_type on_value,
+         data_type off_value, unsigned depth)
+        {
+            vector<unsigned> shape
+            (x->get_shape(), x->get_shape() + x->get_ndims());
+            shape.push_back(depth);
+            TensorCPU<data_type>* z = new TensorCPU<data_type>(shape);
+            OneHot<data_type> args;
+            args.zd = z->get_data_pointer();
+            args.on = on_value, args.off = off_value, args.depth = depth;
+            op(x, &args, &_one_hot_job<data_type>);
             return z;
         }
 

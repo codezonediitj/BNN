@@ -48,6 +48,27 @@ TEST(Core, TensorOpsDivide)
     EXPECT_EQ(z->at(0, 4, 8, 50), 2)<<"Expected quotient is 2.";
 }
 
+TEST(Core, TensorOpsOneHot)
+{
+    vector<unsigned> shape = {1000};
+    TensorCPU<unsigned>* labels = new TensorCPU<unsigned>(shape);
+    bnn::core::fill(labels, (unsigned)9);
+    for(unsigned i = 0; i < 9; i++)
+    {
+        labels->set(i, i);
+    }
+    TensorCPU<unsigned>* new_labels = one_hot(labels, (unsigned)1, (unsigned)0, (unsigned)10);
+    for(unsigned i = 0; i < 10; i++)
+    {
+        for(unsigned j = 0; j < 10; j++)
+        {
+            EXPECT_EQ(new_labels->at(i, j), labels->at(i) == j)
+            <<"Expected one hot value is "<<(labels->at(i) == j)
+            <<" for "<<i<<", "<<j;
+        }
+    }
+}
+
 TEST(Core, TensorCPU)
 {
     TensorCPU<float>* t_f = new TensorCPU<float>;

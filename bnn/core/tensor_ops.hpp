@@ -113,6 +113,12 @@ namespace bnn
         divide
         (TensorCPU<data_type>* x, data_type divisor);
 
+        template <class data_type>
+        TensorCPU<data_type>*
+        one_hot
+        (TensorCPU<data_type>* x, data_type on_value,
+         data_type off_value, unsigned depth);
+
     }
 }
 
