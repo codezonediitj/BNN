@@ -479,6 +479,41 @@ namespace bnn
             BNNMemory->invalidate(this);
         }
 
+        template <class data_type>
+        unsigned long int
+        MatMul<data_type>::_id = 0;
+
+        template <class data_type>
+        MatMul<data_type>::
+        MatMul
+        ():
+        BinaryOperator<data_type>::BinaryOperator("MatMul")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        MatMul<data_type>::
+        MatMul
+        (Operator<data_type>* m, Operator<data_type>* n):
+        BinaryOperator<data_type>::BinaryOperator
+        (m, n, "MatMul_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        MatMul<data_type>::
+        compute_value
+        ()
+        {
+            TensorCPU<data_type> *m, *n;
+            m = this->get_value(0);
+            n = this->get_value(1);
+            return mat_mul(m, n);
+        }
+
         #include "bnn/templates/operations/operators.hpp"
 
     }

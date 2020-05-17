@@ -37,6 +37,20 @@ namespace bnn
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
 
         /*
+        * Performs matrix multiplication on two 2D tensors.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>* First 2D tensor.
+        * @param y Tensor<data_type>* Second 2D tesnor.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        matmul
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
+
+        /*
         * Performs point wise exponentiation of a tensor.
         * Returns the result in a new tensor.
         *

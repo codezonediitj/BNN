@@ -150,6 +150,52 @@ namespace bnn
         }
 
         template <class data_type>
+        struct MatMulArgs: Args<data_type>
+        {
+            data_type *yd, *zd;
+
+            unsigned common, coly;
+        };
+
+        template <class data_type>
+        void
+        _mat_mul_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            MatMulArgs<data_type>* args = reinterpret_cast<MatMulArgs<data_type>*>(_args);
+            data_type *x, *z;
+            x = args->zd, z = args->xd;
+            for(unsigned idx = start; idx < end; idx++)
+            {
+                unsigned i, j, k;
+                j = idx%args->coly, i = idx/args->coly;
+                z[idx] = 0;
+                for(k = 0; k < args->common; k++)
+                {
+                    z[idx] += x[k + args->common*i]*args->yd[j + args->coly*k];
+                }
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        matmul
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
+        {
+            string msg = "Incompatible dimensions for matrix multiplication.";
+            check(x->get_shape()[1] == y->get_shape()[0], msg);
+            unsigned shape[] = {x->get_shape()[0], y->get_shape()[1]};
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (shape, 2);
+            MatMulArgs<data_type> args;
+            args.yd = y->get_data_pointer(); args.zd = x->get_data_pointer();
+            args.coly = y->get_shape()[1]; args.common = x->get_shape()[1];
+            op(z, &args, &_mat_mul_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
         void
         _exp_job
         (Args<data_type>* _args, unsigned start,
