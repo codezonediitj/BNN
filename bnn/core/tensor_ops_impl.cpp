@@ -155,11 +155,13 @@ namespace bnn
             data_type *yd, *zd;
 
             unsigned common, coly;
+
+            bool transpose_x, transpose_y;
         };
 
         template <class data_type>
         void
-        _mat_mul_job
+        _matmul_job
         (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
@@ -173,7 +175,9 @@ namespace bnn
                 z[idx] = 0;
                 for(k = 0; k < args->common; k++)
                 {
-                    z[idx] += x[k + args->common*i]*args->yd[j + args->coly*k];
+                    data_type left_arg = args->transpose_x ? x[i + args->common*k] : x[k + args->common*i];
+                    data_type right_arg = args->transpose_y ? args->yd[k + args->coly*j] : args->yd[j + args->coly*k];
+                    z[idx] += left_arg*right_arg;
                 }
             }
         }
@@ -181,17 +185,20 @@ namespace bnn
         template <class data_type>
         TensorCPU<data_type>*
         matmul
-        (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y,
+         bool transpose_x=false, bool transpose_y=false)
         {
+            bool check_idx_x = !transpose_x, check_idx_y = transpose_y;
             string msg = "Incompatible dimensions for matrix multiplication.";
-            check(x->get_shape()[1] == y->get_shape()[0], msg);
+            check(x->get_shape()[check_idx_x] == y->get_shape()[check_idx_y], msg);
             unsigned shape[] = {x->get_shape()[0], y->get_shape()[1]};
             TensorCPU<data_type>* z = new TensorCPU<data_type>
                                        (shape, 2);
             MatMulArgs<data_type> args;
             args.yd = y->get_data_pointer(); args.zd = x->get_data_pointer();
             args.coly = y->get_shape()[1]; args.common = x->get_shape()[1];
-            op(z, &args, &_mat_mul_job<data_type>);
+            args.transpose_x = transpose_x, args.transpose_y = transpose_y;
+            op(z, &args, &_matmul_job<data_type>);
             return z;
         }
 

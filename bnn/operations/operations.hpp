@@ -84,6 +84,56 @@ namespace bnn
         exp
         (Operator<data_type>* a);
 
+        /* @overload
+        * Creates a bnn::operators::MatMul object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::MatMul object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (TensorCPU<data_type>* a, Operator<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::MatMul object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a Pointer to Operator object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (Operator<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::MatMul object.
+        *
+        * @param a Pointer to Operator object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (Operator<data_type>* a, Operator<data_type>* b);
+
     }
 }
 

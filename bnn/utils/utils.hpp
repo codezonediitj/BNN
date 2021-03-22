@@ -17,6 +17,10 @@ namespace bnn
         check
         (bool exp, string msg);
 
+        void
+        raise_not_implemented_error
+        (string feature_name);
+
         unsigned
         _calc_size
         (unsigned* shape, unsigned ndims);

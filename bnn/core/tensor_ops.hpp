@@ -48,7 +48,8 @@ namespace bnn
         template <class data_type>
         TensorCPU<data_type>*
         matmul
-        (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y,
+         bool transpose_x=false, bool transpose_y=false);
 
         /*
         * Performs point wise exponentiation of a tensor.
