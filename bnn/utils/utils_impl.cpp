@@ -200,15 +200,6 @@ namespace bnn
             }
         }
 
-        void
-        raise_not_implemented_error
-        (string feature_name)
-        {
-            delete BNNThreads;
-            delete BNNMemory;
-            throw std::runtime_error(feature_name + " hasn't been implemented yet.");
-        }
-
         unsigned
         _calc_size
         (unsigned* shape, unsigned ndims)

@@ -6,7 +6,6 @@
 #include <bnn/core/tensor_ops.hpp>
 #include <bnn/operations/operators.hpp>
 #include <bnn/utils/utils.hpp>
-#include <iostream>
 
 namespace bnn
 {
@@ -521,7 +520,7 @@ namespace bnn
         compute_gradient
         (TensorCPU<data_type>* var)
         {
-            bnn::utils::raise_not_implemented_error(std::string("MatMul::compute_gradient"));
+            check(false, std::string("MatMul::compute_gradient"));
         }
 
         template <class data_type>

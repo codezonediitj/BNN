@@ -3,7 +3,6 @@
 
 #include <bnn/autodiff/graph.hpp>
 #include <bnn/utils/utils.hpp>
-#include <iostream>
 
 namespace bnn
 {
