@@ -353,6 +353,76 @@ namespace bnn
         };
 
         template <class data_type>
+        class Multiply: public BinaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                Multiply
+                ();
+
+                Multiply
+                (Operator<data_type>* a, Operator<data_type>* b);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~Multiply
+                ();
+        };
+
+        template <class data_type>
+        class Divide: public BinaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                Divide
+                ();
+
+                Divide
+                (Operator<data_type>* a, Operator<data_type>* b);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~Divide
+                ();
+        };
+
+        template <class data_type>
         class Exp: public UnaryOperator<data_type>
         {
             protected:
@@ -384,6 +454,76 @@ namespace bnn
 
                 virtual
                 ~Exp
+                ();
+        };
+
+        template <class data_type>
+        class Log: public UnaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                Log
+                ();
+
+                Log
+                (Operator<data_type>* a);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~Log
+                ();
+        };
+
+        template <class data_type>
+        class ReLU: public UnaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                ReLU
+                ();
+
+                ReLU
+                (Operator<data_type>* a);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~ReLU
                 ();
         };
 
