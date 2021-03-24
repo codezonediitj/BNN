@@ -9,7 +9,6 @@
 #include <bnn/autodiff/forward.hpp>
 #include <bnn/autodiff/reverse.hpp>
 #include <bnn/core/tensor_ops.hpp>
-#include <iostream>
 
 using namespace bnn::core;
 using namespace bnn::operators;
@@ -131,6 +130,53 @@ TEST(Autodiff, ComputeGradientReverse)
     "Expected value of graident with respect to x2 is "<<gradvals[0];
     EXPECT_NEAR(gradvals[1], grads[1]->at(0, 0, 0), 1.e-6)<<
     "Expected value of graident with respect to x2 is "<<gradvals[1];
+
+    BNNMemory->free_memory(x1);
+    BNNMemory->free_memory(x2);
+    BNNMemory->free_memory(x3);
+    BNNMemory->free_memory(grads[0]);
+    BNNMemory->free_memory(grads[1]);
+}
+
+TEST(Autodiff, MatMulComputeGradientReverse)
+{
+    TensorCPU<float> *x1, *x2, *x3, *x4;
+    unsigned ndims = 2;
+    unsigned* shape = new unsigned[ndims];
+    shape[0] = 3, shape[1] = 3;
+    x1 = new TensorCPU<float>(shape, ndims);
+    x2 = new TensorCPU<float>(shape, ndims);
+    x3 = new TensorCPU<float>(shape, ndims);
+    x4 = new TensorCPU<float>(shape, ndims);
+    float A[3][3] = {{1, -1, 7}, {-2, 3, 3}, {1, 0, 1}};
+    float B[3][3] = {{8, -9, -6}, {1, -3, -4}, {2, 8, -8}};
+    float C[3][3] = {{1, 0, 0}, {0, 3, 0}, {0, 0, 1}};
+    float D[3][3] = {{1, 2, 1}, {2, 3, 4}, {4, 1, 2}};
+    for( int i = 0; i < shape[0]; i++ )
+    {
+        for( int j = 0; j < shape[1]; j++ )
+        {
+            x1->set(A[i][j], i, j);
+            x2->set(B[i][j], i, j);
+            x3->set(C[i][j], i, j);
+            x4->set(D[i][j], i, j);
+        }
+    }
+    Operator<float> *x1x2, *x3x4;
+    x1x2 = bnn::operations::matmul(x1, x2), x3x4 = bnn::operations::matmul(x3, x4);
+    Operator<float>* expr = bnn::operations::matmul(x1x2, x3x4);
+    TensorCPU<float>** vars = new TensorCPU<float>*[1];
+    vars[0] = x3;
+    TensorCPU<float>** grads =  compute_gradient_reverse(expr, vars, 1);
+    float gradvals[3][3] = {{96., 216., 168.}, {328., 738., 574.}, {-384., -864., -672.}};
+    for( int i = 0; i < shape[0]; i++ )
+    {
+        for( int j = 0; j < shape[1]; j++ )
+        {
+            EXPECT_NEAR(gradvals[i][j], grads[0]->at(i, j), 1.e-6)<<
+            "Expected value of graident with respect to x3 at ("<<i<<", "<<j<<") is "<<gradvals[i][j];
+        }
+    }
 
     delete BNNMemory;
     delete BNNThreads;

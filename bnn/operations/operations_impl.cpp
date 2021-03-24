@@ -74,6 +74,47 @@ namespace bnn
             return result;
         }
 
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return matmul(ta, tb);
+        }
+
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (TensorCPU<data_type>* a, Operator<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return matmul(ta, b);
+        }
+
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (Operator<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return matmul(a, tb);
+        }
+
+        template <class data_type>
+        MatMul<data_type>*
+        matmul
+        (Operator<data_type>* a, Operator<data_type>* b)
+        {
+            MatMul<data_type>* result = new MatMul<data_type>(a, b);
+            return result;
+        }
+
         #include "bnn/templates/operations/operations.hpp"
 
     }

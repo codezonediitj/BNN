@@ -479,6 +479,80 @@ namespace bnn
             BNNMemory->invalidate(this);
         }
 
+        template <class data_type>
+        unsigned long int
+        MatMul<data_type>::_id = 0;
+
+        template <class data_type>
+        MatMul<data_type>::
+        MatMul
+        ():
+        BinaryOperator<data_type>::BinaryOperator("MatMul")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        MatMul<data_type>::
+        MatMul
+        (Operator<data_type>* m, Operator<data_type>* n):
+        BinaryOperator<data_type>::BinaryOperator
+        (m, n, "MatMul_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        MatMul<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *m, *n;
+            m = this->get_arg((bool)0);
+            n = this->get_arg((bool)1);
+            return matmul(m->get_value(), n->get_value());
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        MatMul<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+            check(false, std::string("MatMul::compute_gradient"));
+        }
+
+        template <class data_type>
+        void
+        MatMul<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg1 = this->get_arg((bool)0);
+            Operator<data_type>* arg2 = this->get_arg((bool)1);
+            if(arg1->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                TensorCPU<data_type>* n_val = arg2->get_value();
+                arg1->set_gradient(matmul(dy_dcurr, n_val, false, true));
+            }
+            if(arg2->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                TensorCPU<data_type>* m_val = arg1->get_value();
+                arg2->set_gradient(matmul(m_val, dy_dcurr, true, false));
+            }
+        }
+
+        template <class data_type>
+        MatMul<data_type>::
+        ~MatMul
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
         #include "bnn/templates/operations/operators.hpp"
 
     }

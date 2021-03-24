@@ -110,7 +110,7 @@ namespace bnn
 
                 Operator<data_type>* op;
                 unsigned i = 0, j = 0;
-                while(layer->ops[i] != NULL)
+                while(i < layer->len_ops)
                 {
                     op = layer->ops[i];
                     if(op->num_args() == 1)

@@ -73,5 +73,17 @@ template class Exp<unsigned long long>;
 template class Exp<float>;
 template class Exp<double>;
 template class Exp<long double>;
+template class MatMul<bool>;
+template class MatMul<short>;
+template class MatMul<unsigned short>;
+template class MatMul<int>;
+template class MatMul<unsigned int>;
+template class MatMul<long>;
+template class MatMul<unsigned long>;
+template class MatMul<long long>;
+template class MatMul<unsigned long long>;
+template class MatMul<float>;
+template class MatMul<double>;
+template class MatMul<long double>;
 
 #endif

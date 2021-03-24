@@ -387,6 +387,41 @@ namespace bnn
                 ();
         };
 
+        template <class data_type>
+        class MatMul: public BinaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+
+            public:
+
+                MatMul
+                ();
+
+                MatMul
+                (Operator<data_type>* m, Operator<data_type>* n);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~MatMul
+                ();
+        };
+
     }
 }
 

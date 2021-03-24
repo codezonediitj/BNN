@@ -150,6 +150,68 @@ namespace bnn
         }
 
         template <class data_type>
+        struct MatMulArgs: Args<data_type>
+        {
+            data_type *yd, *zd;
+
+            unsigned common, coly;
+
+            bool transpose_x, transpose_y;
+        };
+
+        template <class data_type>
+        void
+        _matmul_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            MatMulArgs<data_type>* args = reinterpret_cast<MatMulArgs<data_type>*>(_args);
+            data_type *x, *z;
+            x = args->zd, z = args->xd;
+            for(unsigned idx = start; idx < end; idx++)
+            {
+                unsigned i, j, k;
+                j = idx%args->coly, i = idx/args->coly;
+                z[idx] = 0;
+                for(k = 0; k < args->common; k++)
+                {
+                    data_type left_arg = args->transpose_x ? x[i + args->common*k] : x[k + args->common*i];
+                    data_type right_arg = args->transpose_y ? args->yd[k + args->coly*j] : args->yd[j + args->coly*k];
+                    z[idx] += left_arg*right_arg;
+                }
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        matmul
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y,
+         bool transpose_x, bool transpose_y)
+        {
+            unsigned x_rows = x->get_shape()[0], x_cols = x->get_shape()[1];
+            unsigned y_rows = y->get_shape()[0], y_cols = y->get_shape()[1];
+            if( transpose_x )
+            {
+                std::swap(x_rows, x_cols);
+            }
+            if( transpose_y )
+            {
+                std::swap(y_rows, y_cols);
+            }
+            string msg = "Incompatible dimensions for matrix multiplication.";
+            check(x_cols == y_rows, msg);
+            unsigned shape[] = {x_rows, y_cols};
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (shape, 2);
+            MatMulArgs<data_type> args;
+            args.yd = y->get_data_pointer(); args.zd = x->get_data_pointer();
+            args.coly = y_cols; args.common = x_cols;
+            args.transpose_x = transpose_x, args.transpose_y = transpose_y;
+            op(z, &args, &_matmul_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
         void
         _exp_job
         (Args<data_type>* _args, unsigned start,

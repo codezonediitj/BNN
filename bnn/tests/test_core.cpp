@@ -69,6 +69,27 @@ TEST(Core, TensorOpsOneHot)
     }
 }
 
+TEST(Core, TensorOpsMatmul)
+{
+    TensorCPU<float> *M, *N, *V;
+    vector<unsigned> shapeM = {200, 784}, shapeN = {784, 3000}, shapeV = {784, 1};
+    M = new TensorCPU<float>(shapeM);
+    N = new TensorCPU<float>(shapeN);
+    V = new TensorCPU<float>(shapeV);
+    bnn::core::fill(M, (float)2.);
+    bnn::core::fill(N, (float)3.);
+    bnn::core::fill(V, (float)3.);
+    string msg = "The resultant matrix should be filled with 4704.";
+    TensorCPU<float>* MN = matmul(M, N);
+    EXPECT_EQ(MN->at(0, 0), 4704.)<<msg;
+    EXPECT_EQ(MN->at(199, 2999), 4704.)<<msg;
+    EXPECT_EQ(MN->at(100, 1500), 4704.)<<msg;
+    TensorCPU<float>* MV = matmul(M, V);
+    EXPECT_EQ(MN->at(0, 0), 4704.)<<msg;
+    EXPECT_EQ(MN->at(199, 0), 4704.)<<msg;
+    EXPECT_EQ(MN->at(100, 0), 4704.)<<msg;
+}
+
 TEST(Core, TensorCPU)
 {
     TensorCPU<float>* t_f = new TensorCPU<float>;
