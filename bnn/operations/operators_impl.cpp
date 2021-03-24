@@ -6,6 +6,7 @@
 #include <bnn/core/tensor_ops.hpp>
 #include <bnn/operations/operators.hpp>
 #include <bnn/utils/utils.hpp>
+#include <iostream>
 
 namespace bnn
 {
@@ -508,10 +509,10 @@ namespace bnn
         compute_value
         ()
         {
-            TensorCPU<data_type> *m, *n;
-            m = this->get_value(0);
-            n = this->get_value(1);
-            return matmul(m, n);
+            Operator<data_type> *m, *n;
+            m = this->get_arg((bool)0);
+            n = this->get_arg((bool)1);
+            return matmul(m->get_value(), n->get_value());
         }
 
         template <class data_type>
@@ -529,20 +530,28 @@ namespace bnn
         compute_gradient_reverse
         ()
         {
-            Operator<data_type>* arg1 = this->get_arg(0);
-            Operator<data_type>* arg2 = this->get_arg(1);
+            Operator<data_type>* arg1 = this->get_arg((bool)0);
+            Operator<data_type>* arg2 = this->get_arg((bool)1);
             if(arg1->is_variable())
             {
                 TensorCPU<data_type>* dy_dcurr = this->get_gradient();
                 TensorCPU<data_type>* n_val = arg2->get_value();
-                arg1->set_gradient(matmul(dy_dcurr, arg2, transpose_y=true));
+                arg1->set_gradient(matmul(dy_dcurr, n_val, false, true));
             }
             if(arg2->is_variable())
             {
                 TensorCPU<data_type>* dy_dcurr = this->get_gradient();
-                TensorCPU<data_type>* n_val = arg1->get_value();
-                arg2->set_gradient(matmul(arg1, dy_dcurr, transpose_x=true));
+                TensorCPU<data_type>* m_val = arg1->get_value();
+                arg2->set_gradient(matmul(m_val, dy_dcurr, true, false));
             }
+        }
+
+        template <class data_type>
+        MatMul<data_type>::
+        ~MatMul
+        ()
+        {
+            BNNMemory->invalidate(this);
         }
 
         #include "bnn/templates/operations/operators.hpp"

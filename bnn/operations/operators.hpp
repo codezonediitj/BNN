@@ -388,7 +388,7 @@ namespace bnn
         };
 
         template <class data_type>
-        class MatMul: BinaryOperator<data_type>
+        class MatMul: public BinaryOperator<data_type>
         {
             protected:
 

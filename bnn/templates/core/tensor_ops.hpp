@@ -97,17 +97,17 @@ template TensorCPU<unsigned long long>* one_hot<unsigned long long>(TensorCPU<un
 template TensorCPU<float>* one_hot<float>(TensorCPU<float>* x, float on_value, float off_value, unsigned depth);
 template TensorCPU<double>* one_hot<double>(TensorCPU<double>* x, double on_value, double off_value, unsigned depth);
 template TensorCPU<long double>* one_hot<long double>(TensorCPU<long double>* x, long double on_value, long double off_value, unsigned depth);
-template TensorCPU<bool>* matmul<bool>(TensorCPU<bool>* x, TensorCPU<bool>* y);
-template TensorCPU<short>* matmul<short>(TensorCPU<short>* x, TensorCPU<short>* y);
-template TensorCPU<unsigned short>* matmul<unsigned short>(TensorCPU<unsigned short>* x, TensorCPU<unsigned short>* y);
-template TensorCPU<int>* matmul<int>(TensorCPU<int>* x, TensorCPU<int>* y);
-template TensorCPU<unsigned int>* matmul<unsigned int>(TensorCPU<unsigned int>* x, TensorCPU<unsigned int>* y);
-template TensorCPU<long>* matmul<long>(TensorCPU<long>* x, TensorCPU<long>* y);
-template TensorCPU<unsigned long>* matmul<unsigned long>(TensorCPU<unsigned long>* x, TensorCPU<unsigned long>* y);
-template TensorCPU<long long>* matmul<long long>(TensorCPU<long long>* x, TensorCPU<long long>* y);
-template TensorCPU<unsigned long long>* matmul<unsigned long long>(TensorCPU<unsigned long long>* x, TensorCPU<unsigned long long>* y);
-template TensorCPU<float>* matmul<float>(TensorCPU<float>* x, TensorCPU<float>* y);
-template TensorCPU<double>* matmul<double>(TensorCPU<double>* x, TensorCPU<double>* y);
-template TensorCPU<long double>* matmul<long double>(TensorCPU<long double>* x, TensorCPU<long double>* y);
+template TensorCPU<bool>* matmul<bool>(TensorCPU<bool>* x, TensorCPU<bool>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<short>* matmul<short>(TensorCPU<short>* x, TensorCPU<short>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<unsigned short>* matmul<unsigned short>(TensorCPU<unsigned short>* x, TensorCPU<unsigned short>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<int>* matmul<int>(TensorCPU<int>* x, TensorCPU<int>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<unsigned int>* matmul<unsigned int>(TensorCPU<unsigned int>* x, TensorCPU<unsigned int>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<long>* matmul<long>(TensorCPU<long>* x, TensorCPU<long>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<unsigned long>* matmul<unsigned long>(TensorCPU<unsigned long>* x, TensorCPU<unsigned long>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<long long>* matmul<long long>(TensorCPU<long long>* x, TensorCPU<long long>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<unsigned long long>* matmul<unsigned long long>(TensorCPU<unsigned long long>* x, TensorCPU<unsigned long long>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<float>* matmul<float>(TensorCPU<float>* x, TensorCPU<float>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<double>* matmul<double>(TensorCPU<double>* x, TensorCPU<double>* y, bool transpose_x, bool transpose_y);
+template TensorCPU<long double>* matmul<long double>(TensorCPU<long double>* x, TensorCPU<long double>* y, bool transpose_x, bool transpose_y);
 
 #endif

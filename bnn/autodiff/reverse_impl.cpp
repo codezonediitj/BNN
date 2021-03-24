@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <iostream>
 
 namespace bnn
 {
@@ -197,11 +198,12 @@ namespace bnn
                     jobs[i][1] = jobs[i][0];
                 }
 
+                unsigned var_idx = 0;
                 for(unsigned i = 0; i < layer->len_ops; i++)
                 {
                     if(layer->ops[i]->is_variable())
                     {
-                        unsigned j = i%layer->len_ops;
+                        unsigned j = var_idx%layer->len_ops;
                         jobs[j][0]->op = layer->ops[i];
                         if(var_map.find(layer->ops[i]->get_value()) != var_map.end())
                         {
@@ -210,6 +212,7 @@ namespace bnn
                         op_queue<data_type>* task = new op_queue<data_type>;
                         jobs[j][0]->next = task;
                         jobs[j][0] = task;
+                        var_idx += 1;
                     }
                 }
 

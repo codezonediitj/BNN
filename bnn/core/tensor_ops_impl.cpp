@@ -186,17 +186,26 @@ namespace bnn
         TensorCPU<data_type>*
         matmul
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y,
-         bool transpose_x=false, bool transpose_y=false)
+         bool transpose_x, bool transpose_y)
         {
-            bool check_idx_x = !transpose_x, check_idx_y = transpose_y;
+            unsigned x_rows = x->get_shape()[0], x_cols = x->get_shape()[1];
+            unsigned y_rows = y->get_shape()[0], y_cols = y->get_shape()[1];
+            if( transpose_x )
+            {
+                std::swap(x_rows, x_cols);
+            }
+            if( transpose_y )
+            {
+                std::swap(y_rows, y_cols);
+            }
             string msg = "Incompatible dimensions for matrix multiplication.";
-            check(x->get_shape()[check_idx_x] == y->get_shape()[check_idx_y], msg);
-            unsigned shape[] = {x->get_shape()[0], y->get_shape()[1]};
+            check(x_cols == y_rows, msg);
+            unsigned shape[] = {x_rows, y_cols};
             TensorCPU<data_type>* z = new TensorCPU<data_type>
                                        (shape, 2);
             MatMulArgs<data_type> args;
             args.yd = y->get_data_pointer(); args.zd = x->get_data_pointer();
-            args.coly = y->get_shape()[1]; args.common = x->get_shape()[1];
+            args.coly = y_cols; args.common = x_cols;
             args.transpose_x = transpose_x, args.transpose_y = transpose_y;
             op(z, &args, &_matmul_job<data_type>);
             return z;
