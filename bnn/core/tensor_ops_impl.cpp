@@ -125,6 +125,32 @@ namespace bnn
 
         template <class data_type>
         void
+        _subtract_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            BinaryArgs<data_type>* args = reinterpret_cast<BinaryArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = args->xd[i] - args->yd[i];
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        subtract
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            BinaryArgs<data_type> args;
+            args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
+            op(x, &args, &_subtract_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
+        void
         _multiply_job
         (Args<data_type>* _args, unsigned start,
          unsigned end)

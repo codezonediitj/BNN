@@ -13,6 +13,18 @@ template TensorCPU<unsigned long long>* add<unsigned long long>(TensorCPU<unsign
 template TensorCPU<float>* add<float>(TensorCPU<float>* x, TensorCPU<float>* y);
 template TensorCPU<double>* add<double>(TensorCPU<double>* x, TensorCPU<double>* y);
 template TensorCPU<long double>* add<long double>(TensorCPU<long double>* x, TensorCPU<long double>* y);
+template TensorCPU<bool>* subtract<bool>(TensorCPU<bool>* x, TensorCPU<bool>* y);
+template TensorCPU<short>* subtract<short>(TensorCPU<short>* x, TensorCPU<short>* y);
+template TensorCPU<unsigned short>* subtract<unsigned short>(TensorCPU<unsigned short>* x, TensorCPU<unsigned short>* y);
+template TensorCPU<int>* subtract<int>(TensorCPU<int>* x, TensorCPU<int>* y);
+template TensorCPU<unsigned int>* subtract<unsigned int>(TensorCPU<unsigned int>* x, TensorCPU<unsigned int>* y);
+template TensorCPU<long>* subtract<long>(TensorCPU<long>* x, TensorCPU<long>* y);
+template TensorCPU<unsigned long>* subtract<unsigned long>(TensorCPU<unsigned long>* x, TensorCPU<unsigned long>* y);
+template TensorCPU<long long>* subtract<long long>(TensorCPU<long long>* x, TensorCPU<long long>* y);
+template TensorCPU<unsigned long long>* subtract<unsigned long long>(TensorCPU<unsigned long long>* x, TensorCPU<unsigned long long>* y);
+template TensorCPU<float>* subtract<float>(TensorCPU<float>* x, TensorCPU<float>* y);
+template TensorCPU<double>* subtract<double>(TensorCPU<double>* x, TensorCPU<double>* y);
+template TensorCPU<long double>* subtract<long double>(TensorCPU<long double>* x, TensorCPU<long double>* y);
 template TensorCPU<bool>* multiply<bool>(TensorCPU<bool>* x, TensorCPU<bool>* y);
 template TensorCPU<short>* multiply<short>(TensorCPU<short>* x, TensorCPU<short>* y);
 template TensorCPU<unsigned short>* multiply<unsigned short>(TensorCPU<unsigned short>* x, TensorCPU<unsigned short>* y);

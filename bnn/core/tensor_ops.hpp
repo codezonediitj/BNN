@@ -23,6 +23,20 @@ namespace bnn
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
 
         /*
+        * Performs point wise subtraction of two tensors.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>*
+        * @param y Tensor<data_type>*
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        subtract
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
+
+        /*
         * Performs point wise multiplication of two tensors.
         * Returns the result in a new tensor.
         *
