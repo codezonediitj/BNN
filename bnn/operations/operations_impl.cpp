@@ -115,6 +115,126 @@ namespace bnn
             return result;
         }
 
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return multiply(ta, tb);
+        }
+
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (TensorCPU<data_type>* a, Operator<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return multiply(ta, b);
+        }
+
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (Operator<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return multiply(a, tb);
+        }
+
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (Operator<data_type>* a, Operator<data_type>* b)
+        {
+            Multiply<data_type>* result = new Multiply<data_type>(a, b);
+            return result;
+        }
+
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return divide(ta, tb);
+        }
+
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (TensorCPU<data_type>* a, Operator<data_type>* b)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return divide(ta, b);
+        }
+
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (Operator<data_type>* a, TensorCPU<data_type>* b)
+        {
+            TensorWrapper<data_type>* tb =
+            new TensorWrapper<data_type>(b);
+            return divide(a, tb);
+        }
+
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (Operator<data_type>* a, Operator<data_type>* b)
+        {
+            Divide<data_type>* result = new Divide<data_type>(a, b);
+            return result;
+        }
+
+        template <class data_type>
+        Log<data_type>*
+        log
+        (TensorCPU<data_type>* a)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return log(ta);
+        }
+
+        template <class data_type>
+        Log<data_type>*
+        log
+        (Operator<data_type>* a)
+        {
+            Log<data_type>* result = new Log<data_type>(a);
+            return result;
+        }
+
+        template <class data_type>
+        ReLU<data_type>*
+        relu
+        (TensorCPU<data_type>* a)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return relu(ta);
+        }
+
+        template <class data_type>
+        ReLU<data_type>*
+        relu
+        (Operator<data_type>* a)
+        {
+            ReLU<data_type>* result = new ReLU<data_type>(a);
+            return result;
+        }
+
         #include "bnn/templates/operations/operations.hpp"
 
     }

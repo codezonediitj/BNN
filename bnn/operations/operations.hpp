@@ -85,6 +85,50 @@ namespace bnn
         (Operator<data_type>* a);
 
         /* @overload
+        * Creates a bnn::operators::Log object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        */
+        template <class data_type>
+        Log<data_type>*
+        log
+        (TensorCPU<data_type>* a);
+
+        /* @overload
+        * Creates a bnn::operators::Log object.
+        *
+        * @param a Pointer to Operator object.
+        */
+        template <class data_type>
+        Log<data_type>*
+        log
+        (Operator<data_type>* a);
+
+        /* @overload
+        * Creates a bnn::operators::ReLU object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        */
+        template <class data_type>
+        ReLU<data_type>*
+        relu
+        (TensorCPU<data_type>* a);
+
+        /* @overload
+        * Creates a bnn::operators::ReLU object.
+        *
+        * @param a Pointer to Operator object.
+        */
+        template <class data_type>
+        ReLU<data_type>*
+        relu
+        (Operator<data_type>* a);
+
+        /* @overload
         * Creates a bnn::operators::MatMul object.
         *
         * @tparam data_type Data type of the elements
@@ -132,6 +176,106 @@ namespace bnn
         template <class data_type>
         MatMul<data_type>*
         matmul
+        (Operator<data_type>* a, Operator<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Multiply object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Multiply object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (TensorCPU<data_type>* a, Operator<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Multiply object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a Pointer to Operator object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (Operator<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Multiply object.
+        *
+        * @param a Pointer to Operator object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        Multiply<data_type>*
+        multiply
+        (Operator<data_type>* a, Operator<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Divide object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (TensorCPU<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Divide object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (TensorCPU<data_type>* a, Operator<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Divide object.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a Pointer to Operator object.
+        * @param b TensorCPU object.
+        */
+        template <class data_type>
+        Divide<data_type>*
+        divide
+        (Operator<data_type>* a, TensorCPU<data_type>* b);
+
+        /* @overload
+        * Creates a bnn::operators::Divide object.
+        *
+        * @param a Pointer to Operator object.
+        * @param b Pointer to Operator object.
+        */
+        template <class data_type>
+        Divide<data_type>*
+        divide
         (Operator<data_type>* a, Operator<data_type>* b);
 
     }
