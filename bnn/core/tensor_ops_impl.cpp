@@ -125,7 +125,7 @@ namespace bnn
 
         template <class data_type>
         void
-        _mul_job
+        _multiply_job
         (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
@@ -138,14 +138,14 @@ namespace bnn
 
         template <class data_type>
         TensorCPU<data_type>*
-        mul
+        multiply
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
         {
             TensorCPU<data_type>* z = new TensorCPU<data_type>
                                        (x->get_shape(), x->get_ndims());
             BinaryArgs<data_type> args;
             args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
-            op(x, &args, &_mul_job<data_type>);
+            op(x, &args, &_multiply_job<data_type>);
             return z;
         }
 
@@ -238,6 +238,58 @@ namespace bnn
         }
 
         template <class data_type>
+        void
+        _log_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            UnaryArgs<data_type>* args = reinterpret_cast<UnaryArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = std::log(args->xd[i]);
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        log
+        (TensorCPU<data_type>* x)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            UnaryArgs<data_type> args;
+            args.zd = z->get_data_pointer();
+            op(x, &args, &_log_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
+        void
+        _rectifier_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            UnaryArgs<data_type>* args = reinterpret_cast<UnaryArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = max((data_type)0.0, args->xd[i]);
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        rectifier
+        (TensorCPU<data_type>* x)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            UnaryArgs<data_type> args;
+            args.zd = z->get_data_pointer();
+            op(x, &args, &_rectifier_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
         struct ScalarArgs: Args<data_type>
         {
             data_type val;
@@ -294,6 +346,32 @@ namespace bnn
                                         (x->get_shape(), x->get_ndims());
             DivideArgs<data_type> args;
             args.val = divisor, args.zd = z->get_data_pointer();
+            op(x, &args, &_divide_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
+        void
+        _divide_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            BinaryArgs<data_type>* args = reinterpret_cast<BinaryArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = args->xd[i]/args->yd[i];
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        divide
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            BinaryArgs<data_type> args;
+            args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
             op(x, &args, &_divide_job<data_type>);
             return z;
         }

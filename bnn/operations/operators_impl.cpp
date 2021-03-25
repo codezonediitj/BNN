@@ -453,8 +453,8 @@ namespace bnn
         {
             Operator<data_type> *x, *y;
             x = this->get_arg(0), y =  this->get_arg(1);
-            return add(mul(x->get_gradient(), y->get_value()),
-                       mul(x->get_value(), y->get_gradient()));
+            return add(multiply(x->get_gradient(), y->get_value()),
+                       multiply(x->get_value(), y->get_gradient()));
         }
 
         template <class data_type>
@@ -468,11 +468,11 @@ namespace bnn
             TensorCPU<data_type>* dy_dcurr = this->get_gradient();
             if(arg1->is_variable())
             {
-                arg1->set_gradient(mul(dy_dcurr, arg2->get_value()));
+                arg1->set_gradient(multiply(dy_dcurr, arg2->get_value()));
             }
             if(arg2->is_variable())
             {
-                arg2->set_gradient(mul(dy_dcurr, arg1->get_value()));
+                arg2->set_gradient(multiply(dy_dcurr, arg1->get_value()));
             }
         }
 
@@ -527,7 +527,7 @@ namespace bnn
             Operator<data_type> *x, *y;
             x = this->get_arg(0), y = this->get_arg(1);
             TensorCPU<data_type>* left = divide(x->get_gradient(), y->get_value());
-            TensorCPU<data_type>* right = divide(mul(this->get_value(), y->get_gradient()),
+            TensorCPU<data_type>* right = divide(multiply(this->get_value(), y->get_gradient()),
                                                  y->get_value());
             return subtract(left, right);
         }
@@ -550,8 +550,8 @@ namespace bnn
                 TensorCPU<data_type>* neg_one = new TensorCPU<data_type>
                 (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
                 bnn::core::fill(neg_one, (data_type)-1.0)
-                arg2->set_gradient(mul(dy_dcurr,
-                                        mul(neg_one, divide(this->get_value(),
+                arg2->set_gradient(multiply(dy_dcurr,
+                                        multiply(neg_one, divide(this->get_value(),
                                                             arg2->get_value()))));
             }
         }
@@ -606,7 +606,7 @@ namespace bnn
         {
             Operator<data_type> *x;
             x = this->get_arg();
-            return mul(this->get_value(), x->get_gradient());
+            return multiply(this->get_value(), x->get_gradient());
         }
 
         template <class data_type>
@@ -620,7 +620,7 @@ namespace bnn
             {
                 TensorCPU<data_type>* dy_dcurr = this->get_gradient();
                 TensorCPU<data_type>* dcurr_darg = this->get_value();
-                arg->set_gradient(mul(dy_dcurr, dcurr_darg));
+                arg->set_gradient(multiply(dy_dcurr, dcurr_darg));
             }
         }
 
@@ -730,7 +730,7 @@ namespace bnn
         {
             Operator<data_type> *x;
             x = this->get_arg();
-            return relu(x->get_value());
+            return rectifier(x->get_value());
         }
 
         template <class data_type>
@@ -741,7 +741,7 @@ namespace bnn
         {
             Operator<data_type> *x;
             x = this->get_arg();
-            return mul(heaviside(this->get_value()), x->get_gradient());
+            return multiply(heaviside(this->get_value()), x->get_gradient());
         }
 
         template <class data_type>
@@ -755,7 +755,7 @@ namespace bnn
             {
                 TensorCPU<data_type>* dy_dcurr = this->get_gradient();
                 TensorCPU<data_type>* dcurr_darg = this->get_value();
-                arg->set_gradient(mul(dy_dcurr, heaviside(this->get_value())));
+                arg->set_gradient(multiply(dy_dcurr, heaviside(this->get_value())));
             }
         }
 

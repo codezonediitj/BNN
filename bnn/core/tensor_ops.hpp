@@ -33,7 +33,7 @@ namespace bnn
         */
         template <class data_type>
         TensorCPU<data_type>*
-        mul
+        multiply
         (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
 
         /*
@@ -62,6 +62,32 @@ namespace bnn
         template <class data_type>
         TensorCPU<data_type>*
         exp
+        (TensorCPU<data_type>* x);
+
+        /*
+        * Performs point wise natural logarithm of a tensor.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>*
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        log
+        (TensorCPU<data_type>* x);
+
+        /*
+        * Performs point wise rectifier operation on a tensor.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>*
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        rectifier
         (TensorCPU<data_type>* x);
 
         /*
@@ -127,6 +153,20 @@ namespace bnn
         TensorCPU<data_type>*
         divide
         (TensorCPU<data_type>* x, data_type divisor);
+
+        /*
+        * Performs point wise division of two tensors.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>* First 2D tensor.
+        * @param y Tensor<data_type>* Second 2D tesnor.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        divide
+        (TensorCPU<data_type>* x, TensorCPU<data_type>* y);
 
         /*
         * Returns a one hot tensor with a new axis appended
