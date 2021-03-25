@@ -413,6 +413,159 @@ namespace bnn
 
         template <class data_type>
         unsigned long int
+        Multiply<data_type>::_id = 0;
+
+        template <class data_type>
+        Multiply<data_type>::
+        Multiply
+        ():
+        BinaryOperator<data_type>::BinaryOperator("Multiply")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        Multiply<data_type>::
+        Multiply
+        (Operator<data_type>* a, Operator<data_type>* b):
+        BinaryOperator<data_type>::BinaryOperator
+        (a, b, "Multiply_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Multiply<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *x, *y;
+            x = this->get_arg(0), y = this->get_arg(1);
+            return multiply(x->get_value(), y->get_value());
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Multiply<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+            Operator<data_type> *x, *y;
+            x = this->get_arg(0), y =  this->get_arg(1);
+            return add(mul(x->get_gradient(), y->get_value()),
+                       mul(x->get_value(), y->get_gradient()));
+        }
+
+        template <class data_type>
+        void
+        Multiply<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg1 = this->get_arg(0);
+            Operator<data_type>* arg2 = this->get_arg(1);
+            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+            if(arg1->is_variable())
+            {
+                arg1->set_gradient(mul(dy_dcurr, arg2->get_value()));
+            }
+            if(arg2->is_variable())
+            {
+                arg2->set_gradient(mul(dy_dcurr, arg1->get_value()));
+            }
+        }
+
+        template <class data_type>
+        Multiply<data_type>::
+        ~Multiply
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
+        unsigned long int
+        Divide<data_type>::_id = 0;
+
+        template <class data_type>
+        Divide<data_type>::
+        Divide
+        ():
+        BinaryOperator<data_type>::BinaryOperator("Divide")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        Divide<data_type>::
+        Divide
+        (Operator<data_type>* a, Operator<data_type>* b):
+        BinaryOperator<data_type>::BinaryOperator
+        (a, b, "Divide_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Divide<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *x, *y;
+            x = this->get_arg(0), y = this->get_arg(1);
+            return divide(x->get_value(), y->get_value());
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Divide<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+            Operator<data_type> *x, *y;
+            x = this->get_arg(0), y = this->get_arg(1);
+            TensorCPU<data_type>* left = divide(x->get_gradient(), y->get_value());
+            TensorCPU<data_type>* right = divide(mul(this->get_value(), y->get_gradient()),
+                                                 y->get_value());
+            return subtract(left, right);
+        }
+
+        template <class data_type>
+        void
+        Divide<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg1 = this->get_arg(0);
+            Operator<data_type>* arg2 = this->get_arg(1);
+            TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+            if(arg1->is_variable())
+            {
+                arg1->set_gradient(divide(dy_dcurr, arg2->get_value()));
+            }
+            if(arg2->is_variable())
+            {
+                TensorCPU<data_type>* neg_one = new TensorCPU<data_type>
+                (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
+                bnn::core::fill(neg_one, (data_type)-1.0)
+                arg2->set_gradient(mul(dy_dcurr,
+                                        mul(neg_one, divide(this->get_value(),
+                                                            arg2->get_value()))));
+            }
+        }
+
+        template <class data_type>
+        Divide<data_type>::
+        ~Divide
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
+        unsigned long int
         Exp<data_type>::_id = 0;
 
         template <class data_type>
@@ -453,7 +606,7 @@ namespace bnn
         {
             Operator<data_type> *x;
             x = this->get_arg();
-            return mul(exp(x->get_value()), x->get_gradient());
+            return mul(this->get_value(), x->get_gradient());
         }
 
         template <class data_type>
@@ -467,13 +620,148 @@ namespace bnn
             {
                 TensorCPU<data_type>* dy_dcurr = this->get_gradient();
                 TensorCPU<data_type>* dcurr_darg = this->get_value();
-                arg->set_gradient(bnn::core::mul(dy_dcurr, dcurr_darg));
+                arg->set_gradient(mul(dy_dcurr, dcurr_darg));
             }
         }
 
         template <class data_type>
         Exp<data_type>::
         ~Exp
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
+        unsigned long int
+        Log<data_type>::_id = 0;
+
+        template <class data_type>
+        Log<data_type>::
+        Log
+        ():
+        UnaryOperator<data_type>::UnaryOperator("Log")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        Log<data_type>::
+        Log
+        (Operator<data_type>* a):
+        UnaryOperator<data_type>::UnaryOperator
+        (a, "Log_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Log<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *x;
+            x = this->get_arg();
+            return log(x->get_value());
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Log<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+            Operator<data_type> *x;
+            x = this->get_arg();
+            return divide(x->get_gradient(), this->get_value());
+        }
+
+        template <class data_type>
+        void
+        Log<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg = this->get_arg();
+            if(arg->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                arg->set_gradient(divide(dy_dcurr, arg->get_value()));
+            }
+        }
+
+        template <class data_type>
+        Log<data_type>::
+        ~Log
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
+        template <class data_type>
+        unsigned long int
+        ReLU<data_type>::_id = 0;
+
+        template <class data_type>
+        ReLU<data_type>::
+        ReLU
+        ():
+        UnaryOperator<data_type>::UnaryOperator("ReLU")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        ReLU<data_type>::
+        ReLU
+        (Operator<data_type>* a):
+        UnaryOperator<data_type>::UnaryOperator
+        (a, "ReLU_" + std::to_string(_id++))
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        ReLU<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *x;
+            x = this->get_arg();
+            return relu(x->get_value());
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        ReLU<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+            Operator<data_type> *x;
+            x = this->get_arg();
+            return mul(heaviside(this->get_value()), x->get_gradient());
+        }
+
+        template <class data_type>
+        void
+        ReLU<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg = this->get_arg();
+            if(arg->is_variable())
+            {
+                TensorCPU<data_type>* dy_dcurr = this->get_gradient();
+                TensorCPU<data_type>* dcurr_darg = this->get_value();
+                arg->set_gradient(mul(dy_dcurr, heaviside(this->get_value())));
+            }
+        }
+
+        template <class data_type>
+        ReLU<data_type>::
+        ~ReLU
         ()
         {
             BNNMemory->invalidate(this);
