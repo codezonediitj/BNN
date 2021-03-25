@@ -91,6 +91,25 @@ namespace bnn
         (TensorCPU<data_type>* x);
 
         /*
+        * Performs point wise heaviside operation on a tensor.
+        * Returns the result in a new tensor.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param x Tensor<data_type>*
+        *
+        * Note
+        * ====
+        *
+        * It outputs 0 for an element whose value is 0
+        * in the input tensor.
+        */
+        template <class data_type>
+        TensorCPU<data_type>*
+        heaviside
+        (TensorCPU<data_type>* x);
+
+        /*
         * Fills the tensor with a given value.
         *
         * @tparam data_type Data type of the elements

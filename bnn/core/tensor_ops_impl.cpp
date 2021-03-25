@@ -290,6 +290,32 @@ namespace bnn
         }
 
         template <class data_type>
+        void
+        _heaviside_job
+        (Args<data_type>* _args, unsigned start,
+         unsigned end)
+        {
+            UnaryArgs<data_type>* args = reinterpret_cast<UnaryArgs<data_type>*>(_args);
+            for(unsigned i = start; i < end; i++)
+            {
+                args->zd[i] = args->xd[i] > 0 ? (data_type)1.0 : (data_type)0.0;
+            }
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        heaviside
+        (TensorCPU<data_type>* x)
+        {
+            TensorCPU<data_type>* z = new TensorCPU<data_type>
+                                       (x->get_shape(), x->get_ndims());
+            UnaryArgs<data_type> args;
+            args.zd = z->get_data_pointer();
+            op(x, &args, &_heaviside_job<data_type>);
+            return z;
+        }
+
+        template <class data_type>
         struct ScalarArgs: Args<data_type>
         {
             data_type val;
