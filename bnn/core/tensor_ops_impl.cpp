@@ -404,7 +404,7 @@ namespace bnn
 
         template <class data_type>
         void
-        _divide_job
+        _divide_tensors_job
         (Args<data_type>* _args, unsigned start,
          unsigned end)
         {
@@ -424,7 +424,7 @@ namespace bnn
                                        (x->get_shape(), x->get_ndims());
             BinaryArgs<data_type> args;
             args.yd = y->get_data_pointer(), args.zd = z->get_data_pointer();
-            op(x, &args, &_divide_job<data_type>);
+            op(x, &args, &_divide_tensors_job<data_type>);
             return z;
         }
 

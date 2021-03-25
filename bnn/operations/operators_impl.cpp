@@ -549,7 +549,7 @@ namespace bnn
             {
                 TensorCPU<data_type>* neg_one = new TensorCPU<data_type>
                 (dy_dcurr->get_shape(), dy_dcurr->get_ndims());
-                bnn::core::fill(neg_one, (data_type)-1.0)
+                bnn::core::fill(neg_one, (data_type)-1.0);
                 arg2->set_gradient(multiply(dy_dcurr,
                                         multiply(neg_one, divide(this->get_value(),
                                                             arg2->get_value()))));
