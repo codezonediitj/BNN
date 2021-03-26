@@ -701,30 +701,30 @@ namespace bnn
 
         template <class data_type>
         unsigned long int
-        ReLU<data_type>::_id = 0;
+        Rectifier<data_type>::_id = 0;
 
         template <class data_type>
-        ReLU<data_type>::
-        ReLU
+        Rectifier<data_type>::
+        Rectifier
         ():
-        UnaryOperator<data_type>::UnaryOperator("ReLU")
+        UnaryOperator<data_type>::UnaryOperator("Rectifier")
         {
             BNNMemory->push(this);
         }
 
         template <class data_type>
-        ReLU<data_type>::
-        ReLU
+        Rectifier<data_type>::
+        Rectifier
         (Operator<data_type>* a):
         UnaryOperator<data_type>::UnaryOperator
-        (a, "ReLU_" + std::to_string(_id++))
+        (a, "Rectifier_" + std::to_string(_id++))
         {
             BNNMemory->push(this);
         }
 
         template <class data_type>
         TensorCPU<data_type>*
-        ReLU<data_type>::
+        Rectifier<data_type>::
         compute_value
         ()
         {
@@ -735,7 +735,7 @@ namespace bnn
 
         template <class data_type>
         TensorCPU<data_type>*
-        ReLU<data_type>::
+        Rectifier<data_type>::
         compute_gradient
         (TensorCPU<data_type>* var)
         {
@@ -746,7 +746,7 @@ namespace bnn
 
         template <class data_type>
         void
-        ReLU<data_type>::
+        Rectifier<data_type>::
         compute_gradient_reverse
         ()
         {
@@ -760,8 +760,8 @@ namespace bnn
         }
 
         template <class data_type>
-        ReLU<data_type>::
-        ~ReLU
+        Rectifier<data_type>::
+        ~Rectifier
         ()
         {
             BNNMemory->invalidate(this);

@@ -217,21 +217,21 @@ namespace bnn
         }
 
         template <class data_type>
-        ReLU<data_type>*
-        relu
+        Rectifier<data_type>*
+        rectifier
         (TensorCPU<data_type>* a)
         {
             TensorWrapper<data_type>* ta =
             new TensorWrapper<data_type>(a);
-            return relu(ta);
+            return rectifier(ta);
         }
 
         template <class data_type>
-        ReLU<data_type>*
-        relu
+        Rectifier<data_type>*
+        rectifier
         (Operator<data_type>* a)
         {
-            ReLU<data_type>* result = new ReLU<data_type>(a);
+            Rectifier<data_type>* result = new Rectifier<data_type>(a);
             return result;
         }
 

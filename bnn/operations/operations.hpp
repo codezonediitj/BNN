@@ -107,25 +107,25 @@ namespace bnn
         (Operator<data_type>* a);
 
         /* @overload
-        * Creates a bnn::operators::ReLU object.
+        * Creates a bnn::operators::Rectifier object.
         *
         * @tparam data_type Data type of the elements
         *     supported by C++.
         * @param a TensorCPU object.
         */
         template <class data_type>
-        ReLU<data_type>*
-        relu
+        Rectifier<data_type>*
+        rectifier
         (TensorCPU<data_type>* a);
 
         /* @overload
-        * Creates a bnn::operators::ReLU object.
+        * Creates a bnn::operators::Rectifier object.
         *
         * @param a Pointer to Operator object.
         */
         template <class data_type>
-        ReLU<data_type>*
-        relu
+        Rectifier<data_type>*
+        rectifier
         (Operator<data_type>* a);
 
         /* @overload

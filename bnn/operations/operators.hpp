@@ -493,7 +493,7 @@ namespace bnn
         };
 
         template <class data_type>
-        class ReLU: public UnaryOperator<data_type>
+        class Rectifier: public UnaryOperator<data_type>
         {
             protected:
 
@@ -501,10 +501,10 @@ namespace bnn
 
             public:
 
-                ReLU
+                Rectifier
                 ();
 
-                ReLU
+                Rectifier
                 (Operator<data_type>* a);
 
                 virtual
@@ -523,7 +523,7 @@ namespace bnn
                 ();
 
                 virtual
-                ~ReLU
+                ~Rectifier
                 ();
         };
 
