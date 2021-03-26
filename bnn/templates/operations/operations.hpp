@@ -265,6 +265,29 @@ template Divide<unsigned long long>* divide<unsigned long long>(Operator<unsigne
 template Divide<float>* divide<float>(Operator<float>* a, Operator<float>* b);
 template Divide<double>* divide<double>(Operator<double>* a, Operator<double>* b);
 template Divide<long double>* divide<long double>(Operator<long double>* a, Operator<long double>* b);
-
+template Sum<bool>* sum<bool>(TensorCPU<bool>* a, unsigned int axis);
+template Sum<short>* sum<short>(TensorCPU<short>* a, unsigned int axis);
+template Sum<unsigned short>* sum<unsigned short>(TensorCPU<unsigned short>* a, unsigned int axis);
+template Sum<int>* sum<int>(TensorCPU<int>* a, unsigned int axis);
+template Sum<unsigned int>* sum<unsigned int>(TensorCPU<unsigned int>* a, unsigned int axis);
+template Sum<long>* sum<long>(TensorCPU<long>* a, unsigned int axis);
+template Sum<unsigned long>* sum<unsigned long>(TensorCPU<unsigned long>* a, unsigned int axis);
+template Sum<long long>* sum<long long>(TensorCPU<long long>* a, unsigned int axis);
+template Sum<unsigned long long>* sum<unsigned long long>(TensorCPU<unsigned long long>* a, unsigned int axis);
+template Sum<float>* sum<float>(TensorCPU<float>* a, unsigned int axis);
+template Sum<double>* sum<double>(TensorCPU<double>* a, unsigned int axis);
+template Sum<long double>* sum<long double>(TensorCPU<long double>* a, unsigned int axis);
+template Sum<bool>* sum<bool>(Operator<bool>* a, unsigned int axis);
+template Sum<short>* sum<short>(Operator<short>* a, unsigned int axis);
+template Sum<unsigned short>* sum<unsigned short>(Operator<unsigned short>* a, unsigned int axis);
+template Sum<int>* sum<int>(Operator<int>* a, unsigned int axis);
+template Sum<unsigned int>* sum<unsigned int>(Operator<unsigned int>* a, unsigned int axis);
+template Sum<long>* sum<long>(Operator<long>* a, unsigned int axis);
+template Sum<unsigned long>* sum<unsigned long>(Operator<unsigned long>* a, unsigned int axis);
+template Sum<long long>* sum<long long>(Operator<long long>* a, unsigned int axis);
+template Sum<unsigned long long>* sum<unsigned long long>(Operator<unsigned long long>* a, unsigned int axis);
+template Sum<float>* sum<float>(Operator<float>* a, unsigned int axis);
+template Sum<double>* sum<double>(Operator<double>* a, unsigned int axis);
+template Sum<long double>* sum<long double>(Operator<long double>* a, unsigned int axis);
 
 #endif

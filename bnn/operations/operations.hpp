@@ -278,6 +278,32 @@ namespace bnn
         divide
         (Operator<data_type>* a, Operator<data_type>* b);
 
+        /* @overload
+        * Creates a bnn::operators::Sum object along the specified axis.
+        *
+        * @tparam data_type Data type of the elements
+        *     supported by C++.
+        * @param a TensorCPU object.
+        * @param axis Axis along which the sum is to be performed.
+        *             Optional, by default, 0.
+        */
+        template <class data_type>
+        Sum<data_type>*
+        sum
+        (TensorCPU<data_type>* a, unsigned int axis=0);
+
+        /* @overload
+        * Creates a bnn::operators::Sum object along the specified axis.
+        *
+        * @param a Pointer to Operator object.
+        * @param axis Axis along which the sum is to be performed.
+        *             Optional, by default, 0.
+        */
+        template <class data_type>
+        Sum<data_type>*
+        sum
+        (Operator<data_type>* a, unsigned int axis=0);
+
     }
 }
 
