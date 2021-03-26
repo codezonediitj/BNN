@@ -178,6 +178,62 @@ TEST(Autodiff, MatMulComputeGradientReverse)
         }
     }
 
+    BNNMemory->free_memory(x1);
+    BNNMemory->free_memory(x2);
+    BNNMemory->free_memory(x3);
+    BNNMemory->free_memory(x4);
+    BNNMemory->free_memory(grads[0]);
+}
+
+TEST(Autodiff, MultiplyDivideLogRectifierComputeGradientReverse)
+{
+    TensorCPU<double> *x1, *x2, *x3, *x4;
+    unsigned ndims = 2;
+    unsigned* shape = new unsigned[ndims];
+    shape[0] = 3, shape[1] = 3;
+    x1 = new TensorCPU<double>(shape, ndims);
+    x2 = new TensorCPU<double>(shape, ndims);
+    x3 = new TensorCPU<double>(shape, ndims);
+    x4 = new TensorCPU<double>(shape, ndims);
+    double A[3][3] = {{1, -1, 7}, {-2, 3, 3}, {1, 0, 1}};
+    double B[3][3] = {{8, -9, -6}, {1, -3, -4}, {2, 8, -8}};
+    double C[3][3] = {{1, 0, 0}, {0, 3, 0}, {0, 0, 1}};
+    double D[3][3] = {{1, 2, 1}, {2, 3, 4}, {4, 1, 2}};
+    for( int i = 0; i < shape[0]; i++ )
+    {
+        for( int j = 0; j < shape[1]; j++ )
+        {
+            x1->set(A[i][j], i, j);
+            x2->set(B[i][j], i, j);
+            x3->set(C[i][j], i, j);
+            x4->set(D[i][j], i, j);
+        }
+    }
+    Operator<double> *x1x2, *x3x4;
+    x1x2 = bnn::operations::matmul(x1, x2);
+    Operator<double>* expr = bnn::operations::log(bnn::operations::divide(
+                                            bnn::operations::add(bnn::operations::exp(x1x2),
+                                                                 bnn::operations::exp(x3)), x4));
+    TensorCPU<double>** vars = new TensorCPU<double>*[4];
+    vars[0] = x1, vars[1] = x2, vars[2] = x3, vars[3] = x4;
+    TensorCPU<double>** grads =  compute_gradient_reverse(bnn::operations::multiply(bnn::operations::rectifier(expr), x1), vars, 4);
+    double gradvals[4][3][3] = {{{38.0, 53.306854248046875, -6.0}, {-27.0, 22.90138816833496, 24.0}, {16.613386154174805, 1.3132150173187256, 2.306759834289551}},
+                                {{1.9999547004699707, -7.0, 3.059022617435403e-07}, {-1.0, 10.0, 0.0}, {7.999954700469971, 2.0, 3.059022617435403e-07}},
+                                {{2.06115369216775e-09, -1.9287501457892281e-22, 0.0}, {0.0, 2.807287009191223e-13, 0.0}, {4.539787187241018e-05, 0.0, 0.9999997615814209}},
+                                {{-1.0, 0.5, -0.0}, {-0.0, -0.9999999403953552, -0.0}, {-0.25, -0.0, -0.5}}};
+
+    for( int k = 0; k < 4; k++ )
+    {
+        for( int i = 0; i < shape[0]; i++ )
+        {
+            for( int j = 0; j < shape[1]; j++ )
+            {
+                EXPECT_NEAR(gradvals[k][i][j], grads[k]->at(i, j), 1.e-5)<<
+                "Expected value of graident with respect to x"<<(k + 1)<<" at ("<<i<<", "<<j<<") is "<<gradvals[k][i][j];
+            }
+        }
+    }
+
     delete BNNMemory;
     delete BNNThreads;
 }
