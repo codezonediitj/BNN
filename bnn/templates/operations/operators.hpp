@@ -133,5 +133,17 @@ template class MatMul<unsigned long long>;
 template class MatMul<float>;
 template class MatMul<double>;
 template class MatMul<long double>;
+template class Sum<bool>;
+template class Sum<short>;
+template class Sum<unsigned short>;
+template class Sum<int>;
+template class Sum<unsigned int>;
+template class Sum<long>;
+template class Sum<unsigned long>;
+template class Sum<long long>;
+template class Sum<unsigned long long>;
+template class Sum<float>;
+template class Sum<double>;
+template class Sum<long double>;
 
 #endif

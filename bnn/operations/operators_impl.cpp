@@ -841,6 +841,81 @@ namespace bnn
             BNNMemory->invalidate(this);
         }
 
+        template <class data_type>
+        unsigned long int
+        Sum<data_type>::_id = 0;
+
+        template <class data_type>
+        Sum<data_type>::
+        Sum
+        ():
+        UnaryOperator<data_type>::UnaryOperator("Sum")
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        Sum<data_type>::
+        Sum
+        (Operator<data_type>* a, unsigned int axis):
+        UnaryOperator<data_type>::UnaryOperator
+        (a, "Sum_" + std::to_string(_id++)),
+        _axis(axis)
+        {
+            BNNMemory->push(this);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Sum<data_type>::
+        compute_value
+        ()
+        {
+            Operator<data_type> *x;
+            x = this->get_arg();
+            return sum(x->get_value(), this->_axis);
+        }
+
+        template <class data_type>
+        TensorCPU<data_type>*
+        Sum<data_type>::
+        compute_gradient
+        (TensorCPU<data_type>* var)
+        {
+
+            Operator<data_type>* arg = this->get_arg();
+            TensorCPU<data_type>* darg_dvar = arg->get_gradient();
+            TensorCPU<data_type>* dy_darg = new TensorCPU<data_type>
+            (darg_dvar->get_shape(), darg_dvar->get_ndims());
+            bnn::core::copy(dy_darg, darg_dvar);
+            arg->set_gradient(dy_darg);
+        }
+
+        template <class data_type>
+        void
+        Sum<data_type>::
+        compute_gradient_reverse
+        ()
+        {
+            Operator<data_type>* arg = this->get_arg();
+            if(arg->is_variable())
+            {
+                TensorCPU<data_type>* arg_val = arg->get_value();
+                TensorCPU<data_type>* dy_darg = new TensorCPU<data_type>
+                (arg_val->get_shape(), arg_val->get_ndims());
+                bnn::core::fill(dy_darg, (data_type) 1.0);
+                arg->set_gradient(dy_darg);
+            }
+        }
+
+        template <class data_type>
+        Sum<data_type>::
+        ~Sum
+        ()
+        {
+            BNNMemory->invalidate(this);
+        }
+
         #include "bnn/templates/operations/operators.hpp"
 
     }

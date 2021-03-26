@@ -562,6 +562,42 @@ namespace bnn
                 ();
         };
 
+        template <class data_type>
+        class Sum: public UnaryOperator<data_type>
+        {
+            protected:
+
+                static unsigned long _id;
+                unsigned int _axis;
+
+            public:
+
+                Sum
+                ();
+
+                Sum
+                (Operator<data_type>* a, unsigned int axis=0);
+
+                virtual
+                TensorCPU<data_type>*
+                compute_gradient
+                (TensorCPU<data_type>* var);
+
+                virtual
+                void
+                compute_gradient_reverse
+                ();
+
+                virtual
+                TensorCPU<data_type>*
+                compute_value
+                ();
+
+                virtual
+                ~Sum
+                ();
+        };
+
     }
 }
 

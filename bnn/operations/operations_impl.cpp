@@ -235,6 +235,25 @@ namespace bnn
             return result;
         }
 
+        template <class data_type>
+        Sum<data_type>*
+        sum
+        (TensorCPU<data_type>* a, unsigned int axis)
+        {
+            TensorWrapper<data_type>* ta =
+            new TensorWrapper<data_type>(a);
+            return sum(ta, axis);
+        }
+
+        template <class data_type>
+        Sum<data_type>*
+        sum
+        (Operator<data_type>* a, unsigned int axis)
+        {
+            Sum<data_type>* result = new Sum<data_type>(a, axis);
+            return result;
+        }
+
         #include "bnn/templates/operations/operations.hpp"
 
     }
