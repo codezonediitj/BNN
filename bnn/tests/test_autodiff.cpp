@@ -216,7 +216,7 @@ TEST(Autodiff, MultiplyDivideLogRectifierComputeGradientReverse)
                                                                  bnn::operations::exp(x3)), x4));
     TensorCPU<double>** vars = new TensorCPU<double>*[4];
     vars[0] = x1, vars[1] = x2, vars[2] = x3, vars[3] = x4;
-    TensorCPU<double>** grads =  compute_gradient_reverse(bnn::operations::multiply(bnn::operations::rectifier(expr), x1), vars, 4);
+    TensorCPU<double>** grads =  compute_gradient_reverse(bnn::operations::sum(bnn::operations::multiply(bnn::operations::rectifier(expr), x1)), vars, 4);
     double gradvals[4][3][3] = {{{38.0, 53.306854248046875, -6.0}, {-27.0, 22.90138816833496, 24.0}, {16.613386154174805, 1.3132150173187256, 2.306759834289551}},
                                 {{1.9999547004699707, -7.0, 3.059022617435403e-07}, {-1.0, 10.0, 0.0}, {7.999954700469971, 2.0, 3.059022617435403e-07}},
                                 {{2.06115369216775e-09, -1.9287501457892281e-22, 0.0}, {0.0, 2.807287009191223e-13, 0.0}, {4.539787187241018e-05, 0.0, 0.9999997615814209}},
