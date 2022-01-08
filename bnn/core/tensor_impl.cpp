@@ -98,6 +98,7 @@ namespace bnn
         ndims_cpu(_ndims),
         shape_cpu(_init_shape_cpu(_shape, _ndims))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
