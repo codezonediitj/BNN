@@ -98,6 +98,7 @@ namespace bnn
         ndims_cpu(_ndims),
         shape_cpu(_init_shape_cpu(_shape, _ndims))
         {
+            BNNMemory->push(this);
         }
 
         template <class data_type>
@@ -184,7 +185,6 @@ namespace bnn
         reshape
         (vector<unsigned>& shape)
         {
-            unsigned size = _calc_size(this->shape_cpu, this->ndims_cpu);
             unsigned* new_shape = new unsigned[shape.size()];
             copy(shape.begin(), shape.end(), new_shape);
             this->reshape(new_shape, shape.size());
