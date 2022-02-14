@@ -2,7 +2,6 @@
 #define BNN_BNN_OPERATIONS_OPERATORS_HPP
 
 #include <string>
-#include <unordered_map>
 #include <bnn/core/tensor.hpp>
 #include <bnn/utils/utils.hpp>
 
